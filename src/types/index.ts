@@ -1,12 +1,12 @@
 import type { LucideIcon } from "lucide-react";
 
 export interface Service {
-  icon: LucideIcon;
   title: string;
   description: string;
   features: string[];
   number: string;
   gradient: string;
+  iconSvg: string;
 }
 
 export interface Project {

@@ -1,12 +1,13 @@
 import type { Project } from "@/types";
 
+// Using actual BluEdge portfolio images from /public/bluedge/posts/
 export const projects: Project[] = [
   {
     title: "Baabda Municipality",
     category: "Digital Marketing & Social Media",
     description:
       "Comprehensive social media strategy and content creation for Baabda Municipality, strengthening community engagement and public communication.",
-    image: "https://images.unsplash.com/photo-1577495508048-b635879837f1?w=800",
+    image: "/bluedge/posts/baabda post 20.png",
     color: "#1E3A5F",
     tags: ["Social Media", "Government", "Content Strategy"],
     year: "2024",
@@ -16,7 +17,7 @@ export const projects: Project[] = [
     category: "Branding & Social Media",
     description:
       "Complete brand identity and social media presence for BAS, featuring 'The smooth side of snacking' campaign with clean, modern visuals.",
-    image: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=800",
+    image: "/bluedge/posts/BAS The smooth side of snacking post.jpg.jpeg",
     color: "#8B7355",
     tags: ["Branding", "Food & Beverage", "Social Media"],
     year: "2024",
@@ -26,39 +27,79 @@ export const projects: Project[] = [
     category: "Digital Marketing",
     description:
       "Luxury hospitality digital marketing campaign showcasing elegance and premium experiences for one of the world's most prestigious hotel brands.",
-    image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800",
+    image: "/bluedge/posts/four seasons grid 1 image.jpg.jpeg",
     color: "#C9A962",
     tags: ["Hospitality", "Luxury", "Digital Campaign"],
     year: "2023",
   },
   {
-    title: "Home Items Building Materials",
-    category: "Web Design & Marketing",
+    title: "Lunore Aesthetic",
+    category: "Branding & Social Media",
     description:
-      "Complete digital transformation for Home Items, including website development and marketing strategy for the building materials sector.",
-    image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800",
-    color: "#E85D5D",
-    tags: ["Website", "B2B", "Construction"],
-    year: "2023",
-  },
-  {
-    title: "Lycée Montaigne",
-    category: "Social Media Management",
-    description:
-      "Professional social media coordination and content strategy for the prestigious educational institution, enhancing student and parent engagement.",
-    image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800",
-    color: "#4CAF50",
-    tags: ["Education", "Social Media", "Community"],
+      "Sophisticated brand identity and content creation for Lunore aesthetic clinic, showcasing premium beauty treatments with elegant visuals.",
+    image: "/bluedge/posts/Lunore Body Treatment post.jpg.jpeg",
+    color: "#D4A574",
+    tags: ["Healthcare", "Beauty", "Branding"],
     year: "2024",
   },
   {
-    title: "Motiva International",
-    category: "Digital Strategy",
+    title: "Happy Pet",
+    category: "Social Media Management",
     description:
-      "International digital marketing strategy for Motiva, managing cross-timezone communication and global brand consistency.",
-    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800",
-    color: "#00AEEF",
-    tags: ["International", "Strategy", "B2B"],
+      "Playful and engaging social media content for Happy Pet, creating a vibrant community around pet care and happiness.",
+    image: "/bluedge/posts/Happy pet post 4 (1).jpg.jpeg",
+    color: "#FF9800",
+    tags: ["Pet Care", "Social Media", "Community"],
+    year: "2024",
+  },
+  {
+    title: "Mecanix Industries",
+    category: "B2B Marketing",
+    description:
+      "Industrial branding and B2B marketing for Mecanix cooling industries, showcasing technical expertise and powering progress.",
+    image: "/bluedge/posts/Mecanix cooling industries powering progress post.jpg.jpeg",
+    color: "#2196F3",
+    tags: ["Industrial", "B2B", "Branding"],
     year: "2023",
+  },
+  {
+    title: "Huddex & Hudder",
+    category: "Brand Identity",
+    description:
+      "Creative brand development for Huddex, featuring 'Hudder to the rescue' campaign with bold visuals and engaging storytelling.",
+    image: "/bluedge/posts/Hudder to the rescue post.jpg.jpeg",
+    color: "#9C27B0",
+    tags: ["Branding", "Creative", "Campaign"],
+    year: "2024",
+  },
+  {
+    title: "Riviera",
+    category: "Hospitality Marketing",
+    description:
+      "Premium hospitality marketing for Riviera, capturing the essence of luxury coastal living and sophisticated experiences.",
+    image: "/bluedge/posts/riviera 1.png",
+    color: "#00BCD4",
+    tags: ["Hospitality", "Luxury", "Lifestyle"],
+    year: "2023",
+  },
+  {
+    title: "Nafsikas",
+    category: "Brand Development",
+    description:
+      "Distinctive brand identity and visual storytelling for Nafsikas, creating a memorable presence in the market.",
+    image: "/bluedge/posts/nafsikas 1.png",
+    color: "#E91E63",
+    tags: ["Branding", "Identity", "Creative"],
+    year: "2024",
+  },
+  {
+    title: "HOA Project",
+    category: "Digital Campaign",
+    description:
+      "Comprehensive digital marketing campaign with stunning visuals and strategic content distribution.",
+    image: "/bluedge/posts/hoa 1.png",
+    color: "#4CAF50",
+    tags: ["Digital", "Campaign", "Strategy"],
+    year: "2024",
   },
 ];

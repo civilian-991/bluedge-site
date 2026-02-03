@@ -2,17 +2,21 @@
 
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
+import Image from "next/image";
 
 export default function Preloader() {
   const [isComplete, setIsComplete] = useState(false);
   const preloaderRef = useRef<HTMLDivElement>(null);
+  const logoContainerRef = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
   const circleRef = useRef<SVGCircleElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
+  const taglineRef = useRef<HTMLDivElement>(null);
   const counterRef = useRef<HTMLSpanElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<HTMLDivElement>(null);
   const revealRef = useRef<HTMLDivElement>(null);
+  const orbitalRingsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const tl = gsap.timeline({
@@ -24,22 +28,26 @@ export default function Preloader() {
 
     document.body.style.overflow = "hidden";
 
-    // Create floating particles
+    // Create floating particles with glow
     if (particlesRef.current) {
-      for (let i = 0; i < 30; i++) {
+      for (let i = 0; i < 40; i++) {
         const particle = document.createElement("div");
         particle.className = "absolute rounded-full";
-        particle.style.width = `${Math.random() * 8 + 2}px`;
-        particle.style.height = particle.style.width;
-        particle.style.background = `rgba(0, 174, 239, ${Math.random() * 0.5 + 0.1})`;
+        const size = Math.random() * 6 + 2;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.background = `rgba(44, 172, 226, ${Math.random() * 0.6 + 0.2})`;
+        particle.style.boxShadow = `0 0 ${size * 2}px rgba(44, 172, 226, 0.5)`;
         particle.style.left = `${Math.random() * 100}%`;
         particle.style.top = `${Math.random() * 100}%`;
         particlesRef.current.appendChild(particle);
 
         gsap.to(particle, {
-          y: "random(-100, 100)",
-          x: "random(-50, 50)",
-          duration: "random(3, 6)",
+          y: `random(-150, 150)`,
+          x: `random(-80, 80)`,
+          opacity: `random(0.2, 1)`,
+          scale: `random(0.5, 1.5)`,
+          duration: `random(4, 8)`,
           repeat: -1,
           yoyo: true,
           ease: "sine.inOut",
@@ -47,27 +55,42 @@ export default function Preloader() {
       }
     }
 
-    // Logo entrance with 3D rotation
+    // Animate orbital rings
+    if (orbitalRingsRef.current) {
+      const rings = orbitalRingsRef.current.querySelectorAll(".orbital-ring");
+      rings.forEach((ring, i) => {
+        gsap.to(ring, {
+          rotation: i % 2 === 0 ? 360 : -360,
+          duration: 8 + i * 2,
+          repeat: -1,
+          ease: "none",
+        });
+      });
+    }
+
+    // Logo container entrance with 3D flip
     tl.fromTo(
-      logoRef.current,
+      logoContainerRef.current,
       {
         scale: 0,
         rotateY: -180,
+        rotateX: 30,
         opacity: 0,
       },
       {
         scale: 1,
         rotateY: 0,
+        rotateX: 0,
         opacity: 1,
-        duration: 1.2,
-        ease: "back.out(1.7)",
+        duration: 1.4,
+        ease: "back.out(1.5)",
       },
-      0.2
+      0.3
     );
 
     // Animate the circular progress ring
     if (circleRef.current) {
-      const circumference = 2 * Math.PI * 45;
+      const circumference = 2 * Math.PI * 55;
       circleRef.current.style.strokeDasharray = `${circumference}`;
       circleRef.current.style.strokeDashoffset = `${circumference}`;
 
@@ -75,48 +98,48 @@ export default function Preloader() {
         circleRef.current,
         {
           strokeDashoffset: 0,
-          duration: 2,
+          duration: 2.2,
           ease: "power2.inOut",
         },
         0
       );
     }
 
-    // Animate counter with easing
+    // Animate counter with typewriter effect
     const counter = { value: 0 };
     tl.to(
       counter,
       {
         value: 100,
-        duration: 2,
+        duration: 2.2,
         ease: "power2.inOut",
         onUpdate: () => {
           if (counterRef.current) {
-            counterRef.current.textContent = Math.round(counter.value) + "%";
+            counterRef.current.textContent = Math.round(counter.value).toString().padStart(3, "0");
           }
         },
       },
       0
     );
 
-    // Animate loading line with glow
+    // Animate loading line with glow pulse
     tl.to(
       lineRef.current,
       {
         width: "100%",
-        duration: 2,
+        duration: 2.2,
         ease: "power2.inOut",
       },
       0
     );
 
-    // Animate text characters with 3D effect
+    // Logo text characters with wave animation
     const chars = textRef.current?.querySelectorAll(".char");
     if (chars) {
       tl.fromTo(
         chars,
         {
-          y: 80,
+          y: 100,
           opacity: 0,
           rotateX: -90,
           scale: 0.5,
@@ -126,42 +149,86 @@ export default function Preloader() {
           opacity: 1,
           rotateX: 0,
           scale: 1,
-          duration: 0.8,
-          stagger: 0.05,
+          duration: 0.9,
+          stagger: 0.06,
           ease: "back.out(1.7)",
         },
-        0.6
+        0.5
       );
     }
 
-    // Pulsing glow effect on logo
+    // Tagline reveal
+    tl.fromTo(
+      taglineRef.current,
+      {
+        y: 30,
+        opacity: 0,
+        filter: "blur(10px)",
+      },
+      {
+        y: 0,
+        opacity: 1,
+        filter: "blur(0px)",
+        duration: 0.8,
+        ease: "power2.out",
+      },
+      1.2
+    );
+
+    // Pulsing glow effect on logo - multiple pulses
     tl.to(
       logoRef.current,
       {
-        boxShadow: "0 0 60px rgba(0, 174, 239, 0.5), 0 0 120px rgba(0, 174, 239, 0.3)",
-        duration: 0.6,
+        boxShadow: "0 0 80px rgba(44, 172, 226, 0.6), 0 0 150px rgba(44, 172, 226, 0.3)",
+        duration: 0.4,
         yoyo: true,
-        repeat: 2,
+        repeat: 3,
         ease: "power1.inOut",
       },
-      1.5
+      1.8
     );
 
-    // Exit animations
+    // Electric effect on logo
     tl.to(
-      [logoRef.current, textRef.current],
+      logoRef.current,
       {
-        y: -80,
+        filter: "brightness(1.5) hue-rotate(10deg)",
+        duration: 0.1,
+        yoyo: true,
+        repeat: 5,
+        ease: "power1.inOut",
+      },
+      2.2
+    );
+
+    // Exit animations with stagger
+    tl.to(
+      logoContainerRef.current,
+      {
+        y: -100,
         opacity: 0,
-        scale: 0.8,
-        duration: 0.6,
+        scale: 0.9,
+        rotateX: 30,
+        duration: 0.7,
         ease: "power3.in",
       },
       "+=0.3"
     );
 
     tl.to(
-      counterRef.current,
+      textRef.current,
+      {
+        y: -60,
+        opacity: 0,
+        filter: "blur(10px)",
+        duration: 0.5,
+        ease: "power2.in",
+      },
+      "-=0.5"
+    );
+
+    tl.to(
+      taglineRef.current,
       {
         y: -40,
         opacity: 0,
@@ -171,27 +238,36 @@ export default function Preloader() {
       "-=0.4"
     );
 
-    // Reveal animation - split screen
-    const revealTop = revealRef.current?.querySelector(".reveal-top");
-    const revealBottom = revealRef.current?.querySelector(".reveal-bottom");
+    tl.to(
+      [counterRef.current, lineRef.current?.parentElement],
+      {
+        y: -30,
+        opacity: 0,
+        duration: 0.4,
+        ease: "power2.in",
+      },
+      "-=0.3"
+    );
 
-    if (revealTop) {
-      tl.to(revealTop, {
-        yPercent: -100,
-        duration: 1,
+    // Reveal animation - diagonal split
+    const revealLeft = revealRef.current?.querySelector(".reveal-left");
+    const revealRight = revealRef.current?.querySelector(".reveal-right");
+
+    if (revealLeft && revealRight) {
+      tl.to(revealLeft, {
+        xPercent: -100,
+        duration: 1.2,
         ease: "power4.inOut",
       });
-    }
 
-    if (revealBottom) {
       tl.to(
-        revealBottom,
+        revealRight,
         {
-          yPercent: 100,
-          duration: 1,
+          xPercent: 100,
+          duration: 1.2,
           ease: "power4.inOut",
         },
-        "-=1"
+        "-=1.2"
       );
     }
 
@@ -202,80 +278,109 @@ export default function Preloader() {
 
   if (isComplete) return null;
 
-  const logoText = "BLU EDGE";
-  const chars = logoText.split("");
+  const brandName = "BluEdge";
 
   return (
     <div
       ref={preloaderRef}
       className="fixed inset-0 z-[10000] flex flex-col items-center justify-center bg-[#050508]"
     >
-      {/* Reveal overlays */}
-      <div ref={revealRef} className="absolute inset-0 z-50 pointer-events-none">
-        <div className="reveal-top absolute top-0 left-0 w-full h-1/2 bg-[#050508]" />
-        <div className="reveal-bottom absolute bottom-0 left-0 w-full h-1/2 bg-[#050508]" />
+      {/* Reveal overlays - diagonal */}
+      <div ref={revealRef} className="absolute inset-0 z-50 pointer-events-none flex">
+        <div className="reveal-left w-1/2 h-full bg-[#050508]" />
+        <div className="reveal-right w-1/2 h-full bg-[#050508]" />
       </div>
 
       {/* Animated particles background */}
       <div ref={particlesRef} className="absolute inset-0 overflow-hidden" />
 
-      {/* Animated gradient background */}
+      {/* Animated gradient blobs */}
       <div className="absolute inset-0 overflow-hidden">
         <div
-          className="blob morph-blob absolute top-1/3 left-1/3 w-[600px] h-[600px] bg-[#00AEEF]"
-          style={{ opacity: 0.1 }}
+          className="absolute top-1/4 left-1/3 w-[800px] h-[800px] rounded-full blur-[150px] animate-pulse"
+          style={{
+            background: "radial-gradient(circle, rgba(44, 172, 226, 0.15) 0%, transparent 70%)",
+          }}
         />
         <div
-          className="blob morph-blob absolute bottom-1/4 right-1/3 w-[500px] h-[500px] bg-[#0077B6]"
-          style={{ animationDelay: "-3s", opacity: 0.1 }}
+          className="absolute bottom-1/3 right-1/4 w-[600px] h-[600px] rounded-full blur-[120px] animate-pulse"
+          style={{
+            background: "radial-gradient(circle, rgba(0, 119, 182, 0.15) 0%, transparent 70%)",
+            animationDelay: "1s",
+          }}
+        />
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full blur-[100px]"
+          style={{
+            background: "radial-gradient(circle, rgba(2, 62, 138, 0.1) 0%, transparent 70%)",
+          }}
         />
       </div>
 
-      {/* Grid overlay */}
-      <div className="absolute inset-0 grid-bg opacity-20" />
+      {/* Animated grid */}
+      <div className="absolute inset-0 grid-bg opacity-30" />
 
-      {/* Logo with animated ring */}
+      {/* Noise texture */}
+      <div className="absolute inset-0 noise-overlay opacity-40" />
+
+      {/* Logo container with orbital rings */}
       <div
-        ref={logoRef}
-        className="relative z-10 mb-10"
-        style={{ perspective: "1000px", transformStyle: "preserve-3d" }}
+        ref={logoContainerRef}
+        className="relative z-10 mb-12"
+        style={{ perspective: "1200px", transformStyle: "preserve-3d" }}
       >
+        {/* Orbital rings */}
+        <div ref={orbitalRingsRef} className="absolute inset-[-40px] pointer-events-none">
+          <div
+            className="orbital-ring absolute inset-0 rounded-full border border-accent/20"
+            style={{ transform: "rotateX(60deg)" }}
+          />
+          <div
+            className="orbital-ring absolute inset-2 rounded-full border border-accent/15"
+            style={{ transform: "rotateX(60deg) rotateY(45deg)" }}
+          />
+          <div
+            className="orbital-ring absolute inset-4 rounded-full border border-accent/10"
+            style={{ transform: "rotateX(60deg) rotateY(-45deg)" }}
+          />
+        </div>
+
+        {/* Progress ring SVG */}
         <svg
-          width="140"
-          height="140"
-          viewBox="0 0 100 100"
+          width="180"
+          height="180"
+          viewBox="0 0 120 120"
           className="transform -rotate-90"
         >
-          {/* Background circle */}
+          {/* Background circles */}
           <circle
-            cx="50"
-            cy="50"
-            r="45"
+            cx="60"
+            cy="60"
+            r="55"
             fill="none"
-            stroke="rgba(0, 174, 239, 0.1)"
+            stroke="rgba(44, 172, 226, 0.1)"
             strokeWidth="1"
           />
-          {/* Secondary ring */}
           <circle
-            cx="50"
-            cy="50"
-            r="40"
+            cx="60"
+            cy="60"
+            r="50"
             fill="none"
-            stroke="rgba(0, 174, 239, 0.05)"
+            stroke="rgba(44, 172, 226, 0.05)"
             strokeWidth="0.5"
           />
           {/* Animated progress circle */}
           <circle
             ref={circleRef}
-            cx="50"
-            cy="50"
-            r="45"
+            cx="60"
+            cy="60"
+            r="55"
             fill="none"
             stroke="url(#preloaderGradient)"
-            strokeWidth="2"
+            strokeWidth="3"
             strokeLinecap="round"
             style={{
-              filter: "drop-shadow(0 0 10px rgba(0, 174, 239, 0.5))",
+              filter: "drop-shadow(0 0 15px rgba(44, 172, 226, 0.6))",
             }}
           />
           <defs>
@@ -286,56 +391,75 @@ export default function Preloader() {
               x2="100%"
               y2="100%"
             >
-              <stop offset="0%" stopColor="#00AEEF" />
+              <stop offset="0%" stopColor="#2CACE2" />
               <stop offset="50%" stopColor="#0077B6" />
-              <stop offset="100%" stopColor="#00AEEF" />
+              <stop offset="100%" stopColor="#023E8A" />
             </linearGradient>
           </defs>
         </svg>
 
-        {/* BE Logo in center */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div
-            className="text-5xl font-bold"
-            style={{
-              background: "linear-gradient(135deg, #00AEEF 0%, #0077B6 50%, #00AEEF 100%)",
-              backgroundSize: "200% 200%",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              animation: "gradientShift 3s ease infinite",
-            }}
-          >
-            BE
-          </div>
+        {/* BluEdge Logo in center */}
+        <div
+          ref={logoRef}
+          className="absolute inset-0 flex items-center justify-center rounded-full"
+          style={{
+            boxShadow: "0 0 40px rgba(44, 172, 226, 0.3)",
+          }}
+        >
+          <Image
+            src="/bluedge/Logo.svg"
+            alt="BluEdge"
+            width={90}
+            height={90}
+            className="drop-shadow-[0_0_20px_rgba(44,172,226,0.5)]"
+          />
         </div>
 
-        {/* Orbiting dot */}
-        <div className="absolute inset-0 animate-spin" style={{ animationDuration: "3s" }}>
+        {/* Orbiting dots */}
+        <div className="absolute inset-0">
           <div
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-[#00AEEF]"
-            style={{
-              boxShadow: "0 0 10px #00AEEF, 0 0 20px #00AEEF",
-            }}
-          />
+            className="absolute inset-0 animate-spin"
+            style={{ animationDuration: "4s" }}
+          >
+            <div
+              className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1 w-3 h-3 rounded-full bg-accent"
+              style={{
+                boxShadow: "0 0 15px #2CACE2, 0 0 30px rgba(44, 172, 226, 0.5)",
+              }}
+            />
+          </div>
+          <div
+            className="absolute inset-0 animate-spin"
+            style={{ animationDuration: "6s", animationDirection: "reverse" }}
+          >
+            <div
+              className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1 w-2 h-2 rounded-full bg-[#0077B6]"
+              style={{
+                boxShadow: "0 0 10px #0077B6",
+              }}
+            />
+          </div>
         </div>
       </div>
 
       {/* Logo text with 3D animation */}
       <div
         ref={textRef}
-        className="relative z-10 flex overflow-hidden mb-8"
+        className="relative z-10 flex overflow-hidden mb-6"
         style={{ perspective: "1000px" }}
       >
-        {chars.map((char, i) => (
+        {brandName.split("").map((char, i) => (
           <span
             key={i}
-            className="char inline-block text-4xl md:text-5xl font-bold tracking-tight"
+            className="char inline-block text-5xl md:text-6xl font-bold tracking-tight"
             style={{
-              background: "linear-gradient(135deg, #00AEEF, #0077B6)",
+              background: i < 3
+                ? "linear-gradient(135deg, #2CACE2, #0077B6)"
+                : "linear-gradient(135deg, #ffffff, #ffffff80)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               transformStyle: "preserve-3d",
-              textShadow: "0 0 30px rgba(0, 174, 239, 0.3)",
+              textShadow: i < 3 ? "0 0 40px rgba(44, 172, 226, 0.4)" : "none",
             }}
           >
             {char === " " ? "\u00A0" : char}
@@ -343,36 +467,62 @@ export default function Preloader() {
         ))}
       </div>
 
+      {/* Tagline */}
+      <div
+        ref={taglineRef}
+        className="relative z-10 mb-10 text-sm tracking-[0.4em] text-accent/70 uppercase font-medium"
+      >
+        The Agency That Cares
+      </div>
+
       {/* Loading line with glow */}
-      <div className="relative z-10 w-64 h-[3px] bg-white/10 overflow-hidden rounded-full">
+      <div className="relative z-10 w-72 h-[3px] bg-white/10 overflow-hidden rounded-full">
         <div
           ref={lineRef}
           className="absolute left-0 top-0 h-full w-0 rounded-full"
           style={{
-            background: "linear-gradient(90deg, #00AEEF, #0077B6, #00AEEF)",
-            boxShadow: "0 0 20px #00AEEF, 0 0 40px rgba(0, 174, 239, 0.5)",
+            background: "linear-gradient(90deg, #2CACE2, #0077B6, #023E8A)",
+            boxShadow: "0 0 25px rgba(44, 172, 226, 0.6), 0 0 50px rgba(44, 172, 226, 0.3)",
           }}
         />
       </div>
 
       {/* Counter */}
-      <span
-        ref={counterRef}
-        className="relative z-10 mt-6 text-sm font-medium tracking-[0.4em] text-white/50 uppercase font-mono"
-      >
-        0%
-      </span>
+      <div className="relative z-10 mt-8 flex items-center gap-4">
+        <span className="text-xs tracking-[0.3em] text-white/30 uppercase">Loading</span>
+        <span
+          ref={counterRef}
+          className="text-2xl font-bold tracking-wider text-accent font-mono"
+          style={{
+            textShadow: "0 0 20px rgba(44, 172, 226, 0.5)",
+          }}
+        >
+          000
+        </span>
+      </div>
 
-      {/* Tagline */}
-      <p className="absolute bottom-16 text-xs tracking-[0.3em] text-white/30 uppercase">
-        Creative Marketing Agency
+      {/* Corner accents with animation */}
+      <div className="absolute top-8 left-8 w-20 h-20">
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-accent/40 to-transparent" />
+        <div className="absolute top-0 left-0 h-full w-px bg-gradient-to-b from-accent/40 to-transparent" />
+      </div>
+      <div className="absolute top-8 right-8 w-20 h-20">
+        <div className="absolute top-0 right-0 w-full h-px bg-gradient-to-l from-accent/40 to-transparent" />
+        <div className="absolute top-0 right-0 h-full w-px bg-gradient-to-b from-accent/40 to-transparent" />
+      </div>
+      <div className="absolute bottom-8 left-8 w-20 h-20">
+        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-accent/40 to-transparent" />
+        <div className="absolute bottom-0 left-0 h-full w-px bg-gradient-to-t from-accent/40 to-transparent" />
+      </div>
+      <div className="absolute bottom-8 right-8 w-20 h-20">
+        <div className="absolute bottom-0 right-0 w-full h-px bg-gradient-to-l from-accent/40 to-transparent" />
+        <div className="absolute bottom-0 right-0 h-full w-px bg-gradient-to-t from-accent/40 to-transparent" />
+      </div>
+
+      {/* Bottom branding */}
+      <p className="absolute bottom-8 text-[10px] tracking-[0.3em] text-white/20 uppercase">
+        BluEdge Marketing Agency — Beirut, Lebanon
       </p>
-
-      {/* Corner accents */}
-      <div className="absolute top-8 left-8 w-16 h-16 border-l border-t border-[#00AEEF]/20" />
-      <div className="absolute top-8 right-8 w-16 h-16 border-r border-t border-[#00AEEF]/20" />
-      <div className="absolute bottom-8 left-8 w-16 h-16 border-l border-b border-[#00AEEF]/20" />
-      <div className="absolute bottom-8 right-8 w-16 h-16 border-r border-b border-[#00AEEF]/20" />
     </div>
   );
 }

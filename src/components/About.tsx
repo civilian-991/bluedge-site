@@ -1,14 +1,51 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { motion, useInView } from "framer-motion";
-import { Users, Award, Rocket } from "lucide-react";
+import { motion, useInView, AnimatePresence } from "framer-motion";
+import { Users, Award, Rocket, Heart } from "lucide-react";
+import Image from "next/image";
 import { stats, teamRoles } from "@/data";
 import type { Stat, TeamRole } from "@/types";
 
 gsap.registerPlugin(ScrollTrigger);
+
+// Animated counter component
+function AnimatedCounter({ target, suffix }: { target: number; suffix: string }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const isInView = useInView(ref, { once: true });
+
+  useEffect(() => {
+    if (!isInView) return;
+
+    let startTime: number;
+    const duration = 2500;
+
+    const animate = (currentTime: number) => {
+      if (!startTime) startTime = currentTime;
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+      setCount(Math.floor(easeOutQuart * target));
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+
+    requestAnimationFrame(animate);
+  }, [isInView, target]);
+
+  return (
+    <span ref={ref}>
+      {count}
+      {suffix}
+    </span>
+  );
+}
 
 function StatCard({
   stat,
@@ -18,63 +55,91 @@ function StatCard({
   index: number;
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
-  const numberRef = useRef<HTMLSpanElement>(null);
   const isInView = useInView(cardRef, { once: true });
-
-  useEffect(() => {
-    if (isInView && numberRef.current) {
-      const target = stat.number;
-      const obj = { value: 0 };
-      gsap.to(obj, {
-        value: target,
-        duration: 2.5,
-        delay: index * 0.2,
-        ease: "power2.out",
-        onUpdate: () => {
-          if (numberRef.current) {
-            numberRef.current.textContent = Math.round(obj.value).toString();
-          }
-        },
-      });
-    }
-  }, [isInView, stat.number, index]);
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
     <motion.div
       ref={cardRef}
-      initial={{ opacity: 0, y: 60, rotateX: -30 }}
-      animate={isInView ? { opacity: 1, y: 0, rotateX: 0 } : { opacity: 0, y: 60, rotateX: -30 }}
-      transition={{ duration: 1, delay: index * 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
+      initial={{ opacity: 0, y: 80, rotateX: -30, scale: 0.9 }}
+      animate={
+        isInView
+          ? { opacity: 1, y: 0, rotateX: 0, scale: 1 }
+          : { opacity: 0, y: 80, rotateX: -30, scale: 0.9 }
+      }
+      transition={{
+        duration: 1,
+        delay: index * 0.15,
+        ease: [0.25, 0.46, 0.45, 0.94],
+      }}
       className="group relative"
       style={{ perspective: "1000px" }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="text-center p-8 rounded-3xl border border-white/5 bg-white/[0.02] hover:border-[#00AEEF]/30 hover:bg-[#00AEEF]/5 transition-all duration-500 transform-gpu hover:-translate-y-2">
-        {/* Icon */}
-        <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-[#00AEEF]/10 flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 group-hover:bg-[#00AEEF]/20 transition-all duration-500">
-          <stat.icon className="w-8 h-8 text-[#00AEEF]" />
-        </div>
+      <motion.div
+        className="text-center p-8 md:p-10 rounded-3xl border border-white/5 bg-gradient-to-br from-white/[0.03] to-transparent transition-all duration-500"
+        whileHover={{
+          borderColor: "rgba(44, 172, 226, 0.4)",
+          y: -5,
+        }}
+      >
+        {/* Icon with glow */}
+        <motion.div
+          className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-accent/10 border border-accent/20 flex items-center justify-center relative"
+          animate={{
+            scale: isHovered ? 1.1 : 1,
+            rotate: isHovered ? [0, -5, 5, 0] : 0,
+          }}
+          transition={{ duration: 0.5 }}
+        >
+          <stat.icon className="w-8 h-8 text-accent" />
+
+          {/* Glow effect */}
+          <motion.div
+            className="absolute inset-0 rounded-2xl bg-accent/20 blur-xl"
+            animate={{
+              scale: isHovered ? 1.5 : 1,
+              opacity: isHovered ? 0.6 : 0,
+            }}
+            transition={{ duration: 0.3 }}
+          />
+        </motion.div>
 
         {/* Number with animated glow */}
-        <div className="flex items-baseline justify-center gap-1 mb-3">
-          <span
-            ref={numberRef}
+        <div className="flex items-baseline justify-center gap-1 mb-4">
+          <motion.span
             className="text-5xl md:text-6xl font-bold text-gradient"
+            animate={{
+              textShadow: isHovered
+                ? "0 0 30px rgba(44, 172, 226, 0.5)"
+                : "0 0 0px transparent",
+            }}
           >
-            0
-          </span>
-          <span className="text-4xl md:text-5xl font-bold text-gradient">
-            {stat.suffix}
-          </span>
+            <AnimatedCounter target={stat.number} suffix={stat.suffix} />
+          </motion.span>
         </div>
 
         {/* Label */}
-        <span className="text-white/50 text-sm uppercase tracking-wider">
+        <motion.span
+          className="text-white/50 text-sm uppercase tracking-wider"
+          animate={{
+            color: isHovered ? "rgba(44, 172, 226, 0.8)" : "rgba(255,255,255,0.5)",
+          }}
+        >
           {stat.label}
-        </span>
+        </motion.span>
 
         {/* Hover glow */}
-        <div className="absolute inset-0 rounded-3xl bg-[#00AEEF]/10 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500 -z-10" />
-      </div>
+        <motion.div
+          className="absolute inset-0 rounded-3xl pointer-events-none"
+          animate={{
+            boxShadow: isHovered
+              ? "inset 0 0 60px rgba(44, 172, 226, 0.1)"
+              : "inset 0 0 0px transparent",
+          }}
+        />
+      </motion.div>
     </motion.div>
   );
 }
@@ -88,43 +153,120 @@ function TeamCard({
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(cardRef, { once: true, margin: "-50px" });
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
     <motion.div
       ref={cardRef}
-      initial={{ opacity: 0, y: 80, scale: 0.9 }}
-      animate={isInView ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 80, scale: 0.9 }}
+      initial={{ opacity: 0, y: 100, scale: 0.9 }}
+      animate={
+        isInView
+          ? { opacity: 1, y: 0, scale: 1 }
+          : { opacity: 0, y: 100, scale: 0.9 }
+      }
       transition={{
         duration: 0.8,
-        delay: index * 0.1,
+        delay: index * 0.12,
         ease: [0.25, 0.46, 0.45, 0.94],
       }}
-      whileHover={{ y: -10, scale: 1.02 }}
-      className="group p-8 rounded-3xl border border-white/5 bg-white/[0.02] hover:border-[#00AEEF]/30 hover:bg-[#00AEEF]/5 transition-all duration-500 relative overflow-hidden"
+      className="group relative overflow-hidden"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Animated icon */}
-      <motion.span
-        className="text-6xl mb-4 block"
-        whileHover={{ scale: 1.2, rotate: 10 }}
-        transition={{ type: "spring", stiffness: 300 }}
+      <motion.div
+        className="p-8 md:p-10 rounded-3xl border border-white/5 bg-gradient-to-br from-white/[0.03] to-transparent transition-all duration-500 h-full"
+        whileHover={{
+          borderColor: "rgba(44, 172, 226, 0.4)",
+          y: -8,
+        }}
       >
-        {role.icon}
-      </motion.span>
+        {/* Animated emoji icon */}
+        <motion.span
+          className="text-6xl mb-6 block"
+          animate={{
+            scale: isHovered ? 1.2 : 1,
+            rotate: isHovered ? [0, -10, 10, -5, 0] : 0,
+          }}
+          transition={{ duration: 0.5 }}
+        >
+          {role.icon}
+        </motion.span>
 
-      {/* Title */}
-      <h3 className="text-xl font-semibold mb-2 group-hover:text-gradient transition-all duration-500">
-        {role.title}
-      </h3>
+        {/* Title with gradient on hover */}
+        <h3 className="text-xl md:text-2xl font-semibold mb-3">
+          {role.title.split("").map((char, i) => (
+            <motion.span
+              key={i}
+              className="inline-block"
+              animate={{
+                color: isHovered ? "#2CACE2" : "#ffffff",
+              }}
+              transition={{ duration: 0.2, delay: i * 0.02 }}
+            >
+              {char === " " ? "\u00A0" : char}
+            </motion.span>
+          ))}
+        </h3>
 
-      {/* Description */}
-      <p className="text-white/50 text-sm">{role.description}</p>
+        {/* Description */}
+        <motion.p
+          className="text-white/50 text-sm leading-relaxed"
+          animate={{
+            color: isHovered ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.5)",
+          }}
+        >
+          {role.description}
+        </motion.p>
 
-      {/* Gradient line */}
-      <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-[#00AEEF] to-[#0077B6] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+        {/* Gradient line */}
+        <motion.div
+          className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-accent via-[#0077B6] to-accent/50"
+          initial={{ width: 0 }}
+          animate={{ width: isHovered ? "100%" : "0%" }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+        />
 
-      {/* Background decoration */}
-      <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-[#00AEEF]/5 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        {/* Background decoration */}
+        <motion.div
+          className="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-accent/10 blur-3xl"
+          animate={{
+            scale: isHovered ? 1.5 : 1,
+            opacity: isHovered ? 0.3 : 0,
+          }}
+          transition={{ duration: 0.5 }}
+        />
+      </motion.div>
     </motion.div>
+  );
+}
+
+// Floating elements component
+function FloatingElements() {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {[...Array(6)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute rounded-full bg-accent/10 blur-2xl"
+          style={{
+            width: Math.random() * 200 + 100,
+            height: Math.random() * 200 + 100,
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+          }}
+          animate={{
+            x: [0, Math.random() * 50 - 25, 0],
+            y: [0, Math.random() * 50 - 25, 0],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            duration: Math.random() * 10 + 10,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+    </div>
   );
 }
 
@@ -132,6 +274,7 @@ export default function About() {
   const sectionRef = useRef<HTMLElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const visualRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -141,15 +284,15 @@ export default function About() {
         gsap.fromTo(
           paragraphs,
           {
-            y: 60,
+            y: 80,
             opacity: 0,
-            filter: "blur(5px)",
+            filter: "blur(10px)",
           },
           {
             y: 0,
             opacity: 1,
             filter: "blur(0px)",
-            duration: 1,
+            duration: 1.2,
             stagger: 0.2,
             ease: "power3.out",
             scrollTrigger: {
@@ -162,13 +305,13 @@ export default function About() {
 
       // Parallax effect on visual element
       gsap.to(visualRef.current, {
-        y: -100,
+        y: -150,
         ease: "none",
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top bottom",
           end: "bottom top",
-          scrub: 1.5,
+          scrub: 2,
         },
       });
 
@@ -184,7 +327,7 @@ export default function About() {
             trigger: visualRef.current,
             start: "top bottom",
             end: "bottom top",
-            scrub: 2,
+            scrub: 2.5,
           },
         }
       );
@@ -197,14 +340,14 @@ export default function About() {
     <section
       ref={sectionRef}
       id="about"
-      className="relative py-32 overflow-hidden"
+      className="relative py-32 md:py-40 overflow-hidden"
       style={{ paddingLeft: "5%", paddingRight: "5%" }}
     >
       {/* Background elements */}
       <div className="absolute inset-0">
-        <div className="blob morph-blob absolute top-1/4 right-0 w-[500px] h-[500px] bg-[#00AEEF] opacity-5" />
-        <div className="blob morph-blob absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-[#0077B6] opacity-5" />
-        <div className="grid-bg absolute inset-0 opacity-10" />
+        <div className="absolute inset-0 grid-bg opacity-20" />
+        <FloatingElements />
+        <div className="absolute inset-0 noise-overlay opacity-30" />
       </div>
 
       <div className="relative z-10 max-w-[1800px] mx-auto">
@@ -212,114 +355,148 @@ export default function About() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 mb-32">
           {/* Left column - Text content */}
           <div ref={textRef}>
-            {/* Eyebrow */}
-            <motion.span
-              initial={{ opacity: 0, y: 20, x: -20 }}
-              whileInView={{ opacity: 1, y: 0, x: 0 }}
+            {/* Eyebrow with animation */}
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="inline-flex items-center gap-2 mb-6"
+              transition={{ duration: 0.8 }}
+              className="flex items-center gap-4 mb-8"
             >
-              <Rocket className="w-5 h-5 text-[#00AEEF]" />
-              <span className="text-sm text-white/50 uppercase tracking-[0.2em]">
-                About Blu Edge
-              </span>
-              <span className="w-8 h-px bg-gradient-to-r from-[#00AEEF] to-transparent" />
-            </motion.span>
+              <motion.div
+                className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/30 flex items-center justify-center"
+                animate={{
+                  boxShadow: [
+                    "0 0 0 0 rgba(44, 172, 226, 0)",
+                    "0 0 20px 5px rgba(44, 172, 226, 0.2)",
+                    "0 0 0 0 rgba(44, 172, 226, 0)",
+                  ],
+                }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                <Heart className="w-6 h-6 text-accent" />
+              </motion.div>
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-accent uppercase tracking-[0.3em] font-medium">
+                  About BluEdge
+                </span>
+                <motion.span
+                  className="h-px bg-gradient-to-r from-accent to-transparent"
+                  initial={{ width: 0 }}
+                  whileInView={{ width: 60 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 0.3 }}
+                />
+              </div>
+            </motion.div>
 
             {/* Title with character animation */}
             <motion.h2
-              initial={{ opacity: 0, y: 40 }}
+              ref={titleRef}
+              initial={{ opacity: 0, y: 60 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="section-title mb-8"
+              transition={{ duration: 1 }}
+              className="section-title mb-10"
             >
               We chose <span className="text-gradient">the blue pill</span> —
               innovation over constraints
             </motion.h2>
 
-            {/* Paragraphs */}
-            <p className="body-text mb-6 text-lg">
-              Founded in Lebanon, Blu Edge is a full-service creative marketing
+            {/* Paragraphs with enhanced styling */}
+            <p className="body-text mb-6 text-lg md:text-xl leading-relaxed">
+              Founded in Lebanon, BluEdge is a full-service creative marketing
               agency with{" "}
-              <strong className="text-white">
+              <strong className="text-accent">
                 20+ years of executive experience
               </strong>
               . We serve clients across Lebanon and the GCC region with
               comprehensive solutions.
             </p>
 
-            <p className="body-text mb-6 text-lg">
+            <p className="body-text mb-6 text-lg md:text-xl leading-relaxed">
               Our approach combines strategic thinking with creative execution.
               We use a{" "}
-              <strong className="text-white">
+              <strong className="text-accent">
                 360-degree assessment process
               </strong>{" "}
               to understand your business, identify opportunities, and deliver
               measurable results.
             </p>
 
-            <p className="body-text text-lg">
+            <p className="body-text text-lg md:text-xl leading-relaxed">
               From startups to established enterprises, we&apos;ve helped
               businesses elevate their digital presence through{" "}
-              <strong className="text-white">
+              <strong className="text-accent">
                 lead generation, conversion optimization, and reputation
                 management
               </strong>
               .
             </p>
 
-            {/* CTA */}
+            {/* CTA with heavy animation */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="mt-10"
+              transition={{ delay: 0.5 }}
+              className="mt-12"
             >
               <motion.a
                 href="#contact"
+                className="group inline-flex items-center gap-4"
                 whileHover={{ x: 10 }}
-                className="inline-flex items-center gap-3 text-[#00AEEF] font-medium group"
               >
-                <span className="text-lg">Let&apos;s work together</span>
-                <span className="w-10 h-10 rounded-full border border-[#00AEEF]/30 flex items-center justify-center group-hover:bg-[#00AEEF]/10 transition-colors">
+                <span className="text-xl text-accent font-medium">
+                  Let&apos;s work together
+                </span>
+                <motion.span
+                  className="w-12 h-12 rounded-full border border-accent/30 flex items-center justify-center relative overflow-hidden"
+                  whileHover={{
+                    backgroundColor: "rgba(44, 172, 226, 0.1)",
+                    borderColor: "rgba(44, 172, 226, 0.5)",
+                  }}
+                >
                   <motion.span
+                    className="text-xl text-accent"
                     animate={{ x: [0, 5, 0] }}
                     transition={{ repeat: Infinity, duration: 1.5 }}
-                    className="text-xl"
                   >
                     →
                   </motion.span>
-                </span>
+                </motion.span>
               </motion.a>
             </motion.div>
           </div>
 
-          {/* Right column - Visual */}
+          {/* Right column - Visual with BluEdge Logo */}
           <motion.div
             ref={visualRef}
-            initial={{ opacity: 0, scale: 0.9, rotateY: -10 }}
+            initial={{ opacity: 0, scale: 0.9, rotateY: -15 }}
             whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 1, ease: "easeOut" }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
             className="relative"
-            style={{ perspective: "1000px", transformStyle: "preserve-3d" }}
+            style={{ perspective: "1200px", transformStyle: "preserve-3d" }}
           >
             <div className="relative aspect-square rounded-3xl overflow-hidden">
               {/* Animated gradient border */}
-              <div
+              <motion.div
                 className="absolute -inset-[2px] rounded-3xl"
                 style={{
                   background:
-                    "linear-gradient(135deg, #00AEEF, #0077B6, #00AEEF)",
-                  backgroundSize: "200% 200%",
-                  animation: "gradientShift 4s ease infinite",
+                    "linear-gradient(135deg, #2CACE2, #0077B6, #023E8A, #2CACE2)",
+                  backgroundSize: "300% 300%",
                 }}
+                animate={{
+                  backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"],
+                }}
+                transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
               />
 
               {/* Inner content */}
               <div className="absolute inset-[2px] rounded-3xl overflow-hidden bg-[#050508]">
-                {/* BE Logo large */}
+                {/* BluEdge Logo large */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <motion.div
                     className="text-center"
@@ -332,35 +509,72 @@ export default function About() {
                       ease: "easeInOut",
                     }}
                   >
-                    <div className="be-logo w-32 h-32 mx-auto mb-6">
-                      <span className="text-5xl">BE</span>
-                    </div>
-                    <h3 className="text-3xl font-bold text-gradient mb-2">
-                      BLU EDGE
+                    <motion.div
+                      className="relative w-40 h-40 mx-auto mb-8"
+                      animate={{
+                        filter: [
+                          "drop-shadow(0 0 20px rgba(44, 172, 226, 0.3))",
+                          "drop-shadow(0 0 40px rgba(44, 172, 226, 0.5))",
+                          "drop-shadow(0 0 20px rgba(44, 172, 226, 0.3))",
+                        ],
+                      }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    >
+                      <Image
+                        src="/bluedge/Logo.svg"
+                        alt="BluEdge"
+                        fill
+                        className="object-contain"
+                      />
+                    </motion.div>
+                    <h3 className="text-4xl font-bold text-gradient mb-3">
+                      BluEdge
                     </h3>
-                    <p className="text-white/50 uppercase tracking-[0.3em] text-sm">
-                      Creative Agency
+                    <p className="text-accent/70 uppercase tracking-[0.4em] text-sm">
+                      The Agency That Cares
                     </p>
                   </motion.div>
                 </div>
 
                 {/* Decorative elements */}
                 <div className="absolute inset-0 grid-bg opacity-20" />
-                <div className="blob morph-blob absolute -top-20 -right-20 w-64 h-64 bg-[#00AEEF] opacity-20" />
-                <div className="blob morph-blob absolute -bottom-20 -left-20 w-48 h-48 bg-[#0077B6] opacity-20" />
+
+                {/* Animated blobs */}
+                <motion.div
+                  className="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-accent/20 blur-3xl"
+                  animate={{
+                    scale: [1, 1.2, 1],
+                    x: [0, 20, 0],
+                    y: [0, -20, 0],
+                  }}
+                  transition={{ duration: 8, repeat: Infinity }}
+                />
+                <motion.div
+                  className="absolute -bottom-20 -left-20 w-48 h-48 rounded-full bg-[#0077B6]/20 blur-3xl"
+                  animate={{
+                    scale: [1.2, 1, 1.2],
+                    x: [0, -20, 0],
+                    y: [0, 20, 0],
+                  }}
+                  transition={{ duration: 10, repeat: Infinity }}
+                />
 
                 {/* Orbital rings */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div
-                    className="absolute w-[200px] h-[200px] rounded-full border border-[#00AEEF]/10 animate-spin"
-                    style={{ animationDuration: "20s" }}
+                  <motion.div
+                    className="absolute w-[220px] h-[220px] rounded-full border border-accent/15"
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                   />
-                  <div
-                    className="absolute w-[250px] h-[250px] rounded-full border border-[#00AEEF]/5 animate-spin"
-                    style={{
-                      animationDuration: "30s",
-                      animationDirection: "reverse",
-                    }}
+                  <motion.div
+                    className="absolute w-[280px] h-[280px] rounded-full border border-accent/10"
+                    animate={{ rotate: -360 }}
+                    transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+                  />
+                  <motion.div
+                    className="absolute w-[340px] h-[340px] rounded-full border border-accent/5"
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
                   />
                 </div>
               </div>
@@ -368,54 +582,82 @@ export default function About() {
 
             {/* Floating badge */}
             <motion.div
-              initial={{ opacity: 0, x: 30, y: 20 }}
+              initial={{ opacity: 0, x: 50, y: 30 }}
               whileInView={{ opacity: 1, x: 0, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.5 }}
-              animate={{ y: [0, -10, 0] }}
-              className="absolute -right-4 md:right-4 bottom-20 bg-white/10 backdrop-blur-xl rounded-2xl p-5 border border-white/10"
+              transition={{ delay: 0.6, duration: 0.8 }}
+              className="absolute -right-4 md:right-4 bottom-20"
             >
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-[#00AEEF] flex items-center justify-center">
-                  <Award className="w-6 h-6 text-white" />
+              <motion.div
+                className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/10"
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <div className="flex items-center gap-4">
+                  <motion.div
+                    className="w-14 h-14 rounded-full bg-accent flex items-center justify-center"
+                    animate={{
+                      boxShadow: [
+                        "0 0 0 0 rgba(44, 172, 226, 0)",
+                        "0 0 20px 5px rgba(44, 172, 226, 0.4)",
+                        "0 0 0 0 rgba(44, 172, 226, 0)",
+                      ],
+                    }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  >
+                    <Award className="w-7 h-7 text-white" />
+                  </motion.div>
+                  <div>
+                    <div className="text-2xl font-bold">Award</div>
+                    <div className="text-white/50 text-sm">Winning Agency</div>
+                  </div>
                 </div>
-                <div>
-                  <div className="text-2xl font-bold">Award</div>
-                  <div className="text-white/50 text-sm">Winning Agency</div>
-                </div>
-              </div>
+              </motion.div>
             </motion.div>
           </motion.div>
         </div>
 
         {/* Stats section */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-32">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 mb-32"
+        >
           {stats.map((stat, index) => (
             <StatCard key={stat.label} stat={stat} index={index} />
           ))}
-        </div>
+        </motion.div>
 
         {/* Team section */}
         <div id="team">
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 60 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="text-center mb-20"
           >
-            <span className="inline-flex items-center gap-2 mb-6">
-              <Users className="w-5 h-5 text-[#00AEEF]" />
-              <span className="text-sm text-white/50 uppercase tracking-[0.2em]">
+            <motion.div className="flex items-center justify-center gap-4 mb-8">
+              <motion.div
+                className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/30 flex items-center justify-center"
+                animate={{
+                  rotate: [0, 5, -5, 0],
+                }}
+                transition={{ duration: 4, repeat: Infinity }}
+              >
+                <Users className="w-6 h-6 text-accent" />
+              </motion.div>
+              <span className="text-sm text-accent uppercase tracking-[0.3em] font-medium">
                 Our Team
               </span>
-            </span>
+            </motion.div>
             <h2 className="section-title">
               Meet the <span className="text-gradient">Squad</span>
             </h2>
           </motion.div>
 
           {/* Team roles grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {teamRoles.map((role, index) => (
               <TeamCard key={role.title} role={role} index={index} />
             ))}
