@@ -181,10 +181,10 @@ function ProjectCard({
         ease: "power2.out",
       });
 
-      // Parallax image
+      // Parallax image - reduced movement to prevent cropping
       gsap.to(imageRef.current, {
-        x: (x - centerX) / 10,
-        y: (y - centerY) / 10,
+        x: (x - centerX) / 20,
+        y: (y - centerY) / 20,
         duration: 0.4,
       });
 
@@ -234,7 +234,7 @@ function ProjectCard({
         {/* Image with parallax and zoom */}
         <div
           ref={imageRef}
-          className="absolute inset-[-30%] transition-transform duration-700"
+          className="absolute inset-[-10%] transition-transform duration-700"
         >
           <motion.div
             className="w-full h-full relative"
@@ -247,7 +247,7 @@ function ProjectCard({
               src={project.image}
               alt={project.title}
               fill
-              className="object-cover"
+              className="object-cover object-center"
               sizes="(max-width: 768px) 85vw, (max-width: 1200px) 65vw, 50vw"
             />
           </motion.div>
