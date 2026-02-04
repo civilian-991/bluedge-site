@@ -535,11 +535,11 @@ export default function Hero() {
           0.6
         );
 
-        // Glitch shake on each character
+        // Glitch shake on each character - keeping blue tones
         line1Chars.forEach((char, i) => {
           tl.to(char, {
-            x: "random(-5, 5)",
-            color: i % 2 === 0 ? "#00ffff" : "#ff00ff",
+            x: "random(-3, 3)",
+            textShadow: "0 0 20px rgba(44,172,226,0.8)",
             duration: 0.05,
             yoyo: true,
             repeat: 2,
