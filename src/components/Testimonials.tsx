@@ -22,12 +22,18 @@ function TestimonialCard({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 50, scale: 0.9 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      initial={{ opacity: 0, y: 80, scale: 0.8, rotateY: -15, filter: "blur(10px)" }}
+      whileInView={{ opacity: 1, y: 0, scale: 1, rotateY: 0, filter: "blur(0px)" }}
       viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
-      whileHover={{ y: -10, scale: 1.02 }}
-      className="flex-shrink-0 w-[380px] md:w-[450px] p-8 rounded-3xl bg-white/[0.02] border border-white/5 hover:border-[#00AEEF]/30 transition-all duration-500 group relative overflow-hidden"
+      transition={{ duration: 0.7, delay: index * 0.08, ease: [0.34, 1.56, 0.64, 1] }}
+      whileHover={{
+        y: -15,
+        scale: 1.03,
+        rotateY: 5,
+        boxShadow: "0 30px 60px rgba(44,172,226,0.15)",
+      }}
+      className="flex-shrink-0 w-[380px] md:w-[450px] p-8 rounded-3xl bg-white/[0.02] border border-white/5 hover:border-[#00AEEF]/40 transition-all duration-500 group relative overflow-hidden"
+      style={{ perspective: "1000px", transformStyle: "preserve-3d" }}
     >
       {/* Gradient background on hover */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#00AEEF]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -130,11 +136,53 @@ export default function Testimonials() {
       ref={sectionRef}
       className="relative py-32 overflow-hidden bg-[#030306]"
     >
-      {/* Background gradient */}
+      {/* Enhanced background with energy effects */}
       <div className="absolute inset-0">
         <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#050508] to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#050508] to-transparent" />
-        <div className="blob morph-blob absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#00AEEF] opacity-5" />
+        <div className="blob morph-blob absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#00AEEF] opacity-8" />
+        {/* Floating particles */}
+        {[...Array(20)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              width: `${2 + Math.random() * 4}px`,
+              height: `${2 + Math.random() * 4}px`,
+              background: "#2CACE2",
+              boxShadow: "0 0 10px #2CACE2",
+            }}
+            animate={{
+              y: [0, -150, 0],
+              opacity: [0, 1, 0],
+              scale: [0, 1.5, 0],
+            }}
+            transition={{
+              duration: 4 + Math.random() * 3,
+              repeat: Infinity,
+              delay: Math.random() * 4,
+            }}
+          />
+        ))}
+        {/* Energy waves */}
+        <motion.div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] rounded-full border border-[#2CACE2]/10"
+          animate={{
+            scale: [1, 1.5, 1],
+            opacity: [0.3, 0, 0.3],
+          }}
+          transition={{ duration: 4, repeat: Infinity }}
+        />
+        <motion.div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full border border-[#2CACE2]/15"
+          animate={{
+            scale: [1, 1.3, 1],
+            opacity: [0.4, 0, 0.4],
+          }}
+          transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
+        />
       </div>
 
       <div className="relative z-10">

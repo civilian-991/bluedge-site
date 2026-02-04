@@ -61,16 +61,16 @@ function StatCard({
   return (
     <motion.div
       ref={cardRef}
-      initial={{ opacity: 0, y: 80, rotateX: -30, scale: 0.9 }}
+      initial={{ opacity: 0, y: 120, rotateX: -60, scale: 0.6, filter: "blur(15px)" }}
       animate={
         isInView
-          ? { opacity: 1, y: 0, rotateX: 0, scale: 1 }
-          : { opacity: 0, y: 80, rotateX: -30, scale: 0.9 }
+          ? { opacity: 1, y: 0, rotateX: 0, scale: 1, filter: "blur(0px)" }
+          : { opacity: 0, y: 120, rotateX: -60, scale: 0.6, filter: "blur(15px)" }
       }
       transition={{
-        duration: 1,
-        delay: index * 0.15,
-        ease: [0.25, 0.46, 0.45, 0.94],
+        duration: 0.8,
+        delay: index * 0.12,
+        ease: [0.34, 1.56, 0.64, 1],
       }}
       className="group relative"
       style={{ perspective: "1000px" }}
@@ -240,28 +240,79 @@ function TeamCard({
   );
 }
 
-// Floating elements component
+// Enhanced floating elements with energy effects
 function FloatingElements() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {[...Array(6)].map((_, i) => (
+      {/* Large glowing orbs */}
+      {[...Array(8)].map((_, i) => (
         <motion.div
           key={i}
-          className="absolute rounded-full bg-accent/10 blur-2xl"
+          className="absolute rounded-full"
           style={{
-            width: Math.random() * 200 + 100,
-            height: Math.random() * 200 + 100,
+            width: Math.random() * 300 + 150,
+            height: Math.random() * 300 + 150,
             left: `${Math.random() * 100}%`,
             top: `${Math.random() * 100}%`,
+            background: `radial-gradient(circle, rgba(44,172,226,${0.1 + Math.random() * 0.1}) 0%, transparent 70%)`,
+            filter: "blur(40px)",
           }}
           animate={{
-            x: [0, Math.random() * 50 - 25, 0],
-            y: [0, Math.random() * 50 - 25, 0],
-            scale: [1, 1.1, 1],
+            x: [0, Math.random() * 100 - 50, 0],
+            y: [0, Math.random() * 100 - 50, 0],
+            scale: [1, 1.3, 1],
+            opacity: [0.5, 1, 0.5],
           }}
           transition={{
-            duration: Math.random() * 10 + 10,
+            duration: Math.random() * 8 + 8,
             repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+      {/* Energy particles rising */}
+      {[...Array(25)].map((_, i) => (
+        <motion.div
+          key={`particle-${i}`}
+          className="absolute rounded-full"
+          style={{
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            width: `${2 + Math.random() * 5}px`,
+            height: `${2 + Math.random() * 5}px`,
+            background: i % 2 === 0 ? "#2CACE2" : "#0077B6",
+            boxShadow: `0 0 10px currentColor, 0 0 20px currentColor`,
+          }}
+          animate={{
+            y: [0, -250, 0],
+            opacity: [0, 1, 0],
+            scale: [0, 1.5, 0],
+          }}
+          transition={{
+            duration: 5 + Math.random() * 4,
+            repeat: Infinity,
+            delay: Math.random() * 5,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+      {/* Horizontal energy lines */}
+      {[...Array(4)].map((_, i) => (
+        <motion.div
+          key={`line-${i}`}
+          className="absolute h-px w-full"
+          style={{
+            top: `${25 + i * 20}%`,
+            background: "linear-gradient(90deg, transparent, rgba(44,172,226,0.2), transparent)",
+          }}
+          animate={{
+            opacity: [0, 0.5, 0],
+            scaleX: [0, 1, 0],
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            delay: i * 1,
             ease: "easeInOut",
           }}
         />

@@ -85,27 +85,56 @@ function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: str
   );
 }
 
-// Floating particles in background
+// Enhanced floating particles in background
 function FloatingParticles() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {[...Array(15)].map((_, i) => (
+      {/* Glowing particles */}
+      {[...Array(30)].map((_, i) => (
         <motion.div
           key={i}
-          className="absolute w-1 h-1 rounded-full bg-accent/30"
+          className="absolute rounded-full"
           style={{
             left: `${Math.random() * 100}%`,
             top: `${Math.random() * 100}%`,
+            width: `${3 + Math.random() * 6}px`,
+            height: `${3 + Math.random() * 6}px`,
+            background: i % 3 === 0 ? "#2CACE2" : i % 3 === 1 ? "#0077B6" : "white",
+            boxShadow: `0 0 ${10 + Math.random() * 20}px currentColor`,
           }}
           animate={{
-            y: [0, -100, 0],
+            y: [0, -200 - Math.random() * 100, 0],
+            x: [0, (Math.random() - 0.5) * 100, 0],
             opacity: [0, 1, 0],
-            scale: [0, 1.5, 0],
+            scale: [0, 2, 0],
           }}
           transition={{
-            duration: Math.random() * 5 + 5,
+            duration: 5 + Math.random() * 4,
             repeat: Infinity,
             delay: Math.random() * 5,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+      {/* Lightning streaks */}
+      {[...Array(5)].map((_, i) => (
+        <motion.div
+          key={`streak-${i}`}
+          className="absolute w-px"
+          style={{
+            left: `${20 + i * 15}%`,
+            top: 0,
+            height: "100%",
+            background: "linear-gradient(to bottom, transparent, rgba(44,172,226,0.3), transparent)",
+          }}
+          animate={{
+            opacity: [0, 0.5, 0],
+            scaleY: [0, 1, 0],
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            delay: i * 0.8,
             ease: "easeInOut",
           }}
         />

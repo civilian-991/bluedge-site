@@ -11,29 +11,54 @@ import type { Service } from "@/types";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Floating particles around cards
+// Floating particles around cards with enhanced effects
 function FloatingOrbs() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {[...Array(8)].map((_, i) => (
+      {[...Array(15)].map((_, i) => (
         <motion.div
           key={i}
           className="absolute rounded-full"
           style={{
-            width: Math.random() * 100 + 50,
-            height: Math.random() * 100 + 50,
+            width: Math.random() * 120 + 60,
+            height: Math.random() * 120 + 60,
             left: `${Math.random() * 100}%`,
             top: `${Math.random() * 100}%`,
-            background: `radial-gradient(circle, rgba(44, 172, 226, ${Math.random() * 0.15 + 0.05}) 0%, transparent 70%)`,
+            background: `radial-gradient(circle, rgba(44, 172, 226, ${Math.random() * 0.2 + 0.08}) 0%, transparent 70%)`,
+            filter: "blur(2px)",
           }}
           animate={{
-            x: [0, Math.random() * 100 - 50, 0],
-            y: [0, Math.random() * 100 - 50, 0],
-            scale: [1, 1.2, 1],
+            x: [0, Math.random() * 150 - 75, 0],
+            y: [0, Math.random() * 150 - 75, 0],
+            scale: [1, 1.4, 1],
+            opacity: [0.5, 1, 0.5],
           }}
           transition={{
-            duration: Math.random() * 10 + 15,
+            duration: Math.random() * 8 + 10,
             repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+      {/* Energy particles */}
+      {[...Array(20)].map((_, i) => (
+        <motion.div
+          key={`particle-${i}`}
+          className="absolute w-2 h-2 rounded-full bg-[#2CACE2]"
+          style={{
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            boxShadow: "0 0 10px #2CACE2, 0 0 20px rgba(44,172,226,0.5)",
+          }}
+          animate={{
+            y: [0, -200, 0],
+            opacity: [0, 1, 0],
+            scale: [0, 1.5, 0],
+          }}
+          transition={{
+            duration: 4 + Math.random() * 3,
+            repeat: Infinity,
+            delay: Math.random() * 4,
             ease: "easeInOut",
           }}
         />
@@ -178,15 +203,15 @@ function ServiceCard({
   return (
     <motion.div
       ref={cardRef}
-      initial={{ opacity: 0, y: 150, rotateX: -30, scale: 0.8 }}
+      initial={{ opacity: 0, y: 200, rotateX: -45, scale: 0.6, filter: "blur(20px)" }}
       animate={
         isInView
-          ? { opacity: 1, y: 0, rotateX: 0, scale: 1 }
-          : { opacity: 0, y: 150, rotateX: -30, scale: 0.8 }
+          ? { opacity: 1, y: 0, rotateX: 0, scale: 1, filter: "blur(0px)" }
+          : { opacity: 0, y: 200, rotateX: -45, scale: 0.6, filter: "blur(20px)" }
       }
       transition={{
-        duration: 1.2,
-        delay: index * 0.2,
+        duration: 1,
+        delay: index * 0.15,
         ease: [0.25, 0.46, 0.45, 0.94],
       }}
       className="group relative"
@@ -382,7 +407,7 @@ function ServiceCard({
   );
 }
 
-// Animated section title
+// Animated section title with explosive entrance
 function AnimatedTitle() {
   const titleRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(titleRef, { once: true, margin: "-100px" });
@@ -393,27 +418,38 @@ function AnimatedTitle() {
     <div
       ref={titleRef}
       className="section-title overflow-hidden flex flex-wrap gap-x-4 md:gap-x-6 mb-6"
-      style={{ perspective: "1000px" }}
+      style={{ perspective: "1200px" }}
     >
       {words.map((word, i) => (
         <motion.span
           key={i}
           className="word inline-block"
-          initial={{ y: 150, opacity: 0, rotateX: -90 }}
+          initial={{ y: 200, opacity: 0, rotateX: -120, scale: 0.5, filter: "blur(20px)" }}
           animate={
             isInView
-              ? { y: 0, opacity: 1, rotateX: 0 }
-              : { y: 150, opacity: 0, rotateX: -90 }
+              ? { y: 0, opacity: 1, rotateX: 0, scale: 1, filter: "blur(0px)" }
+              : { y: 200, opacity: 0, rotateX: -120, scale: 0.5, filter: "blur(20px)" }
           }
           transition={{
-            duration: 1,
-            delay: i * 0.15,
-            ease: [0.25, 0.46, 0.45, 0.94],
+            duration: 0.8,
+            delay: i * 0.12,
+            ease: [0.34, 1.56, 0.64, 1],
           }}
-          style={{ transformStyle: "preserve-3d" }}
+          style={{
+            transformStyle: "preserve-3d",
+            textShadow: word === "Best" ? "0 0 40px rgba(44,172,226,0.5)" : "none",
+          }}
         >
           {word === "Best" ? (
-            <span className="text-gradient">{word}</span>
+            <motion.span
+              className="text-gradient"
+              animate={isInView ? {
+                textShadow: ["0 0 20px rgba(44,172,226,0.3)", "0 0 40px rgba(44,172,226,0.6)", "0 0 20px rgba(44,172,226,0.3)"]
+              } : {}}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              {word}
+            </motion.span>
           ) : (
             word
           )}
