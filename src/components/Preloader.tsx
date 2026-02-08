@@ -8,22 +8,23 @@ export default function Preloader() {
   const [isComplete, setIsComplete] = useState(false);
   const preloaderRef = useRef<HTMLDivElement>(null);
   const tvRef = useRef<HTMLDivElement>(null);
+  const tvBodyRef = useRef<HTMLDivElement>(null);
   const screenRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const logoOverlayRef = useRef<HTMLDivElement>(null);
-  const scanlineRef = useRef<HTMLDivElement>(null);
   const vignetteRef = useRef<HTMLDivElement>(null);
   const ambientGlowRef = useRef<HTMLDivElement>(null);
-  const tvGlowRef = useRef<HTMLDivElement>(null);
   const channelNumRef = useRef<HTMLDivElement>(null);
-  const revealRef = useRef<HTMLDivElement>(null);
-  const antennaLeftRef = useRef<HTMLDivElement>(null);
-  const antennaRightRef = useRef<HTMLDivElement>(null);
+  const fullscreenStaticRef = useRef<HTMLCanvasElement>(null);
+  const blackOverlayRef = useRef<HTMLDivElement>(null);
+  const flickerOverlayRef = useRef<HTMLDivElement>(null);
   const animFrameRef = useRef<number>(0);
-  const staticIntensityRef = useRef(1);
+  const fullscreenAnimRef = useRef<number>(0);
+  const staticIntensityRef = useRef(0);
   const glitchActiveRef = useRef(false);
+  const fullscreenStaticActiveRef = useRef(false);
 
-  // Procedural TV static noise rendered on canvas
+  // Procedural TV static noise
   const drawStatic = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -34,39 +35,48 @@ export default function Preloader() {
     const h = canvas.height;
     const intensity = staticIntensityRef.current;
 
+    if (intensity <= 0) {
+      ctx.fillStyle = "#000";
+      ctx.fillRect(0, 0, w, h);
+      animFrameRef.current = requestAnimationFrame(drawStatic);
+      return;
+    }
+
     const imageData = ctx.createImageData(w, h);
     const data = imageData.data;
 
     for (let i = 0; i < data.length; i += 4) {
       const noise = Math.random() * 255 * intensity;
-      data[i] = noise;     // R
-      data[i + 1] = noise; // G
-      data[i + 2] = noise; // B
-      data[i + 3] = 255;   // A
+      data[i] = noise;
+      data[i + 1] = noise;
+      data[i + 2] = noise;
+      data[i + 3] = 255;
     }
 
-    // Horizontal glitch tear — random horizontal offset bands
-    if (glitchActiveRef.current && Math.random() > 0.4) {
-      const tearY = Math.floor(Math.random() * h);
-      const tearH = Math.floor(Math.random() * 30) + 5;
-      const shift = Math.floor((Math.random() - 0.5) * 40);
-
-      for (let y = tearY; y < Math.min(tearY + tearH, h); y++) {
-        for (let x = 0; x < w; x++) {
-          const srcX = ((x + shift) % w + w) % w;
-          const dstIdx = (y * w + x) * 4;
-          const srcIdx = (y * w + srcX) * 4;
-          data[dstIdx] = data[srcIdx];
-          data[dstIdx + 1] = data[srcIdx + 1];
-          data[dstIdx + 2] = data[srcIdx + 2];
+    // Horizontal glitch tears
+    if (glitchActiveRef.current && Math.random() > 0.5) {
+      const tearCount = Math.floor(Math.random() * 3) + 1;
+      for (let t = 0; t < tearCount; t++) {
+        const tearY = Math.floor(Math.random() * h);
+        const tearH = Math.floor(Math.random() * 20) + 3;
+        const shift = Math.floor((Math.random() - 0.5) * 60);
+        for (let y = tearY; y < Math.min(tearY + tearH, h); y++) {
+          for (let x = 0; x < w; x++) {
+            const srcX = ((x + shift) % w + w) % w;
+            const dstIdx = (y * w + x) * 4;
+            const srcIdx = (y * w + srcX) * 4;
+            data[dstIdx] = data[srcIdx];
+            data[dstIdx + 1] = data[srcIdx + 1];
+            data[dstIdx + 2] = data[srcIdx + 2];
+          }
         }
       }
     }
 
-    // Occasional black horizontal bars (signal loss)
-    if (Math.random() > 0.85) {
+    // Black dropout bars
+    if (Math.random() > 0.8) {
       const barY = Math.floor(Math.random() * h);
-      const barH = Math.floor(Math.random() * 8) + 2;
+      const barH = Math.floor(Math.random() * 12) + 2;
       for (let y = barY; y < Math.min(barY + barH, h); y++) {
         for (let x = 0; x < w; x++) {
           const idx = (y * w + x) * 4;
@@ -79,17 +89,69 @@ export default function Preloader() {
 
     ctx.putImageData(imageData, 0, 0);
 
-    // Rolling scan band (bright horizontal band moving down)
+    // Rolling scan band
     const time = Date.now() * 0.001;
-    const scanY = ((time * 80) % (h + 60)) - 30;
-    const gradient = ctx.createLinearGradient(0, scanY - 30, 0, scanY + 30);
+    const scanY = ((time * 60) % (h + 80)) - 40;
+    const gradient = ctx.createLinearGradient(0, scanY - 40, 0, scanY + 40);
     gradient.addColorStop(0, "rgba(255,255,255,0)");
-    gradient.addColorStop(0.5, `rgba(255,255,255,${0.06 * intensity})`);
+    gradient.addColorStop(0.5, `rgba(255,255,255,${0.08 * intensity})`);
     gradient.addColorStop(1, "rgba(255,255,255,0)");
     ctx.fillStyle = gradient;
-    ctx.fillRect(0, scanY - 30, w, 60);
+    ctx.fillRect(0, scanY - 40, w, 80);
 
     animFrameRef.current = requestAnimationFrame(drawStatic);
+  }, []);
+
+  // Fullscreen static that breaks out of the TV
+  const drawFullscreenStatic = useCallback(() => {
+    const canvas = fullscreenStaticRef.current;
+    if (!canvas || !fullscreenStaticActiveRef.current) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const w = canvas.width;
+    const h = canvas.height;
+    const imageData = ctx.createImageData(w, h);
+    const data = imageData.data;
+
+    for (let i = 0; i < data.length; i += 4) {
+      const noise = Math.random() * 255;
+      data[i] = noise;
+      data[i + 1] = noise;
+      data[i + 2] = noise;
+      data[i + 3] = 255;
+    }
+
+    // Heavy glitch tears across the full screen
+    for (let t = 0; t < 5; t++) {
+      const tearY = Math.floor(Math.random() * h);
+      const tearH = Math.floor(Math.random() * 15) + 3;
+      const shift = Math.floor((Math.random() - 0.5) * 80);
+      for (let y = tearY; y < Math.min(tearY + tearH, h); y++) {
+        for (let x = 0; x < w; x++) {
+          const srcX = ((x + shift) % w + w) % w;
+          const dstIdx = (y * w + x) * 4;
+          const srcIdx = (y * w + srcX) * 4;
+          data[dstIdx] = data[srcIdx];
+          data[dstIdx + 1] = data[srcIdx + 1];
+          data[dstIdx + 2] = data[srcIdx + 2];
+        }
+      }
+    }
+
+    ctx.putImageData(imageData, 0, 0);
+
+    // Scan lines over fullscreen
+    const time = Date.now() * 0.001;
+    const scanY = ((time * 120) % (h + 100)) - 50;
+    const gradient = ctx.createLinearGradient(0, scanY - 50, 0, scanY + 50);
+    gradient.addColorStop(0, "rgba(255,255,255,0)");
+    gradient.addColorStop(0.5, "rgba(255,255,255,0.1)");
+    gradient.addColorStop(1, "rgba(255,255,255,0)");
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, scanY - 50, w, 100);
+
+    fullscreenAnimRef.current = requestAnimationFrame(drawFullscreenStatic);
   }, []);
 
   useEffect(() => {
@@ -99,12 +161,20 @@ export default function Preloader() {
       canvas.height = 240;
     }
 
-    // Start the static animation loop
+    const fsCanvas = fullscreenStaticRef.current;
+    if (fsCanvas) {
+      fsCanvas.width = 240;
+      fsCanvas.height = 160;
+    }
+
+    // Start TV static loop
     animFrameRef.current = requestAnimationFrame(drawStatic);
 
     const tl = gsap.timeline({
       onComplete: () => {
         cancelAnimationFrame(animFrameRef.current);
+        cancelAnimationFrame(fullscreenAnimRef.current);
+        fullscreenStaticActiveRef.current = false;
         setIsComplete(true);
         document.body.style.overflow = "auto";
       },
@@ -113,247 +183,330 @@ export default function Preloader() {
     document.body.style.overflow = "hidden";
 
     // ============================
-    // PHASE 1: Dark room, TV power on (0s - 1.2s)
+    // INITIAL STATE — Everything hidden
     // ============================
-
-    // TV starts scaled down, slightly below, invisible
-    gsap.set(tvRef.current, {
-      scale: 0.9,
-      opacity: 0,
-      y: 20,
-    });
-
+    gsap.set(tvRef.current, { opacity: 0 });
+    gsap.set(tvBodyRef.current, { opacity: 0 });
     gsap.set(logoOverlayRef.current, { opacity: 0 });
     gsap.set(channelNumRef.current, { opacity: 0 });
-
-    // Ambient glow starts dim
     gsap.set(ambientGlowRef.current, { opacity: 0 });
-    gsap.set(tvGlowRef.current, { opacity: 0 });
-
-    // TV fades in with subtle flicker
-    tl.to(tvRef.current, {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      duration: 0.8,
-      ease: "power2.out",
-    }, 0.3);
-
-    // Screen powers on — ambient glow builds
-    tl.to(ambientGlowRef.current, {
-      opacity: 0.6,
-      duration: 1,
-      ease: "power1.inOut",
-    }, 0.5);
-
-    tl.to(tvGlowRef.current, {
-      opacity: 1,
-      duration: 1,
-      ease: "power1.inOut",
-    }, 0.5);
-
-    // Enable glitch tears after a moment
-    tl.call(() => {
-      glitchActiveRef.current = true;
-    }, [], 0.8);
-
-    // Channel number appears (like old TV)
-    tl.to(channelNumRef.current, {
-      opacity: 1,
-      duration: 0.1,
-    }, 1.0);
-
-    // Flicker the channel number
-    tl.to(channelNumRef.current, {
-      opacity: 0,
-      duration: 0.05,
-      yoyo: true,
-      repeat: 3,
-    }, 1.2);
+    gsap.set(screenRef.current, { filter: "brightness(0)" });
+    gsap.set(fullscreenStaticRef.current, { opacity: 0 });
+    gsap.set(blackOverlayRef.current, { opacity: 0 });
+    gsap.set(flickerOverlayRef.current, { opacity: 0 });
 
     // ============================
-    // PHASE 2: Static plays, tension builds (1.2s - 2.8s)
+    // PHASE 1: THE DARK — Nothing but dread (0s - 1.5s)
     // ============================
 
-    // Brief screen blackout (signal loss)
-    tl.to(screenRef.current, {
-      filter: "brightness(0)",
-      duration: 0.06,
-      yoyo: true,
-      repeat: 1,
-    }, 1.6);
+    // Long beat of pure darkness... then a power surge flicker
+    // Just a faint rectangle of light — the screen turning on before you see the TV
 
-    // Another blackout
-    tl.to(screenRef.current, {
-      filter: "brightness(0)",
-      duration: 0.04,
-      yoyo: true,
-      repeat: 1,
-    }, 2.1);
+    // First power surge — screen barely flickers on
+    tl.to(tvRef.current, { opacity: 1, duration: 0 }, 0.8);
 
-    // Quick horizontal screen shift (tracking error)
-    tl.to(canvasRef.current, {
-      x: -15,
-      duration: 0.05,
-    }, 2.15);
-    tl.to(canvasRef.current, {
-      x: 8,
-      duration: 0.04,
-    }, 2.2);
-    tl.to(canvasRef.current, {
-      x: 0,
-      duration: 0.06,
-    }, 2.24);
-
-    // ============================
-    // PHASE 3: Logo flashes through static (2.8s - 4.2s)
-    // ============================
-
-    // First flash — very brief, distorted
-    tl.to(logoOverlayRef.current, {
-      opacity: 0.4,
-      duration: 0.08,
-    }, 2.8);
-
-    tl.to(logoOverlayRef.current, {
-      opacity: 0,
-      duration: 0.05,
-    }, 2.88);
-
-    // Screen distortion on flash
-    tl.to(screenRef.current, {
-      filter: "brightness(1.8) contrast(1.5)",
-      duration: 0.08,
-    }, 2.8);
-    tl.to(screenRef.current, {
-      filter: "brightness(1) contrast(1)",
-      duration: 0.1,
-    }, 2.88);
-
-    // Second flash — longer, with chromatic aberration
-    tl.to(logoOverlayRef.current, {
-      opacity: 0.7,
-      filter: "blur(0px)",
-      duration: 0.12,
-    }, 3.2);
-
-    // Chromatic aberration effect on the logo
-    tl.to(logoOverlayRef.current, {
-      textShadow: "3px 0 #ff0000, -3px 0 #00ffff",
-      duration: 0.05,
-    }, 3.2);
-
-    tl.to(logoOverlayRef.current, {
-      textShadow: "0 0 transparent",
-      duration: 0.05,
-    }, 3.3);
-
-    tl.to(logoOverlayRef.current, {
-      opacity: 0,
-      duration: 0.08,
-    }, 3.35);
-
-    // Intense screen distortion
-    tl.to(screenRef.current, {
-      filter: "brightness(2) contrast(2) saturate(0.5)",
-      duration: 0.06,
-    }, 3.2);
     tl.to(screenRef.current, {
       filter: "brightness(0.3)",
+      duration: 0.04,
+    }, 0.8);
+    tl.to(screenRef.current, {
+      filter: "brightness(0)",
+      duration: 0.03,
+    }, 0.84);
+
+    // Static intensity surges briefly
+    tl.call(() => { staticIntensityRef.current = 0.4; }, [], 0.8);
+    tl.call(() => { staticIntensityRef.current = 0; }, [], 0.84);
+
+    // Second flicker — slightly longer
+    tl.to(screenRef.current, {
+      filter: "brightness(0.5)",
+      duration: 0.06,
+    }, 1.1);
+    tl.call(() => { staticIntensityRef.current = 0.6; }, [], 1.1);
+
+    tl.to(screenRef.current, {
+      filter: "brightness(0)",
+      duration: 0.04,
+    }, 1.16);
+    tl.call(() => { staticIntensityRef.current = 0; }, [], 1.16);
+
+    // Flicker overlay flash synced with screen
+    tl.to(flickerOverlayRef.current, { opacity: 0.15, duration: 0.04 }, 0.8);
+    tl.to(flickerOverlayRef.current, { opacity: 0, duration: 0.03 }, 0.84);
+    tl.to(flickerOverlayRef.current, { opacity: 0.2, duration: 0.06 }, 1.1);
+    tl.to(flickerOverlayRef.current, { opacity: 0, duration: 0.04 }, 1.16);
+
+    // ============================
+    // PHASE 2: TV COMES ALIVE — Screen powers on, TV body revealed (1.5s - 2.5s)
+    // ============================
+
+    // Screen powers on for real — static floods in
+    tl.to(screenRef.current, {
+      filter: "brightness(0.8)",
       duration: 0.08,
-    }, 3.28);
-    tl.to(screenRef.current, {
-      filter: "brightness(1) contrast(1) saturate(1)",
-      duration: 0.15,
-    }, 3.36);
-
-    // Third flash — logo is clear, holds
-    tl.to(logoOverlayRef.current, {
-      opacity: 1,
-      filter: "blur(0px)",
-      duration: 0.15,
-    }, 3.7);
-
-    // Reduce static intensity as logo takes over
-    tl.to(staticIntensityRef, {
-      current: 0.3,
-      duration: 0.5,
-      ease: "power2.in",
-    }, 3.8);
-
-    // Screen brightens
-    tl.to(screenRef.current, {
-      filter: "brightness(1.3)",
-      duration: 0.3,
-    }, 3.9);
-
-    // ============================
-    // PHASE 4: TV screen goes white, zoom to fill viewport (4.2s - 5.2s)
-    // ============================
-
-    // Static fades out completely
-    tl.to(staticIntensityRef, {
-      current: 0,
-      duration: 0.3,
-    }, 4.2);
-
-    // Screen goes white
-    tl.to(screenRef.current, {
-      filter: "brightness(3) contrast(0.5)",
-      duration: 0.3,
-      ease: "power2.in",
-    }, 4.3);
-
-    // Hide logo overlay as screen goes white
-    tl.to(logoOverlayRef.current, {
-      opacity: 0,
-      filter: "brightness(3)",
-      duration: 0.2,
-    }, 4.35);
-
-    // Channel number disappears
-    tl.to(channelNumRef.current, {
-      opacity: 0,
-      duration: 0.1,
-    }, 4.2);
-
-    // Disable glitches
+    }, 1.5);
     tl.call(() => {
-      glitchActiveRef.current = false;
-    }, [], 4.2);
+      staticIntensityRef.current = 1;
+      glitchActiveRef.current = true;
+    }, [], 1.5);
 
-    // TV zoom — fills the viewport
-    tl.to(tvRef.current, {
-      scale: 12,
-      duration: 0.8,
-      ease: "power3.in",
-    }, 4.4);
-
-    // Ambient glow intensifies
+    // Ambient glow slowly seeps out from the TV
     tl.to(ambientGlowRef.current, {
+      opacity: 0.5,
+      duration: 1.5,
+      ease: "power1.in",
+    }, 1.5);
+
+    // TV body slowly becomes visible — illuminated by its own screen
+    tl.to(tvBodyRef.current, {
       opacity: 1,
-      scale: 3,
+      duration: 1.2,
+      ease: "power1.in",
+    }, 1.6);
+
+    // Screen reaches full brightness
+    tl.to(screenRef.current, {
+      filter: "brightness(1)",
+      duration: 0.8,
+      ease: "power1.inOut",
+    }, 1.8);
+
+    // Channel number flickers on
+    tl.to(channelNumRef.current, { opacity: 1, duration: 0.03 }, 2.0);
+    tl.to(channelNumRef.current, { opacity: 0, duration: 0.03 }, 2.03);
+    tl.to(channelNumRef.current, { opacity: 1, duration: 0.03 }, 2.1);
+    tl.to(channelNumRef.current, { opacity: 0, duration: 0.02 }, 2.13);
+    tl.to(channelNumRef.current, { opacity: 0.8, duration: 0.05 }, 2.2);
+
+    // ============================
+    // PHASE 3: TENSION — Static builds, disturbing glitches (2.5s - 3.8s)
+    // ============================
+
+    // Sudden blackout
+    tl.to(screenRef.current, {
+      filter: "brightness(0)",
+      duration: 0.03,
+    }, 2.6);
+    tl.to(screenRef.current, {
+      filter: "brightness(1)",
+      duration: 0.05,
+    }, 2.68);
+
+    // Tracking error — horizontal jitter
+    tl.to(canvasRef.current, { x: -20, duration: 0.04 }, 2.9);
+    tl.to(canvasRef.current, { x: 12, duration: 0.03 }, 2.94);
+    tl.to(canvasRef.current, { x: -6, duration: 0.03 }, 2.97);
+    tl.to(canvasRef.current, { x: 0, duration: 0.05 }, 3.0);
+
+    // Another longer blackout — unsettling
+    tl.to(screenRef.current, {
+      filter: "brightness(0)",
+      duration: 0.02,
+    }, 3.2);
+    // Hold the darkness just a beat too long
+    tl.to(screenRef.current, {
+      filter: "brightness(1.2)",
+      duration: 0.04,
+    }, 3.35);
+    tl.to(screenRef.current, {
+      filter: "brightness(1)",
+      duration: 0.1,
+    }, 3.39);
+
+    // Screen rolls vertically (VHS tracking loss)
+    tl.to(canvasRef.current, { y: -30, duration: 0.15, ease: "none" }, 3.5);
+    tl.to(canvasRef.current, { y: 0, duration: 0.08, ease: "power2.out" }, 3.65);
+
+    // ============================
+    // PHASE 4: SUBLIMINAL LOGO FLASHES (3.8s - 5.0s)
+    // ============================
+
+    // First flash — subliminal, 2-3 frames, you barely see it
+    tl.to(logoOverlayRef.current, { opacity: 0.3, duration: 0.04 }, 3.9);
+    tl.to(logoOverlayRef.current, { opacity: 0, duration: 0.02 }, 3.94);
+    // Screen brightness spike on flash
+    tl.to(screenRef.current, {
+      filter: "brightness(1.6) contrast(1.4)",
+      duration: 0.04,
+    }, 3.9);
+    tl.to(screenRef.current, {
+      filter: "brightness(1) contrast(1)",
+      duration: 0.06,
+    }, 3.94);
+
+    // Beat of static...
+
+    // Second flash — slightly longer, inverted/distorted feel
+    tl.to(logoOverlayRef.current, {
+      opacity: 0.6,
+      duration: 0.06,
+    }, 4.2);
+    // Chromatic split
+    tl.set(logoOverlayRef.current, {
+      filter: "blur(1px)",
+      css: { "--chromatic": "1" },
+    }, 4.2);
+    tl.to(logoOverlayRef.current, {
+      opacity: 0,
+      duration: 0.04,
+    }, 4.26);
+    tl.set(logoOverlayRef.current, { filter: "blur(0px)" }, 4.3);
+
+    // Screen distortion on second flash
+    tl.to(screenRef.current, {
+      filter: "brightness(2) contrast(2) hue-rotate(20deg)",
+      duration: 0.04,
+    }, 4.2);
+    tl.to(screenRef.current, {
+      filter: "brightness(0.2)",
+      duration: 0.06,
+    }, 4.26);
+    tl.to(screenRef.current, {
+      filter: "brightness(1) contrast(1) hue-rotate(0deg)",
+      duration: 0.15,
+    }, 4.32);
+
+    // Screen shake
+    tl.to(tvRef.current, { x: -4, duration: 0.03 }, 4.2);
+    tl.to(tvRef.current, { x: 5, duration: 0.03 }, 4.23);
+    tl.to(tvRef.current, { x: -2, duration: 0.02 }, 4.26);
+    tl.to(tvRef.current, { x: 0, duration: 0.04 }, 4.28);
+
+    // Third flash — logo HOLDS, eerie stillness
+    tl.to(staticIntensityRef, {
+      current: 0.4,
+      duration: 0.2,
+      ease: "power2.in",
+    }, 4.5);
+
+    tl.to(logoOverlayRef.current, {
+      opacity: 1,
+      duration: 0.08,
+    }, 4.55);
+
+    // Static dies down, logo glows alone on dark screen
+    tl.to(staticIntensityRef, {
+      current: 0.08,
       duration: 0.6,
-    }, 4.4);
+      ease: "power2.in",
+    }, 4.6);
 
-    // Everything goes white
-    tl.to(preloaderRef.current, {
-      backgroundColor: "#ffffff",
-      duration: 0.3,
-    }, 4.8);
+    // Eerie beat — logo just sits there
+    tl.to(channelNumRef.current, { opacity: 0, duration: 0.05 }, 4.6);
 
-    // Final fade out
+    // ============================
+    // PHASE 5: THE HORROR TRANSITION (5.2s - 6.4s)
+    // ============================
+
+    // Screen flickers violently
+    tl.to(screenRef.current, {
+      filter: "brightness(0)",
+      duration: 0.03,
+    }, 5.2);
+    tl.to(screenRef.current, {
+      filter: "brightness(2)",
+      duration: 0.03,
+    }, 5.23);
+    tl.to(screenRef.current, {
+      filter: "brightness(0)",
+      duration: 0.03,
+    }, 5.26);
+    tl.to(screenRef.current, {
+      filter: "brightness(1.5)",
+      duration: 0.03,
+    }, 5.29);
+
+    // Logo vanishes
+    tl.to(logoOverlayRef.current, { opacity: 0, duration: 0.03 }, 5.2);
+
+    // Static ERUPTS — maxes out
+    tl.call(() => {
+      staticIntensityRef.current = 1;
+      glitchActiveRef.current = true;
+    }, [], 5.29);
+
+    // TV shakes violently
+    tl.to(tvRef.current, { x: -8, y: 3, rotation: -0.5, duration: 0.03 }, 5.3);
+    tl.to(tvRef.current, { x: 10, y: -4, rotation: 0.7, duration: 0.03 }, 5.33);
+    tl.to(tvRef.current, { x: -6, y: 5, rotation: -0.3, duration: 0.03 }, 5.36);
+    tl.to(tvRef.current, { x: 7, y: -2, rotation: 0.5, duration: 0.03 }, 5.39);
+    tl.to(tvRef.current, { x: -10, y: 3, rotation: -0.8, duration: 0.03 }, 5.42);
+    tl.to(tvRef.current, { x: 5, y: -5, rotation: 0.4, duration: 0.03 }, 5.45);
+    tl.to(tvRef.current, { x: 0, y: 0, rotation: 0, duration: 0.05 }, 5.48);
+
+    // THE STATIC BREAKS OUT — fills the entire viewport
+    tl.call(() => {
+      fullscreenStaticActiveRef.current = true;
+      fullscreenAnimRef.current = requestAnimationFrame(drawFullscreenStatic);
+    }, [], 5.5);
+
+    // TV fades out as fullscreen static takes over
+    tl.to(tvRef.current, {
+      opacity: 0,
+      scale: 1.1,
+      duration: 0.15,
+      ease: "power2.in",
+    }, 5.5);
+
+    tl.to(ambientGlowRef.current, { opacity: 0, duration: 0.1 }, 5.5);
+
+    // Fullscreen static ramps up
+    tl.to(fullscreenStaticRef.current, {
+      opacity: 1,
+      duration: 0.08,
+    }, 5.5);
+
+    // Rapid strobe flickers over the static
+    tl.to(flickerOverlayRef.current, { opacity: 0.6, duration: 0.03 }, 5.55);
+    tl.to(flickerOverlayRef.current, { opacity: 0, duration: 0.03 }, 5.58);
+    tl.to(flickerOverlayRef.current, { opacity: 0.4, duration: 0.03 }, 5.65);
+    tl.to(flickerOverlayRef.current, { opacity: 0, duration: 0.03 }, 5.68);
+    tl.to(flickerOverlayRef.current, { opacity: 0.8, duration: 0.02 }, 5.75);
+    tl.to(flickerOverlayRef.current, { opacity: 0, duration: 0.04 }, 5.77);
+
+    // Screen shake on the whole preloader
+    tl.to(preloaderRef.current, { x: -5, duration: 0.03 }, 5.55);
+    tl.to(preloaderRef.current, { x: 6, duration: 0.03 }, 5.58);
+    tl.to(preloaderRef.current, { x: -3, duration: 0.03 }, 5.61);
+    tl.to(preloaderRef.current, { x: 0, duration: 0.03 }, 5.64);
+
+    // HARD CUT TO BLACK
+    tl.to(blackOverlayRef.current, {
+      opacity: 1,
+      duration: 0.03,
+    }, 5.85);
+
+    // Kill the fullscreen static
+    tl.call(() => {
+      fullscreenStaticActiveRef.current = false;
+      cancelAnimationFrame(fullscreenAnimRef.current);
+    }, [], 5.88);
+
+    tl.to(fullscreenStaticRef.current, { opacity: 0, duration: 0 }, 5.88);
+
+    // Hold black — a beat of nothing (this is the horror pause)
+    // ...silence...
+
+    // Site fades up from the darkness
+    tl.to(blackOverlayRef.current, {
+      opacity: 0,
+      duration: 0.8,
+      ease: "power2.inOut",
+    }, 6.2);
+
     tl.to(preloaderRef.current, {
       opacity: 0,
-      duration: 0.4,
+      duration: 0.6,
       ease: "power2.inOut",
-    }, 5.0);
+    }, 6.5);
 
     return () => {
       cancelAnimationFrame(animFrameRef.current);
+      cancelAnimationFrame(fullscreenAnimRef.current);
       document.body.style.overflow = "auto";
     };
-  }, [drawStatic]);
+  }, [drawStatic, drawFullscreenStatic]);
 
   if (isComplete) return null;
 
@@ -361,39 +514,43 @@ export default function Preloader() {
     <div
       ref={preloaderRef}
       className="fixed inset-0 z-[10000] flex flex-col items-center justify-center"
-      style={{
-        background: "radial-gradient(ellipse at center, #0a0a0c 0%, #020203 50%, #000000 100%)",
-      }}
+      style={{ background: "#000000" }}
     >
-      {/* Film grain overlay on entire screen */}
+      {/* Film grain overlay */}
       <div
-        className="absolute inset-0 pointer-events-none z-50 opacity-[0.04]"
+        className="absolute inset-0 pointer-events-none z-[60] opacity-[0.035]"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
         }}
       />
 
-      {/* Vignette overlay */}
+      {/* Heavy vignette — dark corners */}
       <div
         ref={vignetteRef}
-        className="absolute inset-0 pointer-events-none z-40"
+        className="absolute inset-0 pointer-events-none z-[55]"
         style={{
-          background: "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.7) 80%, rgba(0,0,0,0.95) 100%)",
+          background: "radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.8) 70%, rgba(0,0,0,0.98) 100%)",
         }}
       />
 
-      {/* Ambient glow from TV onto the "floor" */}
+      {/* Flicker overlay — white flash for power surges */}
+      <div
+        ref={flickerOverlayRef}
+        className="absolute inset-0 pointer-events-none z-[58] bg-white"
+      />
+
+      {/* Ambient glow bleeding from TV */}
       <div
         ref={ambientGlowRef}
         className="absolute pointer-events-none z-0"
         style={{
-          width: "600px",
-          height: "400px",
-          top: "50%",
+          width: "700px",
+          height: "500px",
+          top: "45%",
           left: "50%",
-          transform: "translate(-50%, -30%)",
-          background: "radial-gradient(ellipse at center, rgba(140,160,180,0.12) 0%, rgba(100,120,140,0.06) 40%, transparent 70%)",
-          filter: "blur(40px)",
+          transform: "translate(-50%, -50%)",
+          background: "radial-gradient(ellipse at 50% 40%, rgba(130,150,170,0.1) 0%, rgba(80,100,120,0.04) 40%, transparent 65%)",
+          filter: "blur(50px)",
         }}
       />
 
@@ -401,13 +558,10 @@ export default function Preloader() {
       <div
         ref={tvRef}
         className="relative z-10 flex flex-col items-center"
-        style={{ perspective: "1200px" }}
       >
         {/* Antennas */}
         <div className="relative w-[340px] md:w-[420px] h-[60px] flex items-end justify-center mb-[-2px]">
-          {/* Left antenna */}
           <div
-            ref={antennaLeftRef}
             className="absolute bottom-0"
             style={{
               left: "38%",
@@ -420,15 +574,12 @@ export default function Preloader() {
               boxShadow: "1px 0 3px rgba(0,0,0,0.5)",
             }}
           >
-            {/* Antenna tip */}
             <div
               className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full"
               style={{ background: "#6a6a6a" }}
             />
           </div>
-          {/* Right antenna */}
           <div
-            ref={antennaRightRef}
             className="absolute bottom-0"
             style={{
               right: "38%",
@@ -448,8 +599,9 @@ export default function Preloader() {
           </div>
         </div>
 
-        {/* TV Body */}
+        {/* TV Body — fades in separately from screen */}
         <div
+          ref={tvBodyRef}
           className="relative"
           style={{
             width: "clamp(320px, 50vw, 440px)",
@@ -468,12 +620,12 @@ export default function Preloader() {
           {/* TV brand embossing */}
           <div
             className="absolute top-[10px] left-1/2 -translate-x-1/2 text-[9px] tracking-[0.3em] uppercase font-mono"
-            style={{ color: "rgba(255,255,255,0.08)" }}
+            style={{ color: "rgba(255,255,255,0.06)" }}
           >
             BluEdge
           </div>
 
-          {/* Subtle wood texture strip at bottom */}
+          {/* Wood grain strip at bottom */}
           <div
             className="absolute bottom-0 left-0 right-0 h-[18px] rounded-b-[18px]"
             style={{
@@ -492,13 +644,12 @@ export default function Preloader() {
               boxShadow: `
                 inset 0 0 30px rgba(0,0,0,0.9),
                 inset 0 0 60px rgba(0,0,0,0.5),
-                0 0 2px rgba(140,160,180,0.15)
+                0 0 1px rgba(140,160,180,0.1)
               `,
-              /* Barrel distortion approximation */
               border: "3px solid #0a0a0a",
             }}
           >
-            {/* Canvas for real-time static noise */}
+            {/* Canvas for static noise */}
             <canvas
               ref={canvasRef}
               className="absolute inset-0 w-full h-full"
@@ -508,12 +659,11 @@ export default function Preloader() {
               }}
             />
 
-            {/* CRT scan lines overlay */}
+            {/* CRT scan lines */}
             <div
-              ref={scanlineRef}
               className="absolute inset-0 pointer-events-none z-10"
               style={{
-                background: "repeating-linear-gradient(0deg, rgba(0,0,0,0.25) 0px, rgba(0,0,0,0.25) 1px, transparent 1px, transparent 3px)",
+                background: "repeating-linear-gradient(0deg, rgba(0,0,0,0.3) 0px, rgba(0,0,0,0.3) 1px, transparent 1px, transparent 3px)",
                 borderRadius: "9px / 11px",
               }}
             />
@@ -522,31 +672,21 @@ export default function Preloader() {
             <div
               className="absolute inset-0 pointer-events-none z-20"
               style={{
-                background: "radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.04) 0%, transparent 50%)",
+                background: "radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.03) 0%, transparent 50%)",
                 borderRadius: "9px / 11px",
               }}
             />
 
-            {/* Screen edge shadow (CRT depth) */}
+            {/* Screen edge shadow */}
             <div
               className="absolute inset-0 pointer-events-none z-20"
               style={{
-                boxShadow: "inset 0 0 40px rgba(0,0,0,0.6), inset 0 0 80px rgba(0,0,0,0.3)",
+                boxShadow: "inset 0 0 40px rgba(0,0,0,0.7), inset 0 0 80px rgba(0,0,0,0.4)",
                 borderRadius: "9px / 11px",
               }}
             />
 
-            {/* TV Glow effect on screen */}
-            <div
-              ref={tvGlowRef}
-              className="absolute inset-0 pointer-events-none z-5"
-              style={{
-                background: "radial-gradient(ellipse at center, rgba(150,170,190,0.05) 0%, transparent 60%)",
-                borderRadius: "9px / 11px",
-              }}
-            />
-
-            {/* Logo overlay — flashes through the static */}
+            {/* Logo overlay — subliminal flashes */}
             <div
               ref={logoOverlayRef}
               className="absolute inset-0 z-30 flex items-center justify-center"
@@ -559,7 +699,7 @@ export default function Preloader() {
                   width={70}
                   height={70}
                   className="drop-shadow-[0_0_20px_rgba(44,172,226,0.8)]"
-                  style={{ filter: "brightness(1.2)" }}
+                  style={{ filter: "brightness(1.3)" }}
                 />
                 <span
                   className="text-white text-sm font-bold tracking-[0.25em] uppercase mt-1"
@@ -573,7 +713,7 @@ export default function Preloader() {
               </div>
             </div>
 
-            {/* Channel number (top right, like old TVs) */}
+            {/* Channel number */}
             <div
               ref={channelNumRef}
               className="absolute top-3 right-4 z-30 font-mono text-[#33ff33] text-xs"
@@ -585,7 +725,7 @@ export default function Preloader() {
               CH-03
             </div>
 
-            {/* VHS tracking lines at the very top/bottom */}
+            {/* VHS tracking artifacts */}
             <div
               className="absolute top-0 left-0 right-0 h-[6px] z-20"
               style={{
@@ -600,9 +740,8 @@ export default function Preloader() {
             />
           </div>
 
-          {/* TV controls — right side (knobs) */}
+          {/* TV knobs */}
           <div className="absolute right-[8px] top-1/2 -translate-y-1/2 flex flex-col gap-3 items-center">
-            {/* Volume knob */}
             <div
               className="w-[10px] h-[10px] rounded-full"
               style={{
@@ -610,7 +749,6 @@ export default function Preloader() {
                 boxShadow: "0 1px 3px rgba(0,0,0,0.5), inset 0 0.5px 0 rgba(255,255,255,0.1)",
               }}
             />
-            {/* Channel knob */}
             <div
               className="w-[10px] h-[10px] rounded-full"
               style={{
@@ -630,7 +768,7 @@ export default function Preloader() {
           />
         </div>
 
-        {/* TV Stand / Legs */}
+        {/* TV Legs */}
         <div className="flex justify-center gap-[clamp(120px,18vw,200px)] mt-[-2px]">
           <div
             style={{
@@ -653,12 +791,27 @@ export default function Preloader() {
         </div>
       </div>
 
-      {/* Bottom text */}
-      <p
-        className="absolute bottom-6 text-[10px] tracking-[0.35em] text-white/15 uppercase font-mono z-30"
-      >
-        Signal incoming...
-      </p>
+      {/* ==================== FULLSCREEN STATIC ==================== */}
+      {/* This breaks out of the TV and fills the viewport */}
+      <canvas
+        ref={fullscreenStaticRef}
+        className="absolute inset-0 w-full h-full z-[65] pointer-events-none"
+        style={{ imageRendering: "pixelated" }}
+      />
+
+      {/* Scan lines over fullscreen static */}
+      <div
+        className="absolute inset-0 pointer-events-none z-[66]"
+        style={{
+          background: "repeating-linear-gradient(0deg, rgba(0,0,0,0.2) 0px, rgba(0,0,0,0.2) 1px, transparent 1px, transparent 4px)",
+        }}
+      />
+
+      {/* Black overlay for the hard cut */}
+      <div
+        ref={blackOverlayRef}
+        className="absolute inset-0 z-[70] bg-black pointer-events-none"
+      />
     </div>
   );
 }
