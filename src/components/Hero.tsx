@@ -4,7 +4,8 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowDown, Sparkles, Play, Zap } from "lucide-react";
+import { Sparkles, Play, Zap } from "lucide-react";
+import TintinRocket from "./retro/TintinRocket";
 import Image from "next/image";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -992,15 +993,7 @@ export default function Hero() {
 
           {/* Magnetic CTA Buttons with rocket effects */}
           <div ref={ctaRef} className="flex flex-wrap gap-6 items-center" style={{ perspective: "1000px" }}>
-            <MagneticButton
-              href="#contact"
-              className="btn-primary btn-shine group inline-flex items-center gap-3 relative"
-            >
-              <span className="relative z-10">Start Your Project</span>
-              <span className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center group-hover:rotate-[360deg] transition-transform duration-700 relative z-10">
-                <ArrowDown className="w-4 h-4 text-white rotate-[-90deg]" />
-              </span>
-            </MagneticButton>
+            <TintinRocket />
 
             <MagneticButton
               href="#work"

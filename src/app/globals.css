@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Special+Elite&family=Playfair+Display:wght@400;700;900&family=Bangers&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -2354,5 +2355,225 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* ================================
+   RETRO FONTS (Google Fonts CDN)
+   ================================ */
+/* ================================
+   RETRO CSS UTILITIES
+   ================================ */
+
+/* Halftone dot pattern */
+.halftone {
+  position: relative;
+}
+.halftone::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(0,0,0,0.3) 1px, transparent 1px);
+  background-size: 4px 4px;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+
+/* Paper texture */
+.paper-texture {
+  background-color: #F5F0E1;
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)' opacity='0.06'/%3E%3C/svg%3E");
+}
+
+/* Comic panel border */
+.comic-panel {
+  border: 4px solid #111;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Pixel grid overlay */
+.pixel-grid {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 4px 4px;
+}
+
+/* CRT screen curve effect */
+.crt-curve {
+  border-radius: 20px / 18px;
+  box-shadow:
+    inset 0 0 80px rgba(0,0,0,0.6),
+    inset 0 0 20px rgba(0,0,0,0.4),
+    0 0 20px rgba(44,172,226,0.15);
+}
+
+/* CRT scan lines */
+.crt-scanlines {
+  position: relative;
+}
+.crt-scanlines::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.15) 2px,
+    rgba(0, 0, 0, 0.15) 4px
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* CRT glow for arcade elements */
+.crt-glow {
+  box-shadow:
+    0 0 10px rgba(44, 172, 226, 0.3),
+    0 0 30px rgba(44, 172, 226, 0.15),
+    0 0 60px rgba(44, 172, 226, 0.05),
+    inset 0 0 30px rgba(0, 0, 0, 0.4);
+}
+
+/* Retro TV yellow text glow */
+.tv-glow-yellow {
+  text-shadow: 0 0 10px rgba(245, 213, 71, 0.5), 0 0 20px rgba(245, 213, 71, 0.3);
+}
+
+/* Retro TV blue text glow */
+.tv-glow-blue {
+  text-shadow: 0 0 10px rgba(44, 172, 226, 0.5), 0 0 20px rgba(44, 172, 226, 0.3);
+}
+
+/* Newspaper column layout */
+.newspaper-columns {
+  column-count: 1;
+  column-gap: 2.5rem;
+  column-rule: 1px solid rgba(0,0,0,0.15);
+}
+@media (min-width: 768px) {
+  .newspaper-columns {
+    column-count: 2;
+  }
+}
+@media (min-width: 1024px) {
+  .newspaper-columns {
+    column-count: 3;
+  }
+}
+
+/* Comic speech bubble */
+.speech-bubble {
+  position: relative;
+  background: white;
+  border: 3px solid #111;
+  border-radius: 20px;
+  padding: 1rem 1.25rem;
+  font-family: 'Bangers', cursive;
+  color: #111;
+}
+.speech-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: 30px;
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-top: 20px solid #111;
+}
+.speech-bubble::before {
+  content: '';
+  position: absolute;
+  bottom: -16px;
+  left: 33px;
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-top: 17px solid white;
+  z-index: 1;
+}
+
+/* Wood grain background for manifesto desk */
+.wood-grain {
+  background-color: #3E2723;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 50px,
+      rgba(0,0,0,0.05) 50px,
+      rgba(0,0,0,0.05) 51px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(139,90,43,0.08),
+      rgba(139,90,43,0.08) 2px,
+      transparent 2px,
+      transparent 8px
+    );
+}
+
+/* Typewriter cursor blink */
+@keyframes typewriter-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.typewriter-cursor {
+  animation: typewriter-cursor 0.8s step-end infinite;
+}
+
+/* Arcade blink animation */
+@keyframes arcade-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.arcade-blink {
+  animation: arcade-blink 1s step-end infinite;
+}
+
+/* Speed lines for anime/mecha effects */
+.speed-lines {
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 8px,
+    rgba(255,255,255,0.03) 8px,
+    rgba(255,255,255,0.03) 9px
+  );
+}
+
+/* Starburst background for retro sections */
+.starburst {
+  background: repeating-conic-gradient(
+    from 0deg,
+    rgba(44, 172, 226, 0.05) 0deg 10deg,
+    transparent 10deg 20deg
+  );
+}
+
+/* Coffee ring stain for manifesto */
+.coffee-ring {
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 10px rgba(139, 90, 43, 0.15),
+    0 0 5px rgba(139, 90, 43, 0.1);
+  border: 2px solid rgba(139, 90, 43, 0.12);
+  background: radial-gradient(circle, transparent 60%, rgba(139, 90, 43, 0.06) 70%, transparent 80%);
+}
+
+/* Reduced motion support for retro features */
+@media (prefers-reduced-motion: reduce) {
+  .typewriter-cursor,
+  .arcade-blink {
+    animation: none;
+  }
+  .crt-scanlines::before {
+    display: none;
   }
 }

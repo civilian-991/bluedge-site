@@ -59,3 +59,43 @@ export interface Partnership {
   logo: string;
   url?: string;
 }
+
+export interface TVChannel {
+  id: number;
+  name: string;
+  serviceIndex: number;
+}
+
+export interface ProcessStep {
+  phase: number;
+  title: string;
+  subtitle: string;
+  description: string;
+  icon: string;
+}
+
+export interface ComicPanel {
+  id: number;
+  text: string;
+  speaker?: string;
+  type: 'narration' | 'dialogue' | 'action' | 'thought' | 'shout';
+  bgColor?: string;
+}
+
+export interface SpeechBubble {
+  text: string;
+  type: 'speech' | 'thought' | 'shout';
+  position: 'top' | 'bottom' | 'left' | 'right';
+}
+
+export interface ManifestoSection {
+  title: string;
+  body: string;
+}
+
+export interface ManifestoContent {
+  headline: string;
+  date: string;
+  sections: ManifestoSection[];
+  signature: string;
+}
