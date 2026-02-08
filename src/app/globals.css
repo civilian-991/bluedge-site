@@ -2576,4 +2576,324 @@ body {
   .crt-scanlines::before {
     display: none;
   }
+  .glitch-text-subtle,
+  .glitch-text-medium,
+  .glitch-text-intense {
+    animation: none !important;
+  }
+  .glitch-text-subtle::before,
+  .glitch-text-subtle::after,
+  .glitch-text-medium::before,
+  .glitch-text-medium::after,
+  .glitch-text-intense::before,
+  .glitch-text-intense::after {
+    display: none !important;
+  }
+}
+
+/* ================================
+   GLITCH TEXT HOVER EFFECT
+   ================================ */
+.glitch-text-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+/* Shared pseudo-element setup */
+.glitch-text-subtle::before,
+.glitch-text-subtle::after,
+.glitch-text-medium::before,
+.glitch-text-medium::after,
+.glitch-text-intense::before,
+.glitch-text-intense::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* --- Subtle --- */
+.glitch-text-subtle::before {
+  color: #ff0040;
+  animation: glitchHover1 0.4s linear infinite;
+  clip-path: inset(0 0 65% 0);
+  opacity: 0.6;
+}
+.glitch-text-subtle::after {
+  color: #00ffff;
+  animation: glitchHover2 0.4s linear infinite;
+  clip-path: inset(65% 0 0 0);
+  opacity: 0.6;
+}
+
+/* --- Medium --- */
+.glitch-text-medium::before {
+  color: #ff0040;
+  animation: glitchHover1 0.3s linear infinite;
+  clip-path: inset(0 0 50% 0);
+  opacity: 0.7;
+}
+.glitch-text-medium::after {
+  color: #00ffff;
+  animation: glitchHover2 0.3s linear infinite;
+  clip-path: inset(50% 0 0 0);
+  opacity: 0.7;
+}
+.glitch-text-medium {
+  animation: glitchTextJitter 0.3s steps(2) infinite;
+}
+
+/* --- Intense --- */
+.glitch-text-intense::before {
+  color: #ff0040;
+  animation: glitchHover1 0.2s linear infinite;
+  clip-path: inset(0 0 40% 0);
+  opacity: 0.85;
+}
+.glitch-text-intense::after {
+  color: #00ffff;
+  animation: glitchHover2 0.2s linear infinite;
+  clip-path: inset(40% 0 0 0);
+  opacity: 0.85;
+}
+.glitch-text-intense {
+  animation: glitchTextJitter 0.15s steps(2) infinite;
+}
+
+/* Glitch hover keyframes */
+@keyframes glitchHover1 {
+  0% {
+    transform: translate(0);
+    clip-path: inset(10% 0 60% 0);
+  }
+  20% {
+    transform: translate(-3px, 2px);
+    clip-path: inset(40% 0 20% 0);
+  }
+  40% {
+    transform: translate(3px, -1px);
+    clip-path: inset(70% 0 5% 0);
+  }
+  60% {
+    transform: translate(-2px, 1px);
+    clip-path: inset(20% 0 50% 0);
+  }
+  80% {
+    transform: translate(2px, -2px);
+    clip-path: inset(55% 0 15% 0);
+  }
+  100% {
+    transform: translate(0);
+    clip-path: inset(10% 0 60% 0);
+  }
+}
+
+@keyframes glitchHover2 {
+  0% {
+    transform: translate(0);
+    clip-path: inset(60% 0 10% 0);
+  }
+  20% {
+    transform: translate(3px, -2px);
+    clip-path: inset(20% 0 40% 0);
+  }
+  40% {
+    transform: translate(-3px, 1px);
+    clip-path: inset(5% 0 70% 0);
+  }
+  60% {
+    transform: translate(2px, -1px);
+    clip-path: inset(50% 0 20% 0);
+  }
+  80% {
+    transform: translate(-2px, 2px);
+    clip-path: inset(15% 0 55% 0);
+  }
+  100% {
+    transform: translate(0);
+    clip-path: inset(60% 0 10% 0);
+  }
+}
+
+@keyframes glitchTextJitter {
+  0% { transform: translate(0); }
+  25% { transform: translate(-1px, 1px); }
+  50% { transform: translate(1px, -1px); }
+  75% { transform: translate(-1px, -1px); }
+  100% { transform: translate(0); }
+}
+
+/* Scan line pass during glitch */
+.glitch-text-medium::before,
+.glitch-text-intense::before {
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(255,255,255,0.03) 2px,
+    rgba(255,255,255,0.03) 4px
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+/* ================================
+   SECTION TRANSITION ANIMATIONS
+   ================================ */
+@keyframes pixelFlicker {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 0.2; }
+}
+
+@keyframes staticJitter {
+  0% { transform: translate(0, 0); }
+  33% { transform: translate(-2px, 1px); }
+  66% { transform: translate(1px, -1px); }
+  100% { transform: translate(0, 0); }
+}
+
+@keyframes horizontalSweep {
+  0%, 100% { top: 0; }
+  50% { top: 100%; }
+}
+
+@keyframes countdownPulse {
+  0%, 100% { opacity: 0.15; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.2); }
+}
+
+@keyframes speedLineFlash {
+  0%, 100% { opacity: 0; transform: scaleX(0.5); }
+  50% { opacity: 1; transform: scaleX(1); }
+}
+
+@keyframes inkDrop {
+  0%, 100% { transform: scale(0.8); opacity: 0.5; }
+  50% { transform: scale(1.2); opacity: 0.8; }
+}
+
+@keyframes tapeScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ================================
+   CORK BOARD BACKGROUND (Polaroid Gallery)
+   ================================ */
+.cork-board {
+  background-color: #8B6914;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(0,0,0,0.03) 10px,
+      rgba(0,0,0,0.03) 11px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 10px,
+      rgba(0,0,0,0.03) 10px,
+      rgba(0,0,0,0.03) 11px
+    ),
+    radial-gradient(ellipse at 20% 50%, rgba(139,90,43,0.3) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 50%, rgba(139,90,43,0.3) 0%, transparent 50%);
+}
+
+/* ================================
+   TELEGRAM MACHINE STYLES
+   ================================ */
+.telegram-machine {
+  background: linear-gradient(180deg, #2C1810 0%, #1A0E08 40%, #0D0705 100%);
+  border: 3px solid #4A3020;
+  box-shadow:
+    inset 0 2px 10px rgba(205,127,50,0.1),
+    0 10px 40px rgba(0,0,0,0.6),
+    0 0 0 1px rgba(205,127,50,0.15);
+}
+
+.telegram-input {
+  background: rgba(245,240,225,0.06);
+  border: 1px solid rgba(205,127,50,0.25);
+  color: #F5F0E1;
+  font-family: 'Special Elite', monospace;
+  transition: all 0.3s ease;
+}
+
+.telegram-input:focus {
+  border-color: rgba(205,127,50,0.5);
+  box-shadow: 0 0 15px rgba(205,127,50,0.15);
+  outline: none;
+}
+
+.telegram-input::placeholder {
+  color: rgba(205,127,50,0.3);
+}
+
+.brass-button {
+  background: linear-gradient(180deg, #CD7F32, #8B6914, #CD7F32);
+  border: 2px solid #8B6914;
+  color: #1A0E08;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  box-shadow:
+    0 4px 0 #5C3A0A,
+    0 6px 20px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.2);
+  transition: all 0.1s ease;
+}
+
+.brass-button:hover {
+  filter: brightness(1.1);
+}
+
+.brass-button:active {
+  transform: translateY(3px);
+  box-shadow:
+    0 1px 0 #5C3A0A,
+    0 2px 10px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+/* ================================
+   VHS REWIND OVERLAY
+   ================================ */
+.vhs-rewind-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 998;
+  mix-blend-mode: screen;
+}
+
+.vhs-tracking-line {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: rgba(255,255,255,0.15);
+  animation: vhsTrack 0.08s linear infinite;
+}
+
+@keyframes vhsTrack {
+  0% { transform: translateX(-5px); }
+  100% { transform: translateX(5px); }
+}
+
+/* ================================
+   COLLECTIBLE ANIMATIONS
+   ================================ */
+@keyframes collectPulse {
+  0%, 100% { box-shadow: 0 0 5px rgba(255,215,0,0.3); }
+  50% { box-shadow: 0 0 15px rgba(255,215,0,0.6), 0 0 30px rgba(255,215,0,0.3); }
+}
+
+@keyframes confettiDrop {
+  0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
 }

@@ -7,6 +7,10 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { services } from "@/data";
 import TVStatic from "./shared/TVStatic";
 import ScanLines from "./shared/ScanLines";
+import { useCollectibles } from "@/hooks/useCollectibles";
+import { CollectibleTrigger } from "./CollectibleItem";
+import { useRetroSound } from "@/hooks/useRetroSound";
+import GlitchText from "./GlitchText";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -21,15 +25,33 @@ export default function RetroTVServices() {
   const [isChanging, setIsChanging] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
+  const [mushroomFound, setMushroomFound] = useState(false);
+  const keyBuffer = useRef("");
+  const { playSound } = useRetroSound();
 
   const switchChannel = useCallback((index: number) => {
     if (index === activeChannel || isChanging) return;
     setIsChanging(true);
+    playSound("channelSwitch");
     setTimeout(() => {
       setActiveChannel(index);
       setTimeout(() => setIsChanging(false), 300);
     }, 300);
-  }, [activeChannel, isChanging]);
+  }, [activeChannel, isChanging, playSound]);
+
+  // Listen for "99" typed while in this section
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      keyBuffer.current += e.key;
+      if (keyBuffer.current.length > 5) keyBuffer.current = keyBuffer.current.slice(-5);
+      if (keyBuffer.current.includes("99")) {
+        setMushroomFound(true);
+        keyBuffer.current = "";
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -81,7 +103,9 @@ export default function RetroTVServices() {
               Cable TV Guide
             </span>
           </div>
-          <h2
+          <GlitchText
+            as="h2"
+            intensity="intense"
             className="text-4xl md:text-6xl font-bold mb-4"
             style={{
               fontFamily: "'Press Start 2P', monospace",
@@ -91,7 +115,7 @@ export default function RetroTVServices() {
             }}
           >
             WHAT&apos;S ON TONIGHT
-          </h2>
+          </GlitchText>
           <p className="text-white/40 text-sm max-w-md mx-auto" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: "0.55rem" }}>
             Tune in to our channel lineup
           </p>
@@ -340,6 +364,9 @@ export default function RetroTVServices() {
           </div>
         </div>
       </div>
+
+      {/* Collectible: Power Mushroom (type "99" on keyboard) */}
+      <CollectibleTrigger id="power-mushroom" emoji="🍄" triggered={mushroomFound} />
     </section>
   );
 }

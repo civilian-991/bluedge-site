@@ -1,11 +1,14 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { testimonials } from "@/data";
 import HalftoneOverlay from "./shared/HalftoneOverlay";
+import { CollectibleTrigger } from "./CollectibleItem";
+import { useRetroSound } from "@/hooks/useRetroSound";
+import GlitchText from "./GlitchText";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -25,6 +28,11 @@ export default function NewspaperTestimonials() {
   const sectionRef = useRef<HTMLElement>(null);
   const paperRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+  const [gemFound, setGemFound] = useState(false);
+  const volClickCount = useRef(0);
+  const volClickTimer = useRef<NodeJS.Timeout | null>(null);
+  const { playSound } = useRetroSound();
+  const soundPlayed = useRef(false);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -43,13 +51,19 @@ export default function NewspaperTestimonials() {
             scrollTrigger: {
               trigger: sectionRef.current,
               start: "top 75%",
+              onEnter: () => {
+                if (!soundPlayed.current) {
+                  soundPlayed.current = true;
+                  playSound("newspaperUnfold");
+                }
+              },
             },
           }
         );
       }
     }, sectionRef);
     return () => ctx.revert();
-  }, []);
+  }, [playSound]);
 
   const today = new Date();
   const dateStr = today.toLocaleDateString("en-US", {
@@ -83,18 +97,32 @@ export default function NewspaperTestimonials() {
             <div className="text-center border-b-4 border-double border-black/80 pb-6 mb-6">
               {/* Top line */}
               <div className="flex items-center justify-between text-[10px] text-black/40 mb-3 px-2">
-                <span>Vol. XX, No. 150</span>
+                <span
+                  className="cursor-pointer select-none"
+                  onClick={() => {
+                    volClickCount.current++;
+                    if (volClickTimer.current) clearTimeout(volClickTimer.current);
+                    if (volClickCount.current >= 3) {
+                      setGemFound(true);
+                      volClickCount.current = 0;
+                    } else {
+                      volClickTimer.current = setTimeout(() => { volClickCount.current = 0; }, 800);
+                    }
+                  }}
+                >Vol. XX, No. 150</span>
                 <span>{dateStr}</span>
                 <span>Late Edition</span>
               </div>
 
               {/* Masthead title */}
-              <h2
+              <GlitchText
+                as="h2"
+                intensity="subtle"
                 className="text-4xl md:text-7xl font-black text-black tracking-tight leading-none mb-2"
                 style={{ fontFamily: "'Playfair Display', serif" }}
               >
                 THE BLUEDGE TIMES
-              </h2>
+              </GlitchText>
 
               {/* Subtitle line */}
               <div className="flex items-center justify-center gap-4 text-[10px] text-black/50">
@@ -229,6 +257,9 @@ export default function NewspaperTestimonials() {
           />
         </div>
       </div>
+
+      {/* Collectible: Blue Gem (click "Vol. XX" 3 times) */}
+      <CollectibleTrigger id="blue-gem" emoji="💎" triggered={gemFound} />
     </section>
   );
 }

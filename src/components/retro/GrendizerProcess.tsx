@@ -1,10 +1,12 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion, useInView } from "framer-motion";
 import { processSteps } from "@/data";
+import { CollectibleTrigger } from "./CollectibleItem";
+import GlitchText from "./GlitchText";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -148,6 +150,23 @@ export default function GrendizerProcess() {
   const sectionRef = useRef<HTMLElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+  const [boltFound, setBoltFound] = useState(false);
+  const hoveredParts = useRef(new Set<number>());
+  const hoverTimer = useRef<NodeJS.Timeout | null>(null);
+
+  const handlePartHover = useCallback((index: number) => {
+    hoveredParts.current.add(index);
+    if (hoveredParts.current.size === 1 && !hoverTimer.current) {
+      hoverTimer.current = setTimeout(() => {
+        hoveredParts.current.clear();
+        hoverTimer.current = null;
+      }, 3000);
+    }
+    if (hoveredParts.current.size >= 4) {
+      setBoltFound(true);
+      if (hoverTimer.current) clearTimeout(hoverTimer.current);
+    }
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -205,7 +224,9 @@ export default function GrendizerProcess() {
           >
             Battle Plan
           </span>
-          <h2
+          <GlitchText
+            as="h2"
+            intensity="medium"
             className="text-4xl md:text-6xl font-black mb-4"
             style={{
               fontFamily: "'Bangers', cursive",
@@ -215,7 +236,7 @@ export default function GrendizerProcess() {
             }}
           >
             OUR PROCESS
-          </h2>
+          </GlitchText>
           <p className="text-white/40 text-sm max-w-md mx-auto">
             Assembling your brand&apos;s ultimate form — one phase at a time
           </p>
@@ -229,6 +250,7 @@ export default function GrendizerProcess() {
               <div
                 key={step.phase}
                 className="process-step relative flex gap-6"
+                onMouseEnter={() => handlePartHover(i)}
               >
                 {/* Phase number */}
                 <div className="flex-shrink-0">
@@ -335,6 +357,9 @@ export default function GrendizerProcess() {
           </div>
         </div>
       </div>
+
+      {/* Collectible: Lightning Bolt (hover all 4 mecha parts within 3s) */}
+      <CollectibleTrigger id="lightning-bolt" emoji="⚡" triggered={boltFound} />
     </section>
   );
 }

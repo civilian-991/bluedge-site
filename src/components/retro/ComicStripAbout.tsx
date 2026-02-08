@@ -6,6 +6,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion, useInView } from "framer-motion";
 import { comicPanels } from "@/data";
 import HalftoneOverlay from "./shared/HalftoneOverlay";
+import { useRetroSound } from "@/hooks/useRetroSound";
+import GlitchText from "./GlitchText";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -154,6 +156,8 @@ export default function ComicStripAbout() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true });
+  const { playSound } = useRetroSound();
+  const soundPlayed = useRef(false);
 
   useEffect(() => {
     if (!scrollRef.current || !containerRef.current) return;
@@ -171,12 +175,18 @@ export default function ComicStripAbout() {
           scrub: 1,
           pin: true,
           anticipatePin: 1,
+          onEnter: () => {
+            if (!soundPlayed.current) {
+              soundPlayed.current = true;
+              playSound("comicPop");
+            }
+          },
         },
       });
     }, containerRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [playSound]);
 
   return (
     <div ref={sectionRef} className="mb-32">
@@ -197,7 +207,9 @@ export default function ComicStripAbout() {
         >
           The Origin Story
         </span>
-        <h3
+        <GlitchText
+          as="h3"
+          intensity="medium"
           className="text-3xl md:text-5xl font-bold"
           style={{
             fontFamily: "'Bangers', cursive",
@@ -207,7 +219,7 @@ export default function ComicStripAbout() {
           }}
         >
           HOW BLUEDGE WAS BORN
-        </h3>
+        </GlitchText>
       </motion.div>
 
       {/* Horizontal scroll comic strip */}

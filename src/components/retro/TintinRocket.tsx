@@ -2,15 +2,18 @@
 
 import { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useRetroSound } from "@/hooks/useRetroSound";
 
 export default function TintinRocket() {
   const [isLaunching, setIsLaunching] = useState(false);
   const [countdown, setCountdown] = useState<number | null>(null);
   const rocketRef = useRef<HTMLDivElement>(null);
+  const { playSound } = useRetroSound();
 
   const handleLaunch = useCallback(() => {
     if (isLaunching) return;
     setIsLaunching(true);
+    playSound("rocketCountdown");
 
     // Countdown sequence
     let count = 3;
@@ -23,6 +26,7 @@ export default function TintinRocket() {
       } else {
         clearInterval(countInterval);
         setCountdown(0); // "GO!"
+        playSound("rocketLaunch");
 
         // Scroll to contact after brief delay
         setTimeout(() => {

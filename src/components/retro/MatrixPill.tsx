@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import MatrixRain from "./shared/MatrixRain";
+import { useRetroSound } from "@/hooks/useRetroSound";
+import GlitchText from "./GlitchText";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,6 +18,7 @@ export default function MatrixPill() {
   const [phase, setPhase] = useState<Phase>("choice");
   const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
+  const { playSound } = useRetroSound();
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -41,6 +44,7 @@ export default function MatrixPill() {
   }, []);
 
   const handleBluePill = () => {
+    playSound("pillClick");
     setChoice("blue");
     setPhase("blue-fake");
     // Show fake corporate content, then redirect to red pill content
@@ -51,6 +55,7 @@ export default function MatrixPill() {
   };
 
   const handleRedPill = () => {
+    playSound("pillClick");
     setChoice("red");
     setPhase("rain");
     setTimeout(() => setPhase("revealed"), 3500);
@@ -120,6 +125,7 @@ export default function MatrixPill() {
                 {/* Blue pill */}
                 <motion.button
                   onClick={handleBluePill}
+                  onMouseEnter={() => playSound("pillHover")}
                   initial={{ opacity: 0, x: -50 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
@@ -154,6 +160,7 @@ export default function MatrixPill() {
                 {/* Red pill */}
                 <motion.button
                   onClick={handleRedPill}
+                  onMouseEnter={() => playSound("pillHover")}
                   initial={{ opacity: 0, x: 50 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}

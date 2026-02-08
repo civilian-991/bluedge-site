@@ -3,14 +3,17 @@
 import { useRef, useState, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { stats } from "@/data";
+import { useRetroSound } from "@/hooks/useRetroSound";
+import GlitchText from "./GlitchText";
 
-function ArcadeCounter({ target, suffix }: { target: number; suffix: string }) {
+function ArcadeCounter({ target, suffix, onStart }: { target: number; suffix: string; onStart?: () => void }) {
   const [count, setCount] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once: true });
 
   useEffect(() => {
     if (!isInView) return;
+    onStart?.();
 
     let startTime: number;
     const duration = 2000;
@@ -26,7 +29,7 @@ function ArcadeCounter({ target, suffix }: { target: number; suffix: string }) {
     };
 
     requestAnimationFrame(animate);
-  }, [isInView, target]);
+  }, [isInView, target, onStart]);
 
   return (
     <span ref={ref}>
@@ -76,6 +79,8 @@ function PacManDots() {
 export default function ArcadeStats() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-50px" });
+  const { playSound } = useRetroSound();
+  const soundPlayed = useRef(false);
 
   return (
     <div ref={sectionRef}>
@@ -86,7 +91,9 @@ export default function ArcadeStats() {
         transition={{ duration: 0.6 }}
         className="text-center mb-8"
       >
-        <span
+        <GlitchText
+          as="span"
+          intensity="intense"
           className="text-xs tracking-[0.3em] uppercase"
           style={{
             fontFamily: "'Press Start 2P', monospace",
@@ -95,7 +102,7 @@ export default function ArcadeStats() {
           }}
         >
           HIGH SCORES
-        </span>
+        </GlitchText>
       </motion.div>
 
       {/* Arcade scoreboard */}
@@ -178,7 +185,16 @@ export default function ArcadeStats() {
                   textShadow: "0 0 10px rgba(255,255,255,0.3)",
                 }}
               >
-                <ArcadeCounter target={stat.number} suffix={stat.suffix} />
+                <ArcadeCounter
+                  target={stat.number}
+                  suffix={stat.suffix}
+                  onStart={i === 0 ? () => {
+                    if (!soundPlayed.current) {
+                      soundPlayed.current = true;
+                      playSound("arcadeCount");
+                    }
+                  } : undefined}
+                />
               </span>
             </motion.div>
           ))}

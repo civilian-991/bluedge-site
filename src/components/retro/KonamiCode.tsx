@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useKonamiCode } from "@/hooks/useKonamiCode";
+import { useRetroSound } from "@/hooks/useRetroSound";
 
 const pixelTeam = [
   { name: "Strategist", color: "#2CACE2", emoji: "🤖" },
@@ -15,9 +16,11 @@ const pixelTeam = [
 
 export default function KonamiCode() {
   const { isActivated, reset } = useKonamiCode();
+  const { playSound } = useRetroSound();
 
   useEffect(() => {
     if (!isActivated) return;
+    playSound("konamiVictory");
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") reset();
     };

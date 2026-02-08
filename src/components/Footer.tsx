@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowUpRight, Sparkles } from "lucide-react";
 import { socialLinks, contactInfo, services } from "@/data";
+import { CollectibleTrigger } from "./retro/CollectibleItem";
 
 const footerLinks = {
   services: services.map(s => ({ name: s.title, href: "#services" })),
@@ -22,6 +23,9 @@ const footerLinks = {
 
 export default function Footer() {
   const footerRef = useRef<HTMLElement>(null);
+  const [trophyFound, setTrophyFound] = useState(false);
+  const trophyClickCount = useRef(0);
+  const trophyClickTimer = useRef<NodeJS.Timeout | null>(null);
 
   return (
     <footer
@@ -370,7 +374,19 @@ export default function Footer() {
             ))}
           </div>
 
-          <div className="flex items-center gap-2 text-white/30 text-sm">
+          <div
+            className="flex items-center gap-2 text-white/30 text-sm cursor-pointer select-none"
+            onClick={() => {
+              trophyClickCount.current++;
+              if (trophyClickTimer.current) clearTimeout(trophyClickTimer.current);
+              if (trophyClickCount.current >= 3) {
+                setTrophyFound(true);
+                trophyClickCount.current = 0;
+              } else {
+                trophyClickTimer.current = setTimeout(() => { trophyClickCount.current = 0; }, 800);
+              }
+            }}
+          >
             <span>Crafted with</span>
             <motion.span
               className="text-[#00AEEF]"
@@ -390,6 +406,9 @@ export default function Footer() {
           </div>
         </motion.div>
       </div>
+
+      {/* Collectible: Trophy (click "Crafted with ♥" 3 times) */}
+      <CollectibleTrigger id="trophy" emoji="🏆" triggered={trophyFound} />
     </footer>
   );
 }

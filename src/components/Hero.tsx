@@ -7,6 +7,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Play, Zap } from "lucide-react";
 import TintinRocket from "./retro/TintinRocket";
 import Image from "next/image";
+import { useCollectibles } from "@/hooks/useCollectibles";
+import { CollectibleTrigger } from "./retro/CollectibleItem";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -431,6 +433,9 @@ export default function Hero() {
   const [shockwaveTrigger, setShockwaveTrigger] = useState(false);
   const [lightningTrigger, setLightningTrigger] = useState(false);
   const [energyBeamTrigger, setEnergyBeamTrigger] = useState(false);
+  const [starFound, setStarFound] = useState(false);
+  const clickCountRef = useRef(0);
+  const clickTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const scrambledText = useTextScramble("The Agency That Cares", animationStarted);
 
@@ -914,7 +919,19 @@ export default function Hero() {
                    filter: "blur(20px)",
                    opacity: 0.3,
                  }} />
-            <div className="relative w-52 h-auto electric-pulse plasma-glow">
+            <div
+              className="relative w-52 h-auto electric-pulse plasma-glow cursor-pointer"
+              onClick={() => {
+                clickCountRef.current++;
+                if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
+                if (clickCountRef.current >= 3) {
+                  setStarFound(true);
+                  clickCountRef.current = 0;
+                } else {
+                  clickTimerRef.current = setTimeout(() => { clickCountRef.current = 0; }, 600);
+                }
+              }}
+            >
               <Image
                 src="/bluedge/Logo.svg"
                 alt="BluEdge Logo"
@@ -924,6 +941,7 @@ export default function Hero() {
                 priority
               />
             </div>
+            <CollectibleTrigger id="golden-star" emoji="⭐" triggered={starFound} />
           </motion.div>
 
           {/* Eyebrow with scramble effect */}
