@@ -9,6 +9,7 @@ import { useRetroSound } from "@/hooks/useRetroSound";
 import RPGTextBox from "./RPGTextBox";
 import CharacterSheet from "./CharacterSheet";
 import QuestBoard from "./QuestBoard";
+import WorldMap from "./WorldMap";
 
 type Phase = "intro" | "guild";
 
@@ -24,6 +25,7 @@ export default function RPGDungeonTeam() {
   const [phase, setPhase] = useState<Phase>("intro");
   const [introStep, setIntroStep] = useState(0);
   const [selectedMember, setSelectedMember] = useState<string | null>(null);
+  const [hiddenChamberOpen, setHiddenChamberOpen] = useState(false);
   const { playSound } = useRetroSound();
   const reducedMotion =
     typeof window !== "undefined"
@@ -193,7 +195,7 @@ export default function RPGDungeonTeam() {
                     <div className="text-xs font-mono font-bold text-white/80 uppercase tracking-wider">
                       {member.shortName}
                     </div>
-                    <div className="text-[9px] text-white/30 font-mono mt-1">LVL 99</div>
+                    <div className="text-[10px] sm:text-[9px] text-white/30 font-mono mt-1">LVL 99</div>
 
                     {/* Selection indicator */}
                     {selectedMember === member.slug && (
@@ -266,12 +268,38 @@ export default function RPGDungeonTeam() {
                       <div className="text-[10px] text-white/70 font-mono leading-tight">
                         {item.name}
                       </div>
-                      <div className="text-[8px] text-white/30 font-mono uppercase mt-1">
+                      <div className="text-[10px] sm:text-[8px] text-white/30 font-mono uppercase mt-1">
                         {item.type}
                       </div>
                     </motion.div>
                   );
                 })}
+
+                {/* Hidden Room — Secret Door (barely visible) */}
+                <motion.button
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: allEquipment.length * 0.03 }}
+                  whileHover={{ borderColor: "rgba(44,172,226,0.15)" }}
+                  onClick={() => {
+                    setHiddenChamberOpen(true);
+                    playSound("rpgLevelUp");
+                  }}
+                  className="relative p-3 border border-white/[0.04] rounded-lg bg-white/[0.005] text-center cursor-default hover:cursor-pointer group"
+                  aria-label="Secret door"
+                  title=""
+                >
+                  <div className="text-2xl mb-1 text-white/[0.06] group-hover:text-white/[0.12] transition-colors duration-700">
+                    🚪
+                  </div>
+                  <div className="text-[10px] text-white/[0.04] font-mono leading-tight group-hover:text-white/[0.08] transition-colors duration-700">
+                    ???
+                  </div>
+                  <div className="text-[8px] text-white/[0.03] font-mono uppercase mt-1">
+                    hidden
+                  </div>
+                </motion.button>
               </div>
             </motion.section>
 
@@ -289,6 +317,20 @@ export default function RPGDungeonTeam() {
               <div className="max-w-3xl mx-auto">
                 <QuestBoard quests={allQuests} title="" />
               </div>
+            </motion.section>
+
+            {/* World Map */}
+            <motion.section
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="mb-16"
+            >
+              <h2 className="text-xs font-mono tracking-wider text-accent/60 uppercase mb-6 text-center">
+                ─── World Map ───
+              </h2>
+              <WorldMap />
             </motion.section>
 
             {/* CTA as Quest Posting */}
@@ -327,6 +369,73 @@ export default function RPGDungeonTeam() {
             </motion.section>
           </motion.div>
         )}
+
+        {/* Hidden Chamber Overlay */}
+        <AnimatePresence>
+          {hiddenChamberOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+              onClick={() => setHiddenChamberOpen(false)}
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.6, y: 30 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.8, y: 20 }}
+                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                onClick={(e) => e.stopPropagation()}
+                className="relative max-w-md w-full mx-4 border-2 border-accent/30 rounded-lg bg-[#0a0a0f] p-8 text-center shadow-[0_0_60px_rgba(44,172,226,0.1)]"
+              >
+                {/* Torches */}
+                <div className="absolute top-4 left-4 text-2xl animate-pulse">🔥</div>
+                <div className="absolute top-4 right-4 text-2xl animate-pulse">🔥</div>
+
+                {/* Chamber content */}
+                <div className="text-accent/30 text-xs font-mono tracking-[0.3em] uppercase mb-4 mt-2">
+                  Secret Chamber Discovered
+                </div>
+
+                <div className="text-5xl mb-4">🏰</div>
+
+                <h3 className="text-xl font-bold text-white mb-2 font-mono">
+                  You found the Hidden Chamber!
+                </h3>
+
+                <div className="text-4xl my-4">💎</div>
+
+                <div className="border border-accent/10 rounded-lg p-4 bg-accent/[0.02] mb-6">
+                  <p className="text-white/60 text-sm font-mono leading-relaxed">
+                    Deep beneath the Guild Hall lies a forgotten treasury.
+                    Legend says BluEdge once completed a quest so legendary,
+                    the client sent a thank-you cake shaped like a pixel sword.
+                  </p>
+                  <p className="text-accent/50 text-xs font-mono mt-3 italic">
+                    + 500 XP added to your adventurer&apos;s log
+                  </p>
+                </div>
+
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => {
+                    setHiddenChamberOpen(false);
+                    playSound("rpgMenuSelect");
+                  }}
+                  className="px-6 py-2.5 border border-accent/30 text-accent font-mono text-sm tracking-wider rounded hover:bg-accent/10 transition-colors"
+                >
+                  LEAVE CHAMBER
+                </motion.button>
+
+                <div className="text-[9px] text-white/20 font-mono mt-4">
+                  Only the most curious adventurers find this room.
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

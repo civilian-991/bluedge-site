@@ -43,7 +43,7 @@ export default function FilmStrip({ images }: FilmStripProps) {
           {images.map((src, i) => (
             <motion.div
               key={i}
-              className="relative shrink-0 w-[280px] h-[200px] rounded-sm overflow-hidden border border-amber-900/20"
+              className="relative shrink-0 w-[200px] h-[140px] sm:w-[280px] sm:h-[200px] rounded-sm overflow-hidden border border-amber-900/20"
               whileHover={!isDragging ? { scale: 1.05, y: -5 } : {}}
               transition={{ type: "spring", stiffness: 300 }}
             >
@@ -52,7 +52,7 @@ export default function FilmStrip({ images }: FilmStripProps) {
                 alt={`Frame ${i + 1}`}
                 fill
                 className="object-cover"
-                sizes="280px"
+                sizes="(max-width: 640px) 200px, 280px"
                 draggable={false}
               />
               {/* Film frame overlay */}

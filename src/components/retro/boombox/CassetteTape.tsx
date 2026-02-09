@@ -29,7 +29,7 @@ export default function CassetteTape({ post, tapeColor = "#2CACE2", index }: Cas
             {/* Top section with screw holes */}
             <div className="flex justify-between items-start mb-3">
               <div className="w-2 h-2 rounded-full border border-amber-800/40" />
-              <div className="text-[9px] font-mono text-amber-400/30 tracking-wider uppercase">
+              <div className="text-[10px] sm:text-[9px] font-mono text-amber-400/30 tracking-wider uppercase">
                 SIDE A &middot; {post.readTime}min
               </div>
               <div className="w-2 h-2 rounded-full border border-amber-800/40" />
@@ -82,7 +82,7 @@ export default function CassetteTape({ post, tapeColor = "#2CACE2", index }: Cas
             </div>
 
             {/* Bottom info */}
-            <div className="flex justify-between items-center mt-3 text-[9px] font-mono text-amber-400/30">
+            <div className="flex justify-between items-center mt-3 text-[10px] sm:text-[9px] font-mono text-amber-400/30">
               <span>{post.author}</span>
               <span>{post.date}</span>
             </div>

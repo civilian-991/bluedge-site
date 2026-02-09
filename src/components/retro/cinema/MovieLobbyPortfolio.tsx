@@ -188,7 +188,7 @@ export default function MovieLobbyPortfolio() {
                         {cs.tags.slice(0, 3).map((tag) => (
                           <span
                             key={tag}
-                            className="text-[9px] px-2 py-0.5 border border-amber-900/30 text-amber-400/50 font-mono uppercase"
+                            className="text-[10px] sm:text-[9px] px-2 py-0.5 border border-amber-900/30 text-amber-400/50 font-mono uppercase"
                           >
                             {tag}
                           </span>
@@ -203,7 +203,7 @@ export default function MovieLobbyPortfolio() {
                         viewport={{ once: true }}
                         transition={{ delay: 0.2 + i * 0.05, duration: 0.8 }}
                       />
-                      <div className="text-center mt-2 text-[9px] font-mono text-amber-400/30 tracking-[0.3em] uppercase group-hover:text-amber-400/60 transition-colors">
+                      <div className="text-center mt-2 text-[10px] sm:text-[9px] font-mono text-amber-400/30 tracking-[0.3em] uppercase group-hover:text-amber-400/60 transition-colors">
                         View Premiere →
                       </div>
                     </div>

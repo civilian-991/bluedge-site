@@ -99,7 +99,7 @@ export default function TerminalServiceDetail({ service }: TerminalServiceDetail
               transition={{ duration: 0.5 }}
               className="mb-6"
             >
-              <pre className="text-accent text-[10px] md:text-xs leading-tight overflow-x-auto whitespace-pre">
+              <pre className="hidden md:block text-accent text-xs leading-tight overflow-x-auto whitespace-pre">
                 {service.asciiArt}
               </pre>
               <div className="mt-4 text-accent/60 text-xs">
@@ -279,7 +279,7 @@ export default function TerminalServiceDetail({ service }: TerminalServiceDetail
                         setSelectedFaq(selectedFaq === i ? null : i);
                         playSound("terminalKey");
                       }}
-                      className="text-left hover:text-accent transition-colors w-full"
+                      className="text-left hover:text-accent transition-colors w-full min-h-[44px] py-2 flex items-center gap-1"
                     >
                       <span className="text-accent">[?]</span>{" "}
                       <span className="text-yellow-400/80">{item.question}</span>

@@ -8,21 +8,73 @@ interface FilmCountdownProps {
   onComplete: () => void;
 }
 
+// Pre-generate sparkle data at module level to avoid Math.random() in render
+const SPARKLE_DATA = Array.from({ length: 12 }, (_, i) => {
+  const angle = (i / 12) * 360;
+  const rad = (angle * Math.PI) / 180;
+  const distance = 60 + Math.random() * 40;
+  return {
+    id: i,
+    x: Math.cos(rad) * distance,
+    y: Math.sin(rad) * distance,
+    delay: i * 0.03,
+    size: 3 + Math.random() * 4,
+  };
+});
+
+// Sparkle particles for the collectible celebration
+function SparkleEffect() {
+
+  return (
+    <div className="absolute inset-0 pointer-events-none">
+      {SPARKLE_DATA.map((s) => (
+        <motion.div
+          key={s.id}
+          className="absolute left-1/2 top-1/2 rounded-full bg-amber-300"
+          style={{ width: s.size, height: s.size }}
+          initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
+          animate={{ x: s.x, y: s.y, opacity: 0, scale: 0 }}
+          transition={{ duration: 0.6, delay: s.delay, ease: "easeOut" }}
+        />
+      ))}
+    </div>
+  );
+}
+
 export default function FilmCountdown({ onComplete }: FilmCountdownProps) {
   const [count, setCount] = useState(5);
   const [done, setDone] = useState(false);
   const [showSnap, setShowSnap] = useState(false);
+  const [collectibleFound, setCollectibleFound] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [showSparkles, setShowSparkles] = useState(false);
   const { playSound } = useRetroSound();
   const started = useRef(false);
+
+  // Handle the secret "3" click
+  const handleThreeClick = useCallback(() => {
+    if (collectibleFound) return;
+    setCollectibleFound(true);
+    setShowSparkles(true);
+    playSound("filmSnap");
+
+    // Show toast after a brief flash
+    setTimeout(() => setShowToast(true), 200);
+
+    // Hide toast after 2.5s
+    setTimeout(() => setShowToast(false), 2700);
+  }, [collectibleFound, playSound]);
 
   useEffect(() => {
     if (started.current) return;
     started.current = true;
 
-    // Respect reduced motion
+    // Respect reduced motion — use microtask to avoid sync setState in effect
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setDone(true);
-      onComplete();
+      queueMicrotask(() => {
+        setDone(true);
+        onComplete();
+      });
       return;
     }
 
@@ -100,17 +152,86 @@ export default function FilmCountdown({ onComplete }: FilmCountdownProps) {
               <line x1="160" y1="100" x2="190" y2="100" stroke="currentColor" strokeWidth="1" />
             </svg>
 
-            {/* Number */}
+            {/* Number — "3" is the secret clickable collectible */}
             <motion.span
-              className="absolute inset-0 flex items-center justify-center text-7xl font-bold text-amber-100 font-mono"
+              className={`absolute inset-0 flex items-center justify-center text-7xl font-bold font-mono ${
+                count === 3
+                  ? "text-amber-100 cursor-pointer select-none"
+                  : "text-amber-100"
+              }`}
               style={{
-                textShadow: "0 0 30px rgba(255,200,100,0.5)",
+                textShadow:
+                  count === 3 && collectibleFound
+                    ? "0 0 50px rgba(255,200,100,0.9), 0 0 80px rgba(255,170,0,0.5)"
+                    : "0 0 30px rgba(255,200,100,0.5)",
               }}
+              onClick={count === 3 ? handleThreeClick : undefined}
+              // Brief flash when collectible is triggered
+              animate={
+                count === 3 && collectibleFound
+                  ? {
+                      scale: [1, 1.3, 1],
+                      color: [
+                        "rgb(255, 251, 235)",
+                        "rgb(255, 215, 0)",
+                        "rgb(255, 251, 235)",
+                      ],
+                    }
+                  : {}
+              }
+              transition={
+                count === 3 && collectibleFound
+                  ? { duration: 0.4, ease: "easeOut" }
+                  : undefined
+              }
             >
               {count}
             </motion.span>
+
+            {/* Sparkle burst when collectible found on "3" */}
+            {count === 3 && showSparkles && <SparkleEffect />}
           </motion.div>
         )}
+
+        {/* Director's Cut toast */}
+        <AnimatePresence>
+          {showToast && (
+            <motion.div
+              initial={{ y: 40, opacity: 0, scale: 0.9 }}
+              animate={{ y: 0, opacity: 1, scale: 1 }}
+              exit={{ y: -20, opacity: 0, scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              className="fixed bottom-12 left-1/2 -translate-x-1/2 z-[210] px-6 py-3 rounded-lg border border-amber-400/30 backdrop-blur-sm"
+              style={{
+                background:
+                  "linear-gradient(135deg, rgba(26,18,8,0.95) 0%, rgba(40,30,10,0.95) 100%)",
+                boxShadow:
+                  "0 0 30px rgba(255,170,0,0.15), inset 0 1px 0 rgba(255,200,100,0.1)",
+              }}
+            >
+              <div className="flex items-center gap-3">
+                <motion.span
+                  className="text-2xl"
+                  animate={{ rotate: [0, -10, 10, -5, 5, 0] }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                >
+                  🎬
+                </motion.span>
+                <div>
+                  <p
+                    className="text-amber-400 font-bold text-xs tracking-wider"
+                    style={{ fontFamily: "'Press Start 2P', monospace", fontSize: "0.55rem" }}
+                  >
+                    DIRECTOR&apos;S CUT UNLOCKED!
+                  </p>
+                  <p className="text-amber-200/50 text-[10px] mt-1">
+                    You caught the magic frame
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Clapperboard snap */}
         {showSnap && (
