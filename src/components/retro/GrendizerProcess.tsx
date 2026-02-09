@@ -8,6 +8,7 @@ import { processSteps } from "@/data";
 import { CollectibleTrigger } from "./CollectibleItem";
 import MagneticText from "./MagneticText";
 import ScanLines from "./shared/ScanLines";
+import { useRetroSound } from "@/hooks/useRetroSound";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -246,6 +247,11 @@ function MechaAssembly({
   allComplete: boolean;
 }) {
   const [sparkPhase, setSparkPhase] = useState<number | null>(null);
+  const [hasLaunched, setHasLaunched] = useState(false);
+  const [flashActive, setFlashActive] = useState(false);
+  const [exhaustIntense, setExhaustIntense] = useState(false);
+  const mechaContainerRef = useRef<HTMLDivElement>(null);
+  const { playSound } = useRetroSound();
 
   // Trigger spark whenever a new phase completes
   useEffect(() => {
@@ -257,13 +263,85 @@ function MechaAssembly({
     }
   }, [completedPhases.size]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Launch sequence: rumble → power up → flash → exhaust → blast off
+  useEffect(() => {
+    if (!allComplete || hasLaunched || !mechaContainerRef.current) return;
+    // Skip on reduced motion
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // Mobile check (no pin = no completion trigger, but guard anyway)
+    if (window.innerWidth < 1024) return;
+
+    setHasLaunched(true);
+    const el = mechaContainerRef.current;
+    const tl = gsap.timeline();
+
+    // 1. Rumble (0.6s)
+    tl.to(el, {
+      x: "random(-4, 4)",
+      y: "random(-3, 3)",
+      duration: 0.05,
+      repeat: 11,
+      yoyo: true,
+      ease: "none",
+    });
+
+    // 2. Power up (0.3s)
+    tl.to(el, {
+      scale: 1.15,
+      filter: "brightness(1.4) drop-shadow(0 0 20px #2CACE2)",
+      duration: 0.3,
+      ease: "power2.out",
+    });
+
+    // 3. Flash burst (0.15s)
+    tl.call(() => setFlashActive(true));
+    tl.to({}, { duration: 0.15 });
+    tl.call(() => setFlashActive(false));
+
+    // 4. Exhaust intensify
+    tl.call(() => {
+      setExhaustIntense(true);
+      playSound("rocketLaunch");
+    });
+    tl.to({}, { duration: 0.2 });
+
+    // 5. Blast off (0.8s)
+    tl.to(el, {
+      y: -700,
+      scale: 0.5,
+      opacity: 0,
+      duration: 0.8,
+      ease: "power3.in",
+    });
+
+    return () => {
+      tl.kill();
+    };
+  }, [allComplete, hasLaunched, playSound]);
+
   const showPart = (phase: number) => completedPhases.has(phase) || activePhase >= phase;
 
   return (
     <div className="relative w-[280px] sm:w-[340px] lg:w-[420px] h-[400px] sm:h-[480px] lg:h-[560px] mx-auto">
+      {/* Flash burst overlay */}
+      <AnimatePresence>
+        {flashActive && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.9 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.07 }}
+            className="absolute inset-0 rounded-2xl pointer-events-none z-20"
+            style={{
+              background: "radial-gradient(circle, white 0%, #2CACE2 40%, transparent 70%)",
+            }}
+          />
+        )}
+      </AnimatePresence>
+
       {/* Glow flash on completion */}
       <AnimatePresence>
-        {allComplete && (
+        {allComplete && !hasLaunched && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: [0, 0.4, 0] }}
@@ -275,6 +353,9 @@ function MechaAssembly({
           />
         )}
       </AnimatePresence>
+
+      {/* Mecha container — ref for launch animation */}
+      <div ref={mechaContainerRef}>
 
       {/* Phase 3: Head — top */}
       <div className="absolute top-[5%] left-1/2 -translate-x-1/2">
@@ -424,10 +505,18 @@ function MechaAssembly({
         {/* Booster flames */}
         {showPart(4) && (
           <motion.div
-            animate={{ scaleY: [1, 1.4, 1], opacity: [0.6, 1, 0.6] }}
-            transition={{ duration: 0.3, repeat: Infinity }}
-            className="absolute bottom-[-50%] left-1/2 -translate-x-1/2 w-14 h-16"
+            animate={{
+              scaleY: exhaustIntense ? [1.8, 2.4, 1.8] : [1, 1.4, 1],
+              opacity: [0.6, 1, 0.6],
+            }}
+            transition={{
+              duration: exhaustIntense ? 0.12 : 0.3,
+              repeat: Infinity,
+            }}
+            className="absolute bottom-[-50%] left-1/2 -translate-x-1/2"
             style={{
+              width: exhaustIntense ? "2rem" : "3.5rem",
+              height: exhaustIntense ? "3rem" : "4rem",
               background: "linear-gradient(to bottom, #F5D547, #ff6b35, transparent)",
               clipPath: "polygon(30% 0%, 70% 0%, 100% 100%, 0% 100%)",
               filter: "blur(3px)",
@@ -437,6 +526,8 @@ function MechaAssembly({
         <SparkBurst active={sparkPhase === 4} />
         <EnergyPulse active={sparkPhase === 4} />
       </div>
+
+      </div>{/* end mechaContainerRef */}
 
       {/* Energy lines */}
       <motion.div

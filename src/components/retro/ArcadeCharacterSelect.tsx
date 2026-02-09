@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { teamRoles } from "@/data";
 import type { TeamRole } from "@/types";
 import ScanLines from "./shared/ScanLines";
+import AnimatedCharacter from "./AnimatedCharacter";
 
 function StatBar({ label, value, delay }: { label: string; value: number; delay: number }) {
   const color =
@@ -97,8 +98,13 @@ function CharacterSlot({
         </motion.div>
       )}
 
-      {/* Portrait emoji */}
-      <span className="text-3xl sm:text-4xl">{role.icon}</span>
+      {/* Portrait emoji with idle animation */}
+      <AnimatedCharacter
+        icon={role.icon}
+        characterType={role.shortName}
+        isSelected={isSelected}
+        size="sm"
+      />
 
       {/* Name */}
       <span
@@ -130,9 +136,16 @@ function DetailPanel({ role }: { role: TeamRole }) {
         border: "1px solid rgba(44,172,226,0.2)",
       }}
     >
-      {/* Large portrait */}
+      {/* Large portrait with animation */}
       <div className="text-center">
-        <span className="text-6xl block mb-2">{role.icon}</span>
+        <div className="mb-2 flex justify-center">
+          <AnimatedCharacter
+            icon={role.icon}
+            characterType={role.shortName}
+            isSelected={true}
+            size="lg"
+          />
+        </div>
         <h3
           style={{
             fontFamily: "'Press Start 2P', monospace",

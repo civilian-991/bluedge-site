@@ -21,6 +21,7 @@ import CollectibleCounter from "@/components/retro/CollectibleCounter";
 import CollectibleCelebration from "@/components/retro/CollectibleCelebration";
 import TimeThemeProvider from "@/components/retro/TimeThemeProvider";
 import CircuitPaths from "@/components/retro/CircuitPaths";
+import ScrollMascot from "@/components/retro/ScrollMascot";
 import AmbientAudioManager from "@/components/retro/AmbientAudioManager";
 import CinemaMode from "@/components/retro/CinemaMode";
 import ParallaxInit from "@/components/retro/ParallaxInit";
@@ -73,6 +74,9 @@ export default function Home() {
 
       {/* Scroll-Drawn Circuit Paths (Feature 22) */}
       <CircuitPaths />
+
+      {/* Scroll Mascot — flying rocket companion */}
+      <ScrollMascot />
 
       {/* Collectibles counter (Feature 16) */}
       <CollectibleCounter />

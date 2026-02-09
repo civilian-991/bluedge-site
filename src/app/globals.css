@@ -2999,6 +2999,14 @@ body {
 }
 
 /* ================================
+   SCROLL MASCOT FLICKER (Feature: ScrollMascot)
+   ================================ */
+@keyframes mascotFlicker {
+  0% { opacity: 0.7; transform: scaleY(0.9) translateX(-50%); }
+  100% { opacity: 1; transform: scaleY(1.2) translateX(-50%); }
+}
+
+/* ================================
    REDUCED MOTION — Phase 3 features
    ================================ */
 @media (prefers-reduced-motion: reduce) {
@@ -3015,5 +3023,14 @@ body {
   }
   [style*="charSelectPulse"] {
     animation: none !important;
+  }
+  /* Animated characters — static */
+  .animated-character * {
+    animation: none !important;
+    transition: none !important;
+  }
+  /* Scroll mascot — hidden */
+  .scroll-mascot {
+    display: none !important;
   }
 }
