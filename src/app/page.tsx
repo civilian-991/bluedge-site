@@ -20,7 +20,7 @@ import VHSRewind from "@/components/retro/VHSRewind";
 import CollectibleCounter from "@/components/retro/CollectibleCounter";
 import CollectibleCelebration from "@/components/retro/CollectibleCelebration";
 import TimeThemeProvider from "@/components/retro/TimeThemeProvider";
-import CircuitPaths from "@/components/retro/CircuitPaths";
+
 import ScrollMascot from "@/components/retro/ScrollMascot";
 import AmbientAudioManager from "@/components/retro/AmbientAudioManager";
 import CinemaMode from "@/components/retro/CinemaMode";
@@ -72,10 +72,7 @@ export default function Home() {
       {/* 3D Parallax Depth Engine init (Feature 20) */}
       <ParallaxInit />
 
-      {/* Scroll-Drawn Circuit Paths (Feature 22) */}
-      <CircuitPaths />
-
-      {/* Scroll Mascot — flying rocket companion */}
+{/* Scroll Mascot — flying rocket companion */}
       <ScrollMascot />
 
       {/* Collectibles counter (Feature 16) */}
