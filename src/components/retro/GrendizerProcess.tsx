@@ -120,8 +120,8 @@ function HUDStepCard({
               style={{
                 fontFamily: "'Press Start 2P', monospace",
                 fontSize: "0.6rem",
-                color: isActive ? "#F5D547" : isCompleted ? "#2CACE2" : "rgba(255,255,255,0.3)",
-                textShadow: isActive ? "0 0 10px rgba(245,213,71,0.4)" : "none",
+                color: isActive ? "#38BDF8" : isCompleted ? "#2CACE2" : "rgba(255,255,255,0.3)",
+                textShadow: isActive ? "0 0 10px rgba(56,189,248,0.4)" : "none",
               }}
             >
               {isCompleted && !isActive ? "✓" : String(step.phase).padStart(2, "0")}
@@ -136,9 +136,9 @@ function HUDStepCard({
           style={{
             fontFamily: "'Bangers', cursive",
             fontSize: "clamp(1.2rem, 3vw, 1.8rem)",
-            color: isActive ? "#F5D547" : isCompleted ? "rgba(255,255,255,0.5)" : "white",
+            color: isActive ? "#38BDF8" : isCompleted ? "rgba(255,255,255,0.5)" : "white",
             letterSpacing: "2px",
-            textShadow: isActive ? "0 0 10px rgba(245,213,71,0.3)" : "none",
+            textShadow: isActive ? "0 0 10px rgba(56,189,248,0.3)" : "none",
           }}
         >
           {step.title}
@@ -309,24 +309,24 @@ function MechaAssembly({
           <div
             className="absolute inset-0 rounded-t-full rounded-b-lg"
             style={{
-              background: "linear-gradient(180deg, #F5D547, #e6c200)",
-              border: "3px solid #F5D547",
-              boxShadow: "0 0 20px rgba(245,213,71,0.3)",
+              background: "linear-gradient(180deg, #38BDF8, #0EA5E9)",
+              border: "3px solid #38BDF8",
+              boxShadow: "0 0 20px rgba(56,189,248,0.3)",
             }}
           />
           {/* Visor */}
           <div
             className="absolute top-[35%] left-2 right-2 h-5 sm:h-6 rounded"
             style={{
-              background: "linear-gradient(180deg, #ff4444, #cc0000)",
-              boxShadow: "0 0 15px rgba(255,68,68,0.5)",
+              background: "linear-gradient(180deg, #0EA5E9, #0284C7)",
+              boxShadow: "0 0 15px rgba(14,165,233,0.5)",
             }}
           />
           {/* Horn */}
           <div
             className="absolute -top-5 left-1/2 -translate-x-1/2 w-4 h-7"
             style={{
-              background: "#F5D547",
+              background: "#38BDF8",
               clipPath: "polygon(50% 0%, 100% 100%, 0% 100%)",
             }}
           />
@@ -453,7 +453,7 @@ function MechaAssembly({
             style={{
               width: exhaustIntense ? "2rem" : "3.5rem",
               height: exhaustIntense ? "3rem" : "4rem",
-              background: "linear-gradient(to bottom, #F5D547, #ff6b35, transparent)",
+              background: "linear-gradient(to bottom, #38BDF8, #0EA5E9, transparent)",
               clipPath: "polygon(30% 0%, 70% 0%, 100% 100%, 0% 100%)",
               filter: "blur(3px)",
             }}
@@ -472,7 +472,7 @@ function MechaAssembly({
         className="absolute inset-0 pointer-events-none"
       >
         <div className="absolute top-[25%] left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#2CACE2] to-transparent" />
-        <div className="absolute top-[50%] left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#F5D547] to-transparent" />
+        <div className="absolute top-[50%] left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#38BDF8] to-transparent" />
         <div className="absolute top-[75%] left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#2CACE2] to-transparent" />
       </motion.div>
     </div>
@@ -504,8 +504,8 @@ function MobilePartPreview({ phase }: { phase: number }) {
     ),
     3: (
       <div className="w-12 h-12 mx-auto relative">
-        <div className="absolute inset-0 rounded-t-full rounded-b-lg" style={{ background: "linear-gradient(180deg, #F5D547, #e6c200)", border: "2px solid #F5D547" }} />
-        <div className="absolute top-[35%] left-1 right-1 h-3 rounded" style={{ background: "linear-gradient(180deg, #ff4444, #cc0000)" }} />
+        <div className="absolute inset-0 rounded-t-full rounded-b-lg" style={{ background: "linear-gradient(180deg, #38BDF8, #0EA5E9)", border: "2px solid #38BDF8" }} />
+        <div className="absolute top-[35%] left-1 right-1 h-3 rounded" style={{ background: "linear-gradient(180deg, #0EA5E9, #0284C7)" }} />
       </div>
     ),
     4: (
@@ -604,8 +604,8 @@ export default function GrendizerProcess() {
             className="text-xs tracking-[0.4em] uppercase block mb-4"
             style={{
               fontFamily: "'Press Start 2P', monospace",
-              color: "#F5D547",
-              textShadow: "0 0 10px rgba(245,213,71,0.4)",
+              color: "#38BDF8",
+              textShadow: "0 0 10px rgba(56,189,248,0.4)",
             }}
           >
             Battle Plan
@@ -665,8 +665,8 @@ export default function GrendizerProcess() {
                     style={{
                       fontFamily: "'Press Start 2P', monospace",
                       fontSize: "clamp(0.45rem, 1vw, 0.65rem)",
-                      color: "#F5D547",
-                      textShadow: "0 0 15px rgba(245,213,71,0.5), 0 0 30px rgba(245,213,71,0.3)",
+                      color: "#38BDF8",
+                      textShadow: "0 0 15px rgba(56,189,248,0.5), 0 0 30px rgba(56,189,248,0.3)",
                     }}
                   >
                     SYSTEMS ONLINE — ALL PHASES COMPLETE
@@ -751,7 +751,7 @@ function MobileStepCard({ step, index }: { step: (typeof processSteps)[0]; index
             style={{
               fontFamily: "'Press Start 2P', monospace",
               fontSize: "0.5rem",
-              color: "#F5D547",
+              color: "#38BDF8",
             }}
           >
             {String(step.phase).padStart(2, "0")}
@@ -762,7 +762,7 @@ function MobileStepCard({ step, index }: { step: (typeof processSteps)[0]; index
           style={{
             fontFamily: "'Bangers', cursive",
             fontSize: "1.3rem",
-            color: "#F5D547",
+            color: "#38BDF8",
             letterSpacing: "2px",
           }}
         >

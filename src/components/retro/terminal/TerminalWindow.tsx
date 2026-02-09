@@ -25,7 +25,7 @@ export default function TerminalWindow({
         <div className="flex items-center gap-3">
           <div className="flex gap-1.5">
             <span className="w-3 h-3 rounded-full bg-red-500/70" />
-            <span className="w-3 h-3 rounded-full bg-yellow-500/70" />
+            <span className="w-3 h-3 rounded-full bg-sky-500/70" />
             <span className="w-3 h-3 rounded-full bg-green-500/70" />
           </div>
           <span className="text-xs font-mono text-accent/60 tracking-wider">{title}</span>

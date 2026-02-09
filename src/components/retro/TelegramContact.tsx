@@ -13,7 +13,7 @@ function Rivet({ className = "" }: { className?: string }) {
     <div
       className={`w-3 h-3 rounded-full ${className}`}
       style={{
-        background: "radial-gradient(circle at 35% 35%, #CD7F32, #5C3A0A)",
+        background: "radial-gradient(circle at 35% 35%, #2CACE2, #023E8A)",
         boxShadow: "inset 0 1px 0 rgba(255,255,255,0.2), 0 1px 2px rgba(0,0,0,0.4)",
       }}
     />
@@ -29,8 +29,8 @@ function Gear({ size = 24, className = "" }: { size?: number; className?: string
       transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
     >
       <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-        <circle cx="12" cy="12" r="4" stroke="#CD7F32" strokeWidth="1" opacity="0.4" />
-        <circle cx="12" cy="12" r="8" stroke="#CD7F32" strokeWidth="1" opacity="0.2" strokeDasharray="3 3" />
+        <circle cx="12" cy="12" r="4" stroke="#2CACE2" strokeWidth="1" opacity="0.4" />
+        <circle cx="12" cy="12" r="8" stroke="#2CACE2" strokeWidth="1" opacity="0.2" strokeDasharray="3 3" />
         {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => {
           const rad = (deg * Math.PI) / 180;
           return (
@@ -40,7 +40,7 @@ function Gear({ size = 24, className = "" }: { size?: number; className?: string
               y1={12 + Math.sin(rad) * 7}
               x2={12 + Math.cos(rad) * 10}
               y2={12 + Math.sin(rad) * 10}
-              stroke="#CD7F32"
+              stroke="#2CACE2"
               strokeWidth="2"
               opacity="0.3"
             />
@@ -59,7 +59,7 @@ function MorseDots({ active }: { active: boolean }) {
       {[0, 1, 2, 0, 1, 0, 1, 2].map((type, i) => (
         <motion.div
           key={i}
-          className="rounded-full bg-[#CD7F32]"
+          className="rounded-full bg-[#2CACE2]"
           style={{
             width: type === 2 ? 12 : 4,
             height: 4,
@@ -107,7 +107,7 @@ function TelegraphInput({
     <div>
       <label
         className="block text-[10px] uppercase tracking-[0.2em] mb-2 opacity-50"
-        style={{ fontFamily: "'Special Elite', monospace", color: "#CD7F32" }}
+        style={{ fontFamily: "'Special Elite', monospace", color: "#2CACE2" }}
       >
         {label}
       </label>
@@ -170,7 +170,7 @@ export default function TelegramContact() {
       <div className="absolute inset-0 bg-[#050508]">
         <div className="absolute inset-0 opacity-[0.03]"
           style={{
-            backgroundImage: "repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(205,127,50,0.1) 50px, rgba(205,127,50,0.1) 51px)",
+            backgroundImage: "repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(44,172,226,0.1) 50px, rgba(44,172,226,0.1) 51px)",
           }}
         />
       </div>
@@ -186,7 +186,7 @@ export default function TelegramContact() {
           >
             <span
               className="text-xs tracking-[0.3em] uppercase opacity-50"
-              style={{ fontFamily: "'Special Elite', monospace", color: "#CD7F32" }}
+              style={{ fontFamily: "'Special Elite', monospace", color: "#2CACE2" }}
             >
               ─── Incoming Transmission ───
             </span>
@@ -233,11 +233,11 @@ export default function TelegramContact() {
           <Gear size={24} className="absolute bottom-6 right-1/4 opacity-20" />
 
           {/* Morse code display */}
-          <div className="flex items-center justify-between mb-8 pb-4 border-b border-[#CD7F32]/10">
+          <div className="flex items-center justify-between mb-8 pb-4 border-b border-[#2CACE2]/10">
             <MorseDots active={sending} />
             <span
               className="text-[10px] tracking-[0.2em] uppercase opacity-30"
-              style={{ fontFamily: "'Special Elite', monospace", color: "#CD7F32" }}
+              style={{ fontFamily: "'Special Elite', monospace", color: "#2CACE2" }}
             >
               BLUEDGE TELEGRAPH CO.
             </span>
@@ -258,13 +258,13 @@ export default function TelegramContact() {
                   whileHover={{ x: 5 }}
                   className="flex items-center gap-4 group"
                 >
-                  <div className="w-10 h-10 rounded-lg flex items-center justify-center border border-[#CD7F32]/20 group-hover:border-[#CD7F32]/50 transition-colors">
-                    <item.icon className="w-5 h-5" style={{ color: "#CD7F32" }} />
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center border border-[#2CACE2]/20 group-hover:border-[#2CACE2]/50 transition-colors">
+                    <item.icon className="w-5 h-5" style={{ color: "#2CACE2" }} />
                   </div>
                   <div>
                     <div
                       className="text-[9px] uppercase tracking-wider opacity-40"
-                      style={{ fontFamily: "'Special Elite', monospace", color: "#CD7F32" }}
+                      style={{ fontFamily: "'Special Elite', monospace", color: "#2CACE2" }}
                     >
                       {item.label}
                     </div>
@@ -276,7 +276,7 @@ export default function TelegramContact() {
               ))}
 
               {/* Social */}
-              <div className="pt-4 border-t border-[#CD7F32]/10">
+              <div className="pt-4 border-t border-[#2CACE2]/10">
                 <div className="flex gap-3">
                   {socialLinks.map((social, i) => (
                     <motion.a
@@ -287,19 +287,19 @@ export default function TelegramContact() {
                       viewport={{ once: true }}
                       transition={{ delay: 0.6 + i * 0.08, type: "spring" }}
                       whileHover={{ scale: 1.15 }}
-                      className="w-9 h-9 rounded-full border border-[#CD7F32]/20 flex items-center justify-center hover:border-[#CD7F32]/50 transition-colors"
+                      className="w-9 h-9 rounded-full border border-[#2CACE2]/20 flex items-center justify-center hover:border-[#2CACE2]/50 transition-colors"
                     >
-                      <social.icon className="w-4 h-4 text-white/40 hover:text-[#CD7F32] transition-colors" />
+                      <social.icon className="w-4 h-4 text-white/40 hover:text-[#2CACE2] transition-colors" />
                     </motion.a>
                   ))}
                 </div>
               </div>
 
               {/* Office hours */}
-              <div className="p-4 rounded-lg border border-[#CD7F32]/10 bg-[#CD7F32]/[0.02]">
+              <div className="p-4 rounded-lg border border-[#2CACE2]/10 bg-[#2CACE2]/[0.02]">
                 <h4
                   className="text-[10px] uppercase tracking-wider mb-2"
-                  style={{ fontFamily: "'Special Elite', monospace", color: "#CD7F32", opacity: 0.6 }}
+                  style={{ fontFamily: "'Special Elite', monospace", color: "#2CACE2", opacity: 0.6 }}
                 >
                   Office Hours
                 </h4>
@@ -318,7 +318,7 @@ export default function TelegramContact() {
                 <div>
                   <label
                     className="block text-[10px] uppercase tracking-[0.2em] mb-3 opacity-50"
-                    style={{ fontFamily: "'Special Elite', monospace", color: "#CD7F32" }}
+                    style={{ fontFamily: "'Special Elite', monospace", color: "#2CACE2" }}
                   >
                     Service Request
                   </label>
@@ -333,8 +333,8 @@ export default function TelegramContact() {
                         }}
                         className={`px-3 py-1.5 rounded text-[11px] border transition-all ${
                           selectedService === service
-                            ? "border-[#CD7F32]/60 bg-[#CD7F32]/15 text-[#CD7F32]"
-                            : "border-[#CD7F32]/15 text-white/40 hover:border-[#CD7F32]/30"
+                            ? "border-[#2CACE2]/60 bg-[#2CACE2]/15 text-[#2CACE2]"
+                            : "border-[#2CACE2]/15 text-white/40 hover:border-[#2CACE2]/30"
                         }`}
                         style={{ fontFamily: "'Special Elite', monospace" }}
                       >
@@ -377,7 +377,7 @@ export default function TelegramContact() {
                   <div>
                     <label
                       className="block text-[10px] uppercase tracking-[0.2em] mb-2 opacity-50"
-                      style={{ fontFamily: "'Special Elite', monospace", color: "#CD7F32" }}
+                      style={{ fontFamily: "'Special Elite', monospace", color: "#2CACE2" }}
                     >
                       Budget Range
                     </label>
@@ -390,11 +390,11 @@ export default function TelegramContact() {
                       className="telegram-input w-full px-4 py-3 rounded-md text-sm appearance-none cursor-pointer"
                       style={{ fontFamily: "'Special Elite', monospace" }}
                     >
-                      <option value="" className="bg-[#1A0E08]">Select budget</option>
-                      <option value="5k-10k" className="bg-[#1A0E08]">$5,000 - $10,000</option>
-                      <option value="10k-25k" className="bg-[#1A0E08]">$10,000 - $25,000</option>
-                      <option value="25k-50k" className="bg-[#1A0E08]">$25,000 - $50,000</option>
-                      <option value="50k+" className="bg-[#1A0E08]">$50,000+</option>
+                      <option value="" className="bg-[#060810]">Select budget</option>
+                      <option value="5k-10k" className="bg-[#060810]">$5,000 - $10,000</option>
+                      <option value="10k-25k" className="bg-[#060810]">$10,000 - $25,000</option>
+                      <option value="25k-50k" className="bg-[#060810]">$25,000 - $50,000</option>
+                      <option value="50k+" className="bg-[#060810]">$50,000+</option>
                     </select>
                   </div>
                 </div>
@@ -403,7 +403,7 @@ export default function TelegramContact() {
                 <div>
                   <label
                     className="block text-[10px] uppercase tracking-[0.2em] mb-2 opacity-50"
-                    style={{ fontFamily: "'Special Elite', monospace", color: "#CD7F32" }}
+                    style={{ fontFamily: "'Special Elite', monospace", color: "#2CACE2" }}
                   >
                     Your Message *
                   </label>
@@ -438,7 +438,7 @@ export default function TelegramContact() {
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
-                    className="mt-6 p-4 rounded-lg border border-[#CD7F32]/20 bg-[#CD7F32]/[0.03] overflow-hidden"
+                    className="mt-6 p-4 rounded-lg border border-[#2CACE2]/20 bg-[#2CACE2]/[0.03] overflow-hidden"
                   >
                     <motion.div
                       initial={{ x: "-100%" }}
@@ -447,7 +447,7 @@ export default function TelegramContact() {
                     >
                       <p
                         className="text-xs leading-relaxed"
-                        style={{ fontFamily: "'Special Elite', monospace", color: "#CD7F32" }}
+                        style={{ fontFamily: "'Special Elite', monospace", color: "#2CACE2" }}
                       >
                         ═══════════════════════════
                         <br />
@@ -473,8 +473,8 @@ export default function TelegramContact() {
             <div
               className="w-6 h-32 rounded-full"
               style={{
-                background: "linear-gradient(180deg, #CD7F32, #8B6914, #CD7F32, #8B6914, #CD7F32)",
-                border: "1px solid #5C3A0A",
+                background: "linear-gradient(180deg, #2CACE2, #0077B6, #2CACE2, #0077B6, #2CACE2)",
+                border: "1px solid #023E8A",
               }}
             />
           </div>

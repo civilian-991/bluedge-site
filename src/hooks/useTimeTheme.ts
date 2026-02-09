@@ -16,10 +16,10 @@ interface ThemeConfig {
 const themes: Record<ThemeName, ThemeConfig> = {
   dawn: {
     name: "dawn",
-    accent: "#F5A623",
-    accentGlow: "rgba(245,166,35,0.6)",
-    bgTint: "rgba(120,60,20,0.06)",
-    glowColor: "#FFD700",
+    accent: "#5BC0EB",
+    accentGlow: "rgba(91,192,235,0.6)",
+    bgTint: "rgba(10,30,60,0.06)",
+    glowColor: "#5BC0EB",
     label: "Dawn",
   },
   day: {
@@ -32,18 +32,18 @@ const themes: Record<ThemeName, ThemeConfig> = {
   },
   dusk: {
     name: "dusk",
-    accent: "#A855F7",
-    accentGlow: "rgba(168,85,247,0.6)",
-    bgTint: "rgba(80,20,120,0.06)",
-    glowColor: "#E040FB",
+    accent: "#0077B6",
+    accentGlow: "rgba(0,119,182,0.6)",
+    bgTint: "rgba(0,20,60,0.06)",
+    glowColor: "#0099E0",
     label: "Dusk",
   },
   night: {
     name: "night",
-    accent: "#FF6B9D",
-    accentGlow: "rgba(255,107,157,0.6)",
-    bgTint: "rgba(10,10,60,0.08)",
-    glowColor: "#FF6B9D",
+    accent: "#023E8A",
+    accentGlow: "rgba(2,62,138,0.6)",
+    bgTint: "rgba(0,10,40,0.08)",
+    glowColor: "#0466C8",
     label: "Night",
   },
 };

@@ -32,7 +32,7 @@ export default function CreditsRoll({
   credits = defaultCredits,
 }: CreditsRollProps) {
   return (
-    <div className="relative py-16 overflow-hidden bg-[#0a0804]">
+    <div className="relative py-16 overflow-hidden bg-[#06080f]">
       {/* Film grain */}
       <div
         className="absolute inset-0 opacity-10 pointer-events-none"
@@ -50,25 +50,25 @@ export default function CreditsRoll({
           viewport={{ once: true }}
           transition={{ duration: 1 }}
         >
-          <div className="text-amber-400/40 text-xs font-mono tracking-[0.3em] uppercase mb-4">
+          <div className="text-sky-400/40 text-xs font-mono tracking-[0.3em] uppercase mb-4">
             A BluEdge Production
           </div>
           <h3
-            className="text-3xl md:text-4xl font-bold text-amber-100 font-serif italic"
-            style={{ textShadow: "0 0 30px rgba(255,200,100,0.2)" }}
+            className="text-3xl md:text-4xl font-bold text-sky-100 font-serif italic"
+            style={{ textShadow: "0 0 30px rgba(44,172,226,0.2)" }}
           >
             {projectTitle}
           </h3>
-          <div className="text-amber-400/50 text-sm mt-2 font-mono">
+          <div className="text-sky-400/50 text-sm mt-2 font-mono">
             For {client} &middot; {year}
           </div>
         </motion.div>
 
         {/* Divider */}
         <div className="flex items-center justify-center gap-4">
-          <div className="h-px w-16 bg-amber-400/20" />
-          <span className="text-amber-400/30 text-lg">★</span>
-          <div className="h-px w-16 bg-amber-400/20" />
+          <div className="h-px w-16 bg-sky-400/20" />
+          <span className="text-sky-400/30 text-lg">★</span>
+          <div className="h-px w-16 bg-sky-400/20" />
         </div>
 
         {/* Credits list */}
@@ -82,19 +82,19 @@ export default function CreditsRoll({
               transition={{ delay: i * 0.1, duration: 0.5 }}
               className="space-y-1"
             >
-              <div className="text-amber-400/40 text-xs tracking-[0.2em] uppercase font-mono">
+              <div className="text-sky-400/40 text-xs tracking-[0.2em] uppercase font-mono">
                 {credit.role}
               </div>
-              <div className="text-amber-100/80 text-lg">{credit.name}</div>
+              <div className="text-sky-100/80 text-lg">{credit.name}</div>
             </motion.div>
           ))}
         </div>
 
         {/* Divider */}
         <div className="flex items-center justify-center gap-4">
-          <div className="h-px w-16 bg-amber-400/20" />
-          <span className="text-amber-400/30 text-lg">★</span>
-          <div className="h-px w-16 bg-amber-400/20" />
+          <div className="h-px w-16 bg-sky-400/20" />
+          <span className="text-sky-400/30 text-lg">★</span>
+          <div className="h-px w-16 bg-sky-400/20" />
         </div>
 
         {/* Closing */}
@@ -103,7 +103,7 @@ export default function CreditsRoll({
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.5, duration: 1 }}
-          className="text-amber-400/30 text-xs font-mono tracking-[0.3em] uppercase"
+          className="text-sky-400/30 text-xs font-mono tracking-[0.3em] uppercase"
         >
           Copyright &copy; {year} BluEdge Agency &middot; All Rights Reserved
           <br />

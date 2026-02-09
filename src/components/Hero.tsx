@@ -294,7 +294,7 @@ function MagneticButton({
           <div
             className="absolute w-full h-16 animate-pulse"
             style={{
-              background: "linear-gradient(to bottom, rgba(44,172,226,0.8), rgba(255,165,0,0.4), transparent)",
+              background: "linear-gradient(to bottom, rgba(44,172,226,0.8), rgba(2,62,138,0.4), transparent)",
               clipPath: "polygon(30% 0%, 70% 0%, 100% 100%, 0% 100%)",
               filter: "blur(4px)",
             }}

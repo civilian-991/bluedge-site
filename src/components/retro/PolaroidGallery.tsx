@@ -13,12 +13,12 @@ import { Layers, ArrowUpRight } from "lucide-react";
 gsap.registerPlugin(ScrollTrigger);
 
 const stickyNotes = [
-  { text: "Client loved this!", color: "#F5D547", rotation: -8 },
-  { text: "Award winner ★", color: "#ff9f43", rotation: 5 },
-  { text: "Featured work!", color: "#00ff88", rotation: -3 },
+  { text: "Client loved this!", color: "#38BDF8", rotation: -8 },
+  { text: "Award winner ★", color: "#0EA5E9", rotation: 5 },
+  { text: "Featured work!", color: "#7DD3FC", rotation: -3 },
 ];
 
-function PushPin({ color = "#ff4444" }: { color?: string }) {
+function PushPin({ color = "#0EA5E9" }: { color?: string }) {
   return (
     <svg width="20" height="20" viewBox="0 0 20 20" className="absolute -top-2 left-1/2 -translate-x-1/2 z-10 drop-shadow-lg">
       <circle cx="10" cy="8" r="6" fill={color} />
@@ -292,8 +292,8 @@ export default function PolaroidGallery() {
           ref={boardRef}
           className="relative min-h-[500px] rounded-2xl p-8 md:p-12"
           style={{
-            background: "rgba(139, 105, 20, 0.03)",
-            border: "2px solid rgba(139, 105, 20, 0.08)",
+            background: "rgba(44, 172, 226, 0.03)",
+            border: "2px solid rgba(44, 172, 226, 0.08)",
           }}
         >
           {/* Grid layout for polaroids */}

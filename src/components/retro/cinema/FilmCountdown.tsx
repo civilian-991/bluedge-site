@@ -30,7 +30,7 @@ function SparkleEffect() {
       {SPARKLE_DATA.map((s) => (
         <motion.div
           key={s.id}
-          className="absolute left-1/2 top-1/2 rounded-full bg-amber-300"
+          className="absolute left-1/2 top-1/2 rounded-full bg-sky-300"
           style={{ width: s.size, height: s.size }}
           initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
           animate={{ x: s.x, y: s.y, opacity: 0, scale: 0 }}
@@ -105,7 +105,7 @@ export default function FilmCountdown({ onComplete }: FilmCountdownProps) {
       <motion.div
         exit={{ opacity: 0 }}
         transition={{ duration: 0.3 }}
-        className="fixed inset-0 z-[200] bg-[#1a1208] flex items-center justify-center"
+        className="fixed inset-0 z-[200] bg-[#0a0e1a] flex items-center justify-center"
       >
         {/* Film grain texture */}
         <div
@@ -127,7 +127,7 @@ export default function FilmCountdown({ onComplete }: FilmCountdownProps) {
             className="relative"
           >
             {/* Crosshair circle */}
-            <svg width="200" height="200" viewBox="0 0 200 200" className="text-amber-200/60">
+            <svg width="200" height="200" viewBox="0 0 200 200" className="text-sky-200/60">
               <circle
                 cx="100"
                 cy="100"
@@ -156,14 +156,14 @@ export default function FilmCountdown({ onComplete }: FilmCountdownProps) {
             <motion.span
               className={`absolute inset-0 flex items-center justify-center text-7xl font-bold font-mono ${
                 count === 3
-                  ? "text-amber-100 cursor-pointer select-none"
-                  : "text-amber-100"
+                  ? "text-sky-100 cursor-pointer select-none"
+                  : "text-sky-100"
               }`}
               style={{
                 textShadow:
                   count === 3 && collectibleFound
-                    ? "0 0 50px rgba(255,200,100,0.9), 0 0 80px rgba(255,170,0,0.5)"
-                    : "0 0 30px rgba(255,200,100,0.5)",
+                    ? "0 0 50px rgba(44,172,226,0.9), 0 0 80px rgba(44,172,226,0.5)"
+                    : "0 0 30px rgba(44,172,226,0.5)",
               }}
               onClick={count === 3 ? handleThreeClick : undefined}
               // Brief flash when collectible is triggered
@@ -172,9 +172,9 @@ export default function FilmCountdown({ onComplete }: FilmCountdownProps) {
                   ? {
                       scale: [1, 1.3, 1],
                       color: [
-                        "rgb(255, 251, 235)",
-                        "rgb(255, 215, 0)",
-                        "rgb(255, 251, 235)",
+                        "rgb(224, 242, 254)",
+                        "rgb(44, 172, 226)",
+                        "rgb(224, 242, 254)",
                       ],
                     }
                   : {}
@@ -201,12 +201,12 @@ export default function FilmCountdown({ onComplete }: FilmCountdownProps) {
               animate={{ y: 0, opacity: 1, scale: 1 }}
               exit={{ y: -20, opacity: 0, scale: 0.95 }}
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              className="fixed bottom-12 left-1/2 -translate-x-1/2 z-[210] px-6 py-3 rounded-lg border border-amber-400/30 backdrop-blur-sm"
+              className="fixed bottom-12 left-1/2 -translate-x-1/2 z-[210] px-6 py-3 rounded-lg border border-sky-400/30 backdrop-blur-sm"
               style={{
                 background:
-                  "linear-gradient(135deg, rgba(26,18,8,0.95) 0%, rgba(40,30,10,0.95) 100%)",
+                  "linear-gradient(135deg, rgba(6,8,15,0.95) 0%, rgba(10,14,26,0.95) 100%)",
                 boxShadow:
-                  "0 0 30px rgba(255,170,0,0.15), inset 0 1px 0 rgba(255,200,100,0.1)",
+                  "0 0 30px rgba(44,172,226,0.15), inset 0 1px 0 rgba(44,172,226,0.1)",
               }}
             >
               <div className="flex items-center gap-3">
@@ -219,12 +219,12 @@ export default function FilmCountdown({ onComplete }: FilmCountdownProps) {
                 </motion.span>
                 <div>
                   <p
-                    className="text-amber-400 font-bold text-xs tracking-wider"
+                    className="text-sky-400 font-bold text-xs tracking-wider"
                     style={{ fontFamily: "'Press Start 2P', monospace", fontSize: "0.55rem" }}
                   >
                     DIRECTOR&apos;S CUT UNLOCKED!
                   </p>
-                  <p className="text-amber-200/50 text-[10px] mt-1">
+                  <p className="text-sky-200/50 text-[10px] mt-1">
                     You caught the magic frame
                   </p>
                 </div>

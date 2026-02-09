@@ -26,14 +26,14 @@ export default function CollectibleCounter() {
             backdropFilter: "blur(8px)",
             borderColor:
               count === total
-                ? "rgba(255,215,0,0.5)"
+                ? "rgba(44,172,226,0.5)"
                 : "rgba(255,255,255,0.1)",
             fontFamily: "'Press Start 2P', monospace",
             fontSize: "0.55rem",
           }}
           animate={
             count > 0 && count < total
-              ? { boxShadow: ["0 0 5px rgba(255,215,0,0.2)", "0 0 15px rgba(255,215,0,0.4)", "0 0 5px rgba(255,215,0,0.2)"] }
+              ? { boxShadow: ["0 0 5px rgba(44,172,226,0.2)", "0 0 15px rgba(44,172,226,0.4)", "0 0 5px rgba(44,172,226,0.2)"] }
               : {}
           }
           transition={{ duration: 2, repeat: Infinity }}
@@ -55,8 +55,8 @@ export default function CollectibleCounter() {
             className="fixed bottom-20 left-1/2 z-[1000] px-6 py-3 rounded-xl"
             style={{
               background: "rgba(5,5,8,0.95)",
-              border: "2px solid rgba(255,215,0,0.4)",
-              boxShadow: "0 0 30px rgba(255,215,0,0.2)",
+              border: "2px solid rgba(44,172,226,0.4)",
+              boxShadow: "0 0 30px rgba(44,172,226,0.2)",
               fontFamily: "'Press Start 2P', monospace",
               fontSize: "0.6rem",
             }}
@@ -64,7 +64,7 @@ export default function CollectibleCounter() {
             <div className="flex items-center gap-3">
               <span className="text-lg">{foundItem.emoji}</span>
               <div>
-                <div className="text-[#FFD700] mb-1">FOUND!</div>
+                <div className="text-[#2CACE2] mb-1">FOUND!</div>
                 <div className="text-white/60">{foundItem.name}</div>
               </div>
             </div>

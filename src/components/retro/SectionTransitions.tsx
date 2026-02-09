@@ -123,7 +123,7 @@ function TransitionDivider({ type }: TransitionProps) {
                   className="text-xl font-bold opacity-20"
                   style={{
                     fontFamily: "'Press Start 2P', monospace",
-                    color: "#F5D547",
+                    color: "#38BDF8",
                     animation: `countdownPulse 3s ease-in-out infinite`,
                     animationDelay: `${(3 - n) * 0.6}s`,
                   }}
@@ -209,21 +209,21 @@ function TransitionDivider({ type }: TransitionProps) {
             <div
               className="absolute inset-0"
               style={{
-                background: "linear-gradient(90deg, rgba(245,240,225,0.03) 0%, rgba(245,240,225,0.08) 50%, rgba(245,240,225,0.03) 100%)",
+                background: "linear-gradient(90deg, rgba(44,172,226,0.03) 0%, rgba(44,172,226,0.08) 50%, rgba(44,172,226,0.03) 100%)",
               }}
             />
             {/* Fold crease lines */}
             <div
               className="absolute top-0 bottom-0 left-1/4 w-px"
-              style={{ background: "rgba(139,90,43,0.15)" }}
+              style={{ background: "rgba(44,172,226,0.15)" }}
             />
             <div
               className="absolute top-0 bottom-0 left-1/2 w-px"
-              style={{ background: "rgba(139,90,43,0.2)" }}
+              style={{ background: "rgba(44,172,226,0.2)" }}
             />
             <div
               className="absolute top-0 bottom-0 left-3/4 w-px"
-              style={{ background: "rgba(139,90,43,0.15)" }}
+              style={{ background: "rgba(44,172,226,0.15)" }}
             />
           </div>
         );
@@ -234,7 +234,7 @@ function TransitionDivider({ type }: TransitionProps) {
             <div
               className="absolute left-0 w-full h-6"
               style={{
-                background: "linear-gradient(180deg, transparent, rgba(205,127,50,0.08), rgba(205,127,50,0.12), rgba(205,127,50,0.08), transparent)",
+                background: "linear-gradient(180deg, transparent, rgba(44,172,226,0.08), rgba(44,172,226,0.12), rgba(44,172,226,0.08), transparent)",
               }}
             />
             {/* Tape text */}
@@ -242,7 +242,7 @@ function TransitionDivider({ type }: TransitionProps) {
               className="absolute whitespace-nowrap text-[8px] tracking-[0.3em] opacity-20"
               style={{
                 fontFamily: "'Special Elite', monospace",
-                color: "#CD7F32",
+                color: "#2CACE2",
                 animation: "tapeScroll 10s linear infinite",
               }}
             >

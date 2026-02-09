@@ -249,7 +249,7 @@ export default function RPGDungeonTeam() {
                     uncommon: "border-green-400/20",
                     rare: "border-blue-400/20",
                     epic: "border-purple-400/20",
-                    legendary: "border-amber-400/20 shadow-[0_0_10px_rgba(245,158,11,0.1)]",
+                    legendary: "border-sky-400/20 shadow-[0_0_10px_rgba(56,189,248,0.1)]",
                   };
 
                   return (

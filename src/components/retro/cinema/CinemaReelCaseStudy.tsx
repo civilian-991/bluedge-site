@@ -49,7 +49,7 @@ export default function CinemaReelCaseStudy({ study }: CinemaReelCaseStudyProps)
           {Array.from({ length: 30 }).map((_, i) => (
             <div
               key={i}
-              className="w-4 h-4 rounded-sm bg-[#0a0804] border border-amber-900/20 shrink-0"
+              className="w-4 h-4 rounded-sm bg-[#06080f] border border-sky-900/20 shrink-0"
             />
           ))}
         </div>
@@ -59,7 +59,7 @@ export default function CinemaReelCaseStudy({ study }: CinemaReelCaseStudyProps)
           {Array.from({ length: 30 }).map((_, i) => (
             <div
               key={i}
-              className="w-4 h-4 rounded-sm bg-[#0a0804] border border-amber-900/20 shrink-0"
+              className="w-4 h-4 rounded-sm bg-[#06080f] border border-sky-900/20 shrink-0"
             />
           ))}
         </div>
@@ -76,7 +76,7 @@ export default function CinemaReelCaseStudy({ study }: CinemaReelCaseStudyProps)
               transition={{ duration: 0.8, delay: 0.2 }}
               className="relative mb-12"
             >
-              <div className="relative aspect-video overflow-hidden border-2 border-amber-900/20 bg-[#1a1208]">
+              <div className="relative aspect-video overflow-hidden border-2 border-sky-900/20 bg-[#0a0e1a]">
                 <Image
                   src={study.image}
                   alt={study.title}
@@ -86,13 +86,13 @@ export default function CinemaReelCaseStudy({ study }: CinemaReelCaseStudyProps)
                   priority
                 />
                 {/* Film grain overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0804]/60 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#06080f]/60 to-transparent" />
 
                 {/* Frame markers */}
-                <div className="absolute top-2 left-3 text-[10px] font-mono text-amber-400/30">
+                <div className="absolute top-2 left-3 text-[10px] font-mono text-sky-400/30">
                   35mm &middot; FR:001
                 </div>
-                <div className="absolute top-2 right-3 text-[10px] font-mono text-amber-400/30">
+                <div className="absolute top-2 right-3 text-[10px] font-mono text-sky-400/30">
                   {study.year}
                 </div>
               </div>
@@ -105,19 +105,19 @@ export default function CinemaReelCaseStudy({ study }: CinemaReelCaseStudyProps)
               transition={{ delay: 0.4, duration: 0.6 }}
               className="text-center mb-16"
             >
-              <div className="text-amber-400/40 text-xs font-mono tracking-[0.3em] uppercase mb-3">
+              <div className="text-sky-400/40 text-xs font-mono tracking-[0.3em] uppercase mb-3">
                 A BluEdge Production &middot; {study.year}
               </div>
               <h1
-                className="text-4xl md:text-6xl font-bold text-amber-100 font-serif"
-                style={{ textShadow: "0 0 30px rgba(255,200,100,0.2)" }}
+                className="text-4xl md:text-6xl font-bold text-sky-100 font-serif"
+                style={{ textShadow: "0 0 30px rgba(44,172,226,0.2)" }}
               >
                 {study.title}
               </h1>
               <div className="flex items-center justify-center gap-4 mt-4">
-                <span className="text-amber-400/50 text-sm font-mono">{study.category}</span>
-                <span className="text-amber-400/20">&middot;</span>
-                <span className="px-2 py-0.5 border border-amber-400/20 text-amber-400/50 text-xs font-mono uppercase">
+                <span className="text-sky-400/50 text-sm font-mono">{study.category}</span>
+                <span className="text-sky-400/20">&middot;</span>
+                <span className="px-2 py-0.5 border border-sky-400/20 text-sky-400/50 text-xs font-mono uppercase">
                   {study.genre}
                 </span>
               </div>
@@ -125,7 +125,7 @@ export default function CinemaReelCaseStudy({ study }: CinemaReelCaseStudyProps)
                 {study.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="text-[10px] px-3 py-1 border border-amber-900/30 text-amber-400/40 font-mono uppercase tracking-wider"
+                    className="text-[10px] px-3 py-1 border border-sky-900/30 text-sky-400/40 font-mono uppercase tracking-wider"
                   >
                     {tag}
                   </span>
@@ -143,13 +143,13 @@ export default function CinemaReelCaseStudy({ study }: CinemaReelCaseStudyProps)
                 transition={{ duration: 0.6 }}
               >
                 <div className="flex items-center gap-4 mb-6">
-                  <div className="h-px flex-1 bg-amber-400/10" />
-                  <h2 className="text-xs font-mono tracking-[0.4em] text-amber-400/60 uppercase">
+                  <div className="h-px flex-1 bg-sky-400/10" />
+                  <h2 className="text-xs font-mono tracking-[0.4em] text-sky-400/60 uppercase">
                     Act I &mdash; The Challenge
                   </h2>
-                  <div className="h-px flex-1 bg-amber-400/10" />
+                  <div className="h-px flex-1 bg-sky-400/10" />
                 </div>
-                <p className="text-amber-100/80 text-lg leading-relaxed max-w-3xl mx-auto text-center">
+                <p className="text-sky-100/80 text-lg leading-relaxed max-w-3xl mx-auto text-center">
                   {study.challenge}
                 </p>
               </motion.section>
@@ -162,13 +162,13 @@ export default function CinemaReelCaseStudy({ study }: CinemaReelCaseStudyProps)
                 transition={{ duration: 0.6 }}
               >
                 <div className="flex items-center gap-4 mb-6">
-                  <div className="h-px flex-1 bg-amber-400/10" />
-                  <h2 className="text-xs font-mono tracking-[0.4em] text-amber-400/60 uppercase">
+                  <div className="h-px flex-1 bg-sky-400/10" />
+                  <h2 className="text-xs font-mono tracking-[0.4em] text-sky-400/60 uppercase">
                     Act II &mdash; The Approach
                   </h2>
-                  <div className="h-px flex-1 bg-amber-400/10" />
+                  <div className="h-px flex-1 bg-sky-400/10" />
                 </div>
-                <p className="text-amber-100/80 text-lg leading-relaxed max-w-3xl mx-auto text-center">
+                <p className="text-sky-100/80 text-lg leading-relaxed max-w-3xl mx-auto text-center">
                   {study.approach}
                 </p>
               </motion.section>
@@ -181,11 +181,11 @@ export default function CinemaReelCaseStudy({ study }: CinemaReelCaseStudyProps)
                 transition={{ duration: 0.6 }}
               >
                 <div className="flex items-center gap-4 mb-8">
-                  <div className="h-px flex-1 bg-amber-400/10" />
-                  <h2 className="text-xs font-mono tracking-[0.4em] text-amber-400/60 uppercase">
+                  <div className="h-px flex-1 bg-sky-400/10" />
+                  <h2 className="text-xs font-mono tracking-[0.4em] text-sky-400/60 uppercase">
                     Act III &mdash; Box Office Numbers
                   </h2>
-                  <div className="h-px flex-1 bg-amber-400/10" />
+                  <div className="h-px flex-1 bg-sky-400/10" />
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -196,13 +196,13 @@ export default function CinemaReelCaseStudy({ study }: CinemaReelCaseStudyProps)
                       whileInView={{ opacity: 1, scale: 1 }}
                       viewport={{ once: true }}
                       transition={{ delay: i * 0.1, type: "spring", stiffness: 200 }}
-                      className="text-center p-6 border border-amber-900/20 bg-amber-400/[0.02]"
+                      className="text-center p-6 border border-sky-900/20 bg-sky-400/[0.02]"
                     >
                       <BoxOfficeCounter
                         value={result.value}
                         suffix={result.suffix}
                       />
-                      <div className="text-amber-400/50 text-xs font-mono mt-2 tracking-wider uppercase">
+                      <div className="text-sky-400/50 text-xs font-mono mt-2 tracking-wider uppercase">
                         {result.label}
                       </div>
                     </motion.div>
@@ -219,12 +219,12 @@ export default function CinemaReelCaseStudy({ study }: CinemaReelCaseStudyProps)
                   transition={{ duration: 0.8 }}
                   className="text-center py-8"
                 >
-                  <div className="text-4xl text-amber-400/20 mb-4">&ldquo;</div>
-                  <blockquote className="text-xl md:text-2xl text-amber-100/70 italic font-serif max-w-2xl mx-auto leading-relaxed">
+                  <div className="text-4xl text-sky-400/20 mb-4">&ldquo;</div>
+                  <blockquote className="text-xl md:text-2xl text-sky-100/70 italic font-serif max-w-2xl mx-auto leading-relaxed">
                     {study.testimonial}
                   </blockquote>
                   {study.testimonialAuthor && (
-                    <div className="text-amber-400/40 text-sm font-mono mt-4">
+                    <div className="text-sky-400/40 text-sm font-mono mt-4">
                       &mdash; {study.testimonialAuthor}
                     </div>
                   )}
@@ -233,11 +233,11 @@ export default function CinemaReelCaseStudy({ study }: CinemaReelCaseStudyProps)
             </div>
 
             {/* Navigation between case studies */}
-            <div className="flex justify-between items-center mt-16 pt-8 border-t border-amber-900/20">
+            <div className="flex justify-between items-center mt-16 pt-8 border-t border-sky-900/20">
               {prevStudy ? (
                 <Link
                   href={`/work/${prevStudy.slug}`}
-                  className="group flex items-center gap-3 text-amber-400/40 hover:text-amber-300 transition-colors"
+                  className="group flex items-center gap-3 text-sky-400/40 hover:text-sky-300 transition-colors"
                 >
                   <span className="text-lg group-hover:-translate-x-1 transition-transform">←</span>
                   <div className="text-left">
@@ -253,7 +253,7 @@ export default function CinemaReelCaseStudy({ study }: CinemaReelCaseStudyProps)
 
               <Link
                 href="/work"
-                className="text-amber-400/30 hover:text-amber-300 transition-colors font-mono text-xs tracking-wider uppercase"
+                className="text-sky-400/30 hover:text-sky-300 transition-colors font-mono text-xs tracking-wider uppercase"
               >
                 All Films
               </Link>
@@ -261,7 +261,7 @@ export default function CinemaReelCaseStudy({ study }: CinemaReelCaseStudyProps)
               {nextStudy ? (
                 <Link
                   href={`/work/${nextStudy.slug}`}
-                  className="group flex items-center gap-3 text-amber-400/40 hover:text-amber-300 transition-colors"
+                  className="group flex items-center gap-3 text-sky-400/40 hover:text-sky-300 transition-colors"
                 >
                   <div className="text-right">
                     <div className="text-[10px] font-mono tracking-wider uppercase opacity-60">
@@ -293,11 +293,11 @@ export default function CinemaReelCaseStudy({ study }: CinemaReelCaseStudyProps)
 function BoxOfficeCounter({ value, suffix }: { value: string; suffix?: string }) {
   return (
     <motion.div
-      className="text-3xl md:text-4xl font-bold text-amber-200 font-mono"
-      style={{ textShadow: "0 0 20px rgba(255,200,100,0.3)" }}
+      className="text-3xl md:text-4xl font-bold text-sky-200 font-mono"
+      style={{ textShadow: "0 0 20px rgba(44,172,226,0.3)" }}
     >
       <CountUp target={value} />
-      {suffix && <span className="text-amber-400/60">{suffix}</span>}
+      {suffix && <span className="text-sky-400/60">{suffix}</span>}
     </motion.div>
   );
 }

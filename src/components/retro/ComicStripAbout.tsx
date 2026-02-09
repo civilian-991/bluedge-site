@@ -77,7 +77,7 @@ function ComicPanelCard({
         {/* Narration boxes */}
         {panel.type === "narration" && (
           <div
-            className="bg-[#F5D547] text-black px-5 py-4 max-w-[280px]"
+            className="bg-[#38BDF8] text-black px-5 py-4 max-w-[280px]"
             style={{
               fontFamily: "'Bangers', cursive",
               fontSize: "1rem",
@@ -200,7 +200,7 @@ export default function ComicStripAbout() {
           className="text-xs tracking-[0.3em] uppercase mb-4 block"
           style={{
             fontFamily: "'Bangers', cursive",
-            color: "#F5D547",
+            color: "#38BDF8",
             letterSpacing: "3px",
             fontSize: "0.9rem",
           }}

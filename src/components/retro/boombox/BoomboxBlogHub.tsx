@@ -37,30 +37,30 @@ export default function BoomboxBlogHub() {
           className="mb-16"
         >
           {/* Boombox frame */}
-          <div className="max-w-3xl mx-auto bg-[#2a2520] border-2 border-amber-900/30 rounded-2xl p-6 md:p-8 shadow-2xl">
+          <div className="max-w-3xl mx-auto bg-[#0f1420] border-2 border-sky-900/30 rounded-2xl p-6 md:p-8 shadow-2xl">
             {/* Speaker grilles + VU Meters */}
             <div className="flex items-center justify-between gap-6 mb-6">
               {/* Left speaker */}
               <div className="hidden md:flex flex-col items-center gap-2">
-                <div className="w-20 h-20 rounded-full border-2 border-amber-800/30 bg-[#1a1510] flex items-center justify-center">
-                  <div className="w-12 h-12 rounded-full border border-amber-800/20 bg-[#0f0d08]" />
+                <div className="w-20 h-20 rounded-full border-2 border-sky-800/30 bg-[#0a0e1a] flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-full border border-sky-800/20 bg-[#060a12]" />
                 </div>
                 <VUMeter bars={8} />
               </div>
 
               {/* Center — display */}
               <div className="flex-1 text-center">
-                <div className="bg-[#0a0804] border border-amber-900/30 rounded-lg p-4 mb-3">
-                  <div className="text-amber-400/40 text-[10px] font-mono tracking-[0.3em] uppercase mb-1">
+                <div className="bg-[#06080f] border border-sky-900/30 rounded-lg p-4 mb-3">
+                  <div className="text-sky-400/40 text-[10px] font-mono tracking-[0.3em] uppercase mb-1">
                     BluEdge FM
                   </div>
                   <h1
-                    className="text-3xl md:text-4xl font-bold text-amber-200"
-                    style={{ textShadow: "0 0 20px rgba(255,200,100,0.2)" }}
+                    className="text-3xl md:text-4xl font-bold text-sky-200"
+                    style={{ textShadow: "0 0 20px rgba(44,172,226,0.2)" }}
                   >
                     Blog & Insights
                   </h1>
-                  <div className="text-amber-400/30 text-xs font-mono mt-1">
+                  <div className="text-sky-400/30 text-xs font-mono mt-1">
                     {blogPosts.length} TRACKS LOADED
                   </div>
                 </div>
@@ -74,8 +74,8 @@ export default function BoomboxBlogHub() {
 
               {/* Right speaker */}
               <div className="hidden md:flex flex-col items-center gap-2">
-                <div className="w-20 h-20 rounded-full border-2 border-amber-800/30 bg-[#1a1510] flex items-center justify-center">
-                  <div className="w-12 h-12 rounded-full border border-amber-800/20 bg-[#0f0d08]" />
+                <div className="w-20 h-20 rounded-full border-2 border-sky-800/30 bg-[#0a0e1a] flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-full border border-sky-800/20 bg-[#060a12]" />
                 </div>
                 <VUMeter bars={8} />
               </div>
@@ -95,7 +95,7 @@ export default function BoomboxBlogHub() {
                   aria-label={btn.label}
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
-                  className="w-11 h-11 rounded-full bg-[#1a1510] border border-amber-900/30 flex items-center justify-center text-amber-400/60 hover:text-amber-300 transition-colors text-sm"
+                  className="w-11 h-11 rounded-full bg-[#0a0e1a] border border-sky-900/30 flex items-center justify-center text-sky-400/60 hover:text-sky-300 transition-colors text-sm"
                 >
                   {btn.icon}
                 </motion.button>
@@ -123,7 +123,7 @@ export default function BoomboxBlogHub() {
             </div>
 
             <Link href={`/blog/${featured.slug}`} className="group block">
-              <div className="max-w-3xl mx-auto bg-[#1a1510] border border-amber-900/20 rounded-xl overflow-hidden flex flex-col md:flex-row">
+              <div className="max-w-3xl mx-auto bg-[#0a0e1a] border border-sky-900/20 rounded-xl overflow-hidden flex flex-col md:flex-row">
                 <div className="relative w-full md:w-1/3 aspect-video md:aspect-auto">
                   <Image
                     src={featured.image}
@@ -140,11 +140,11 @@ export default function BoomboxBlogHub() {
                   >
                     {featured.category.replace("-", " ")}
                   </div>
-                  <h2 className="text-xl font-bold text-amber-100 group-hover:text-accent transition-colors mb-2">
+                  <h2 className="text-xl font-bold text-sky-100 group-hover:text-accent transition-colors mb-2">
                     {featured.title}
                   </h2>
-                  <p className="text-amber-100/50 text-sm line-clamp-2">{featured.excerpt}</p>
-                  <div className="flex items-center gap-4 mt-4 text-[10px] font-mono text-amber-400/30">
+                  <p className="text-sky-100/50 text-sm line-clamp-2">{featured.excerpt}</p>
+                  <div className="flex items-center gap-4 mt-4 text-[10px] font-mono text-sky-400/30">
                     <span>{featured.author}</span>
                     <span>&middot;</span>
                     <span>{featured.readTime} min read</span>
@@ -218,7 +218,7 @@ export default function BoomboxBlogHub() {
         </motion.div>
 
         {filtered.length === 0 && (
-          <div className="text-center py-20 text-amber-400/30 font-mono text-sm">
+          <div className="text-center py-20 text-sky-400/30 font-mono text-sm">
             No tapes found in this category. Try another genre.
           </div>
         )}

@@ -100,8 +100,8 @@ export default function RetroTVServices() {
               className="text-xs tracking-[0.4em] uppercase"
               style={{
                 fontFamily: "'Press Start 2P', monospace",
-                color: "#F5D547",
-                textShadow: "0 0 10px rgba(245,213,71,0.4)",
+                color: "#38BDF8",
+                textShadow: "0 0 10px rgba(56,189,248,0.4)",
               }}
             >
               Cable TV Guide
@@ -113,8 +113,8 @@ export default function RetroTVServices() {
             style={{
               fontFamily: "'Press Start 2P', monospace",
               fontSize: "clamp(1rem, 4vw, 2.5rem)",
-              color: "#F5D547",
-              textShadow: "0 0 20px rgba(245,213,71,0.4), 3px 3px 0 #0077B6",
+              color: "#38BDF8",
+              textShadow: "0 0 20px rgba(56,189,248,0.4), 3px 3px 0 #0077B6",
             }}
           >
             {"WHAT'S ON TONIGHT"}
@@ -157,13 +157,13 @@ export default function RetroTVServices() {
                     onClick={() => switchChannel(i)}
                     className={`flex items-center gap-3 px-4 py-3 text-left transition-all duration-200 min-w-[200px] lg:min-w-0 w-full border-b border-white/5 ${
                       activeChannel === i
-                        ? "bg-[#2CACE2]/20 border-l-2 border-l-[#F5D547]"
+                        ? "bg-[#2CACE2]/20 border-l-2 border-l-[#38BDF8]"
                         : "hover:bg-white/5 border-l-2 border-l-transparent"
                     }`}
                   >
                     <span
                       className={`text-sm font-bold min-w-[2rem] ${
-                        activeChannel === i ? "text-[#F5D547]" : "text-white/30"
+                        activeChannel === i ? "text-[#38BDF8]" : "text-white/30"
                       }`}
                       style={{ fontFamily: "'Press Start 2P', monospace", fontSize: "0.6rem" }}
                     >
@@ -203,8 +203,8 @@ export default function RetroTVServices() {
                   className="text-lg"
                   style={{
                     fontFamily: "'Press Start 2P', monospace",
-                    color: "#F5D547",
-                    textShadow: "0 0 10px rgba(245,213,71,0.5)",
+                    color: "#38BDF8",
+                    textShadow: "0 0 10px rgba(56,189,248,0.5)",
                   }}
                 >
                   CH-{String(activeChannel + 1).padStart(2, "0")}
@@ -274,8 +274,8 @@ export default function RetroTVServices() {
                       style={{
                         fontFamily: "'Press Start 2P', monospace",
                         fontSize: "clamp(0.8rem, 2.5vw, 1.4rem)",
-                        color: "#F5D547",
-                        textShadow: "0 0 10px rgba(245,213,71,0.3)",
+                        color: "#38BDF8",
+                        textShadow: "0 0 10px rgba(56,189,248,0.3)",
                       }}
                     >
                       {activeService.title}
@@ -374,7 +374,7 @@ export default function RetroTVServices() {
                   onClick={() => switchChannel(i)}
                   className={`w-3 h-3 rounded-full transition-all ${
                     activeChannel === i
-                      ? "bg-[#F5D547] shadow-[0_0_10px_rgba(245,213,71,0.5)]"
+                      ? "bg-[#38BDF8] shadow-[0_0_10px_rgba(56,189,248,0.5)]"
                       : "bg-white/20 hover:bg-white/40"
                   }`}
                 />

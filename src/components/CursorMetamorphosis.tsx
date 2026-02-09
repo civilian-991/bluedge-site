@@ -26,13 +26,13 @@ interface CursorConfig {
 const sectionConfigs: Record<SectionId, CursorConfig> = {
   hero: { color: "#2CACE2", size: 40, shape: "ring", trail: true },
   "matrix-pill": { color: "#00ff41", size: 36, shape: "reticle", trail: true },
-  services: { color: "#F5D547", size: 36, shape: "remote", trail: false },
-  work: { color: "#ff9f43", size: 40, shape: "grab", trail: false },
+  services: { color: "#38BDF8", size: 36, shape: "remote", trail: false },
+  work: { color: "#38BDF8", size: 40, shape: "grab", trail: false },
   process: { color: "#2CACE2", size: 36, shape: "crosshair", trail: false },
-  about: { color: "#ff6b6b", size: 36, shape: "pencil", trail: true },
+  about: { color: "#0EA5E9", size: 36, shape: "pencil", trail: true },
   partnerships: { color: "#2CACE2", size: 36, shape: "ring", trail: false },
-  testimonials: { color: "#8B6914", size: 36, shape: "quill", trail: true },
-  contact: { color: "#CD7F32", size: 36, shape: "telegraph", trail: false },
+  testimonials: { color: "#0077B6", size: 36, shape: "quill", trail: true },
+  contact: { color: "#2CACE2", size: 36, shape: "telegraph", trail: false },
   default: { color: "#2CACE2", size: 40, shape: "ring", trail: true },
 };
 

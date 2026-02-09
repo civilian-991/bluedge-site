@@ -10,7 +10,7 @@ interface QuestBoardProps {
 
 const statusConfig = {
   completed: { label: "COMPLETED", color: "text-green-400 border-green-400/30 bg-green-400/5" },
-  active: { label: "ACTIVE", color: "text-amber-400 border-amber-400/30 bg-amber-400/5" },
+  active: { label: "ACTIVE", color: "text-sky-400 border-sky-400/30 bg-sky-400/5" },
   legendary: { label: "LEGENDARY", color: "text-purple-400 border-purple-400/30 bg-purple-400/5" },
 };
 

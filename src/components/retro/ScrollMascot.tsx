@@ -188,7 +188,7 @@ export default function ScrollMascot() {
             className="absolute inset-x-[3px] top-0 bottom-[6px] rounded-t-full"
             style={{
               background:
-                "linear-gradient(180deg, #ff4444 0%, #ff4444 33%, white 33%, white 66%, #ff4444 66%, #ff4444 100%)",
+                "linear-gradient(180deg, #0EA5E9 0%, #0EA5E9 33%, white 33%, white 66%, #0EA5E9 66%, #0EA5E9 100%)",
               boxShadow: "inset -1px 0 2px rgba(0,0,0,0.2)",
             }}
           />
@@ -198,7 +198,7 @@ export default function ScrollMascot() {
             style={{
               width: 8,
               height: 10,
-              background: "#ff4444",
+              background: "#0EA5E9",
               clipPath: "polygon(50% 0%, 100% 100%, 0% 100%)",
             }}
           />
@@ -208,7 +208,7 @@ export default function ScrollMascot() {
             style={{
               width: 7,
               height: 9,
-              background: "#ff4444",
+              background: "#0EA5E9",
               clipPath: "polygon(100% 0%, 100% 100%, 0% 100%)",
             }}
           />
@@ -217,7 +217,7 @@ export default function ScrollMascot() {
             style={{
               width: 7,
               height: 9,
-              background: "#ff4444",
+              background: "#0EA5E9",
               clipPath: "polygon(0% 0%, 0% 100%, 100% 100%)",
             }}
           />
@@ -239,7 +239,7 @@ export default function ScrollMascot() {
               width: 8,
               height: 10,
               background:
-                "linear-gradient(to bottom, #F5D547, #ff6b35, rgba(255,100,50,0))",
+                "linear-gradient(to bottom, #38BDF8, #0EA5E9, rgba(14,165,233,0))",
               clipPath: "polygon(25% 0%, 75% 0%, 100% 100%, 0% 100%)",
               filter: "blur(1px)",
               animation: "mascotFlicker 0.2s ease-in-out infinite alternate",

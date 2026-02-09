@@ -47,7 +47,7 @@ export function CollectibleTrigger({
           transition={{ duration: 1, repeat: Infinity }}
           className="text-6xl"
           style={{
-            filter: "drop-shadow(0 0 20px rgba(255,215,0,0.6))",
+            filter: "drop-shadow(0 0 20px rgba(44,172,226,0.6))",
           }}
         >
           {emoji}

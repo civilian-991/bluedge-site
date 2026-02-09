@@ -41,9 +41,9 @@ export default function MovieLobbyPortfolio() {
                   className="w-2.5 h-2.5 rounded-full"
                   animate={{
                     backgroundColor: [
-                      "rgba(255,200,100,0.2)",
-                      "rgba(255,200,100,1)",
-                      "rgba(255,200,100,0.2)",
+                      "rgba(44,172,226,0.2)",
+                      "rgba(44,172,226,1)",
+                      "rgba(44,172,226,0.2)",
                     ],
                   }}
                   transition={{
@@ -55,9 +55,9 @@ export default function MovieLobbyPortfolio() {
               ))}
             </div>
 
-            <div className="border-2 border-amber-400/30 px-12 py-8 bg-[#0a0804]/80">
+            <div className="border-2 border-sky-400/30 px-12 py-8 bg-[#06080f]/80">
               <motion.div
-                className="text-amber-400/40 text-xs font-mono tracking-[0.4em] uppercase mb-3"
+                className="text-sky-400/40 text-xs font-mono tracking-[0.4em] uppercase mb-3"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
@@ -65,13 +65,13 @@ export default function MovieLobbyPortfolio() {
                 BluEdge Pictures Presents
               </motion.div>
               <h1
-                className="text-5xl md:text-7xl font-bold text-amber-100 font-serif"
-                style={{ textShadow: "0 0 40px rgba(255,200,100,0.3)" }}
+                className="text-5xl md:text-7xl font-bold text-sky-100 font-serif"
+                style={{ textShadow: "0 0 40px rgba(44,172,226,0.3)" }}
               >
                 Our Work
               </h1>
               <motion.div
-                className="text-amber-400/50 text-sm mt-3 font-mono tracking-wider"
+                className="text-sky-400/50 text-sm mt-3 font-mono tracking-wider"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
@@ -88,9 +88,9 @@ export default function MovieLobbyPortfolio() {
                   className="w-2.5 h-2.5 rounded-full"
                   animate={{
                     backgroundColor: [
-                      "rgba(255,200,100,0.2)",
-                      "rgba(255,200,100,1)",
-                      "rgba(255,200,100,0.2)",
+                      "rgba(44,172,226,0.2)",
+                      "rgba(44,172,226,1)",
+                      "rgba(44,172,226,0.2)",
                     ],
                   }}
                   transition={{
@@ -120,8 +120,8 @@ export default function MovieLobbyPortfolio() {
               }}
               className={`px-5 py-2 text-sm font-mono tracking-wider border transition-all duration-300 ${
                 activeGenre === genre
-                  ? "border-amber-400 bg-amber-400/10 text-amber-200"
-                  : "border-amber-400/20 text-amber-400/40 hover:border-amber-400/50 hover:text-amber-400/70"
+                  ? "border-sky-400 bg-sky-400/10 text-sky-200"
+                  : "border-sky-400/20 text-sky-400/40 hover:border-sky-400/50 hover:text-sky-400/70"
               }`}
             >
               {genre}
@@ -146,7 +146,7 @@ export default function MovieLobbyPortfolio() {
                     whileHover={{ y: -8, scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     transition={{ type: "spring", stiffness: 300 }}
-                    className="relative bg-[#1a1208] border border-amber-900/20 rounded-sm overflow-hidden shadow-xl shadow-black/30"
+                    className="relative bg-[#0a0e1a] border border-sky-900/20 rounded-sm overflow-hidden shadow-xl shadow-black/30"
                   >
                     {/* Poster image */}
                     <div className="relative aspect-[3/4] overflow-hidden">
@@ -158,15 +158,15 @@ export default function MovieLobbyPortfolio() {
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                       />
                       {/* Dark overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#1a1208] via-[#1a1208]/30 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0a0e1a] via-[#0a0e1a]/30 to-transparent" />
 
                       {/* Genre badge */}
-                      <div className="absolute top-3 right-3 px-2 py-1 bg-amber-400/20 border border-amber-400/30 text-amber-200 text-[10px] font-mono tracking-wider uppercase backdrop-blur-sm">
+                      <div className="absolute top-3 right-3 px-2 py-1 bg-sky-400/20 border border-sky-400/30 text-sky-200 text-[10px] font-mono tracking-wider uppercase backdrop-blur-sm">
                         {cs.genre}
                       </div>
 
                       {/* Year */}
-                      <div className="absolute top-3 left-3 text-amber-400/40 text-[10px] font-mono">
+                      <div className="absolute top-3 left-3 text-sky-400/40 text-[10px] font-mono">
                         {cs.year}
                       </div>
                     </div>
@@ -174,12 +174,12 @@ export default function MovieLobbyPortfolio() {
                     {/* Poster info */}
                     <div className="p-5">
                       <h3
-                        className="text-lg font-serif font-bold text-amber-100 group-hover:text-amber-300 transition-colors leading-tight"
-                        style={{ textShadow: "0 0 10px rgba(255,200,100,0.1)" }}
+                        className="text-lg font-serif font-bold text-sky-100 group-hover:text-sky-300 transition-colors leading-tight"
+                        style={{ textShadow: "0 0 10px rgba(44,172,226,0.1)" }}
                       >
                         {cs.title}
                       </h3>
-                      <div className="text-amber-400/40 text-xs font-mono mt-1 tracking-wider">
+                      <div className="text-sky-400/40 text-xs font-mono mt-1 tracking-wider">
                         {cs.category}
                       </div>
 
@@ -188,7 +188,7 @@ export default function MovieLobbyPortfolio() {
                         {cs.tags.slice(0, 3).map((tag) => (
                           <span
                             key={tag}
-                            className="text-[10px] sm:text-[9px] px-2 py-0.5 border border-amber-900/30 text-amber-400/50 font-mono uppercase"
+                            className="text-[10px] sm:text-[9px] px-2 py-0.5 border border-sky-900/30 text-sky-400/50 font-mono uppercase"
                           >
                             {tag}
                           </span>
@@ -197,13 +197,13 @@ export default function MovieLobbyPortfolio() {
 
                       {/* "Now showing" bar */}
                       <motion.div
-                        className="mt-4 h-0.5 bg-gradient-to-r from-amber-400/0 via-amber-400/40 to-amber-400/0"
+                        className="mt-4 h-0.5 bg-gradient-to-r from-sky-400/0 via-sky-400/40 to-sky-400/0"
                         initial={{ scaleX: 0 }}
                         whileInView={{ scaleX: 1 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.2 + i * 0.05, duration: 0.8 }}
                       />
-                      <div className="text-center mt-2 text-[10px] sm:text-[9px] font-mono text-amber-400/30 tracking-[0.3em] uppercase group-hover:text-amber-400/60 transition-colors">
+                      <div className="text-center mt-2 text-[10px] sm:text-[9px] font-mono text-sky-400/30 tracking-[0.3em] uppercase group-hover:text-sky-400/60 transition-colors">
                         View Premiere →
                       </div>
                     </div>
@@ -219,13 +219,13 @@ export default function MovieLobbyPortfolio() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="flex items-center justify-center gap-4 mt-20 text-amber-400/20"
+          className="flex items-center justify-center gap-4 mt-20 text-sky-400/20"
         >
-          <div className="h-px flex-1 bg-amber-400/10" />
+          <div className="h-px flex-1 bg-sky-400/10" />
           <span className="text-2xl">🎬</span>
           <span className="font-mono text-xs tracking-[0.3em] uppercase">End of Reel</span>
           <span className="text-2xl">🎬</span>
-          <div className="h-px flex-1 bg-amber-400/10" />
+          <div className="h-px flex-1 bg-sky-400/10" />
         </motion.div>
       </div>
     </div>

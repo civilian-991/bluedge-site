@@ -224,7 +224,7 @@ export default function MatrixPill() {
                   transition={{ delay: 2 }}
                 >
                   <p
-                    className="text-2xl font-bold text-[#F5D547] mb-2"
+                    className="text-2xl font-bold text-[#38BDF8] mb-2"
                     style={{ fontFamily: "'Bangers', cursive" }}
                   >
                     Just kidding.

@@ -17,7 +17,7 @@ function ConfettiCanvas({ active }: { active: boolean }) {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const colors = ["#FFD700", "#2CACE2", "#ff6b6b", "#00ff88", "#ff9f43", "#c084fc"];
+    const colors = ["#2CACE2", "#2CACE2", "#0EA5E9", "#00ff88", "#38BDF8", "#023E8A"];
     const particles: {
       x: number;
       y: number;
@@ -127,8 +127,8 @@ export default function CollectibleCelebration() {
               className="relative max-w-lg w-[90%] p-8 rounded-2xl text-center"
               style={{
                 background: "linear-gradient(180deg, #1a1a30 0%, #0a0a18 100%)",
-                border: "3px solid rgba(255,215,0,0.4)",
-                boxShadow: "0 0 60px rgba(255,215,0,0.2)",
+                border: "3px solid rgba(44,172,226,0.4)",
+                boxShadow: "0 0 60px rgba(44,172,226,0.2)",
               }}
               onClick={(e) => e.stopPropagation()}
             >
@@ -139,7 +139,7 @@ export default function CollectibleCelebration() {
                 transition={{ delay: 0.3, type: "spring" }}
                 className="px-6 py-2 rounded-full inline-block mb-6"
                 style={{
-                  background: "linear-gradient(90deg, #FFD700, #FFA500)",
+                  background: "linear-gradient(90deg, #2CACE2, #0077B6)",
                   fontFamily: "'Press Start 2P', monospace",
                   fontSize: "0.65rem",
                   color: "#1a1a30",
@@ -169,7 +169,7 @@ export default function CollectibleCelebration() {
                 style={{
                   fontFamily: "'Press Start 2P', monospace",
                   fontSize: "0.8rem",
-                  color: "#FFD700",
+                  color: "#2CACE2",
                   lineHeight: 1.6,
                 }}
               >
@@ -183,7 +183,7 @@ export default function CollectibleCelebration() {
                 transition={{ delay: 1 }}
                 className="p-4 rounded-lg border border-white/10 bg-white/[0.02] mb-6"
               >
-                <p className="text-[10px] uppercase tracking-wider text-[#FFD700] mb-2"
+                <p className="text-[10px] uppercase tracking-wider text-[#2CACE2] mb-2"
                    style={{ fontFamily: "'Press Start 2P', monospace" }}>
                   Fun Fact
                 </p>
@@ -203,7 +203,7 @@ export default function CollectibleCelebration() {
                   onClick={resetAll}
                   className="px-6 py-2 rounded-lg text-sm"
                   style={{
-                    background: "linear-gradient(90deg, #FFD700, #FFA500)",
+                    background: "linear-gradient(90deg, #2CACE2, #0077B6)",
                     color: "#1a1a30",
                     fontWeight: 600,
                   }}

@@ -51,7 +51,7 @@ function PacManDots() {
         className="relative"
       >
         <div
-          className="w-5 h-5 bg-[#F5D547] rounded-full"
+          className="w-5 h-5 bg-[#38BDF8] rounded-full"
           style={{
             clipPath: "polygon(100% 50%, 70% 0%, 0% 0%, 0% 100%, 70% 100%)",
           }}
@@ -97,8 +97,8 @@ export default function ArcadeStats() {
           className="text-xs tracking-[0.3em] uppercase glitch-text-intense"
           style={{
             fontFamily: "'Press Start 2P', monospace",
-            color: "#F5D547",
-            textShadow: "0 0 10px rgba(245,213,71,0.4)",
+            color: "#38BDF8",
+            textShadow: "0 0 10px rgba(56,189,248,0.4)",
           }}
           radius={60}
           maxDisplacement={10}
@@ -157,11 +157,11 @@ export default function ArcadeStats() {
             >
               {/* Rank */}
               <span
-                className="text-[#F5D547] min-w-[3rem]"
+                className="text-[#38BDF8] min-w-[3rem]"
                 style={{
                   fontFamily: "'Press Start 2P', monospace",
                   fontSize: "0.7rem",
-                  textShadow: "0 0 5px rgba(245,213,71,0.3)",
+                  textShadow: "0 0 5px rgba(56,189,248,0.3)",
                 }}
               >
                 #{i + 1}
@@ -212,7 +212,7 @@ export default function ArcadeStats() {
               style={{
                 fontFamily: "'Press Start 2P', monospace",
                 fontSize: "0.55rem",
-                color: "#F5D547",
+                color: "#38BDF8",
               }}
             >
               INSERT COIN

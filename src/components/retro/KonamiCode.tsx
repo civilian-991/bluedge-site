@@ -8,10 +8,10 @@ import { useRetroSound } from "@/hooks/useRetroSound";
 const pixelTeam = [
   { name: "Strategist", color: "#2CACE2", emoji: "🤖" },
   { name: "Marketer", color: "#0077B6", emoji: "🧘" },
-  { name: "Designer", color: "#F5D547", emoji: "⚔️" },
-  { name: "Researcher", color: "#00ff41", emoji: "🔬" },
-  { name: "SEO Pro", color: "#ff6b6b", emoji: "⚙️" },
-  { name: "Writer", color: "#c084fc", emoji: "📚" },
+  { name: "Designer", color: "#38BDF8", emoji: "⚔️" },
+  { name: "Researcher", color: "#7DD3FC", emoji: "🔬" },
+  { name: "SEO Pro", color: "#0EA5E9", emoji: "⚙️" },
+  { name: "Writer", color: "#0284C7", emoji: "📚" },
 ];
 
 export default function KonamiCode() {
@@ -54,8 +54,8 @@ export default function KonamiCode() {
                 className="text-2xl md:text-3xl tracking-wider"
                 style={{
                   fontFamily: "'Press Start 2P', monospace",
-                  color: "#F5D547",
-                  textShadow: "0 0 10px rgba(245,213,71,0.5)",
+                  color: "#38BDF8",
+                  textShadow: "0 0 10px rgba(56,189,248,0.5)",
                 }}
               >
                 BLUEDGE ARCADE
@@ -153,7 +153,7 @@ export default function KonamiCode() {
                 <div className="text-center">
                   <span
                     className="block text-xs"
-                    style={{ fontFamily: "'Press Start 2P', monospace", color: "#F5D547" }}
+                    style={{ fontFamily: "'Press Start 2P', monospace", color: "#38BDF8" }}
                   >
                     HIGH SCORE
                   </span>
@@ -169,7 +169,7 @@ export default function KonamiCode() {
                 <div className="text-center">
                   <span
                     className="block text-xs"
-                    style={{ fontFamily: "'Press Start 2P', monospace", color: "#F5D547" }}
+                    style={{ fontFamily: "'Press Start 2P', monospace", color: "#38BDF8" }}
                   >
                     LEVEL
                   </span>
@@ -190,7 +190,7 @@ export default function KonamiCode() {
                   style={{
                     fontFamily: "'Press Start 2P', monospace",
                     fontSize: "0.65rem",
-                    color: "#F5D547",
+                    color: "#38BDF8",
                   }}
                 >
                   INSERT COIN TO PLAY
@@ -223,7 +223,7 @@ export default function KonamiCode() {
             {[...Array(5)].map((_, i) => (
               <motion.div
                 key={i}
-                className="w-2 h-2 rounded-full bg-[#F5D547]"
+                className="w-2 h-2 rounded-full bg-[#38BDF8]"
                 animate={{ opacity: [0.3, 1, 0.3] }}
                 transition={{ duration: 0.5, repeat: Infinity, delay: i * 0.1 }}
               />

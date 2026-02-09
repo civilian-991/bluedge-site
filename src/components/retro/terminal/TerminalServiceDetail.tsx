@@ -105,7 +105,7 @@ export default function TerminalServiceDetail({ service }: TerminalServiceDetail
               <div className="mt-4 text-accent/60 text-xs">
                 ═══════════════════════════════════════════════════════
               </div>
-              <div className="mt-2 text-yellow-400/80">
+              <div className="mt-2 text-sky-400/80">
                 <TerminalPrompt path="C:\BLUEDGE\SERVICES">
                   <TypewriterLine text={`TYPE ${service.title.toUpperCase()}`} delay={0.3} speed={40} />
                 </TerminalPrompt>
@@ -144,7 +144,7 @@ export default function TerminalServiceDetail({ service }: TerminalServiceDetail
                 ──────────── CAPABILITIES ────────────
               </div>
               <TerminalPrompt path="C:\BLUEDGE\SERVICES">
-                <span className="text-yellow-400">DIR /FEATURES</span>
+                <span className="text-sky-400">DIR /FEATURES</span>
               </TerminalPrompt>
               <div className="mt-3 space-y-2">
                 {service.features.map((feature, i) => (
@@ -180,7 +180,7 @@ export default function TerminalServiceDetail({ service }: TerminalServiceDetail
                 ──────────── PROCESS LOG ────────────
               </div>
               <TerminalPrompt path="C:\BLUEDGE\SERVICES">
-                <span className="text-yellow-400">RUN /PROCESS</span>
+                <span className="text-sky-400">RUN /PROCESS</span>
               </TerminalPrompt>
               <div className="mt-3 space-y-3">
                 {service.process.map((step, i) => (
@@ -218,7 +218,7 @@ export default function TerminalServiceDetail({ service }: TerminalServiceDetail
                 ──────────── RELATED PROJECTS ────────────
               </div>
               <TerminalPrompt path="C:\BLUEDGE\SERVICES">
-                <span className="text-yellow-400">DIR /PROJECTS</span>
+                <span className="text-sky-400">DIR /PROJECTS</span>
               </TerminalPrompt>
               <div className="mt-3 text-xs md:text-sm">
                 <div className="text-white/40 mb-2">
@@ -264,7 +264,7 @@ export default function TerminalServiceDetail({ service }: TerminalServiceDetail
                 ──────────── FAQ.TXT ────────────
               </div>
               <TerminalPrompt path="C:\BLUEDGE\SERVICES">
-                <span className="text-yellow-400">HELP /FAQ</span>
+                <span className="text-sky-400">HELP /FAQ</span>
               </TerminalPrompt>
               <div className="mt-3 space-y-2">
                 {service.faq.map((item, i) => (
@@ -282,7 +282,7 @@ export default function TerminalServiceDetail({ service }: TerminalServiceDetail
                       className="text-left hover:text-accent transition-colors w-full min-h-[44px] py-2 flex items-center gap-1"
                     >
                       <span className="text-accent">[?]</span>{" "}
-                      <span className="text-yellow-400/80">{item.question}</span>
+                      <span className="text-sky-400/80">{item.question}</span>
                     </button>
                     <AnimatePresence>
                       {selectedFaq === i && (

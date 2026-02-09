@@ -47,7 +47,7 @@ export default function VUMeter({ bars = 12, active = true }: VUMeterProps) {
               backgroundColor: isHot
                 ? "#EF4444"
                 : isWarm
-                ? "#F59E0B"
+                ? "#0EA5E9"
                 : "#10B981",
             }}
           />

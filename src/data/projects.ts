@@ -18,7 +18,7 @@ export const projects: Project[] = [
     description:
       "Complete brand identity and social media presence for BAS, featuring 'The smooth side of snacking' campaign with clean, modern visuals.",
     image: "/bluedge/posts/BAS The smooth side of snacking post.jpg.jpeg",
-    color: "#8B7355",
+    color: "#1E6091",
     tags: ["Branding", "Food & Beverage", "Social Media"],
     year: "2024",
   },
@@ -28,7 +28,7 @@ export const projects: Project[] = [
     description:
       "Luxury hospitality digital marketing campaign showcasing elegance and premium experiences for one of the world's most prestigious hotel brands.",
     image: "/bluedge/posts/four seasons grid 1 image.jpg.jpeg",
-    color: "#C9A962",
+    color: "#0077B6",
     tags: ["Hospitality", "Luxury", "Digital Campaign"],
     year: "2023",
   },
@@ -38,7 +38,7 @@ export const projects: Project[] = [
     description:
       "Sophisticated brand identity and content creation for Lunore aesthetic clinic, showcasing premium beauty treatments with elegant visuals.",
     image: "/bluedge/posts/Lunore Body Treatment post.jpg.jpeg",
-    color: "#D4A574",
+    color: "#0EA5E9",
     tags: ["Healthcare", "Beauty", "Branding"],
     year: "2024",
   },
@@ -48,7 +48,7 @@ export const projects: Project[] = [
     description:
       "Playful and engaging social media content for Happy Pet, creating a vibrant community around pet care and happiness.",
     image: "/bluedge/posts/Happy pet post 4 (1).jpg.jpeg",
-    color: "#FF9800",
+    color: "#38BDF8",
     tags: ["Pet Care", "Social Media", "Community"],
     year: "2024",
   },
@@ -68,7 +68,7 @@ export const projects: Project[] = [
     description:
       "Creative brand development for Huddex, featuring 'Hudder to the rescue' campaign with bold visuals and engaging storytelling.",
     image: "/bluedge/posts/Hudder to the rescue post.jpg.jpeg",
-    color: "#9C27B0",
+    color: "#0466C8",
     tags: ["Branding", "Creative", "Campaign"],
     year: "2024",
   },
@@ -88,7 +88,7 @@ export const projects: Project[] = [
     description:
       "Distinctive brand identity and visual storytelling for Nafsikas, creating a memorable presence in the market.",
     image: "/bluedge/posts/nafsikas 1.png",
-    color: "#E91E63",
+    color: "#023E8A",
     tags: ["Branding", "Identity", "Creative"],
     year: "2024",
   },

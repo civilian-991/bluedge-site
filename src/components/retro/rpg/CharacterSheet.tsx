@@ -21,7 +21,7 @@ const statColors: Record<string, string> = {
   def: "#3B82F6",
   spd: "#10B981",
   int: "#A855F7",
-  cre: "#F59E0B",
+  cre: "#38BDF8",
   wit: "#EC4899",
 };
 
@@ -143,7 +143,7 @@ export default function CharacterSheet({ profile }: CharacterSheetProps) {
                 uncommon: "text-green-400 border-green-400/20",
                 rare: "text-blue-400 border-blue-400/20",
                 epic: "text-purple-400 border-purple-400/20",
-                legendary: "text-amber-400 border-amber-400/20",
+                legendary: "text-sky-400 border-sky-400/20",
               };
               const colorClass = rarityColors[item.rarity] || rarityColors.common;
 

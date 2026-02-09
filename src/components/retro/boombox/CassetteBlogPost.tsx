@@ -67,29 +67,29 @@ export default function CassetteBlogPost({ post }: CassetteBlogPostProps) {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: inserted ? 1 : 0.3, y: inserted ? 0 : -20 }}
           transition={{ duration: 0.5 }}
-          className="bg-[#2a2520] border border-amber-900/30 rounded-xl p-4 mb-10 sticky top-20 z-[80]"
+          className="bg-[#0f1420] border border-sky-900/30 rounded-xl p-4 mb-10 sticky top-20 z-[80]"
         >
           <div className="flex items-center gap-4">
             {/* Left reel */}
             <motion.div
               animate={{ rotate: scrollProgress * 720 }}
-              className="w-8 h-8 rounded-full border-2 border-amber-800/30 flex items-center justify-center shrink-0"
+              className="w-8 h-8 rounded-full border-2 border-sky-800/30 flex items-center justify-center shrink-0"
             >
-              <div className="w-3 h-3 rounded-full bg-amber-900/40" />
+              <div className="w-3 h-3 rounded-full bg-sky-900/40" />
             </motion.div>
 
             {/* Info + progress */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between gap-2">
-                <div className="text-[10px] font-mono text-amber-400/60 truncate">
+                <div className="text-[10px] font-mono text-sky-400/60 truncate">
                   {post.title}
                 </div>
-                <div className="text-[9px] font-mono text-amber-400/30 shrink-0">
+                <div className="text-[9px] font-mono text-sky-400/30 shrink-0">
                   {isSideB ? "SIDE B" : "SIDE A"}
                 </div>
               </div>
               {/* Progress bar */}
-              <div className="h-1 bg-amber-900/20 rounded-full mt-1 overflow-hidden">
+              <div className="h-1 bg-sky-900/20 rounded-full mt-1 overflow-hidden">
                 <motion.div
                   className="h-full rounded-full"
                   style={{
@@ -103,9 +103,9 @@ export default function CassetteBlogPost({ post }: CassetteBlogPostProps) {
             {/* Right reel */}
             <motion.div
               animate={{ rotate: scrollProgress * -720 }}
-              className="w-8 h-8 rounded-full border-2 border-amber-800/30 flex items-center justify-center shrink-0"
+              className="w-8 h-8 rounded-full border-2 border-sky-800/30 flex items-center justify-center shrink-0"
             >
-              <div className="w-3 h-3 rounded-full bg-amber-900/40" />
+              <div className="w-3 h-3 rounded-full bg-sky-900/40" />
             </motion.div>
 
             {/* VU meter */}
@@ -120,7 +120,7 @@ export default function CassetteBlogPost({ post }: CassetteBlogPostProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="relative aspect-video rounded-lg overflow-hidden border border-amber-900/20 mb-8"
+          className="relative aspect-video rounded-lg overflow-hidden border border-sky-900/20 mb-8"
         >
           <Image
             src={post.image}
@@ -130,7 +130,7 @@ export default function CassetteBlogPost({ post }: CassetteBlogPostProps) {
             sizes="(max-width: 768px) 100vw, 768px"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0804]/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#06080f]/60 to-transparent" />
         </motion.div>
 
         {/* Title & meta */}
@@ -175,7 +175,7 @@ export default function CassetteBlogPost({ post }: CassetteBlogPostProps) {
           transition={{ delay: 0.5 }}
           className="prose prose-invert prose-sm max-w-none mb-8"
         >
-          <div className="text-amber-400/30 text-[10px] font-mono tracking-[0.3em] uppercase mb-4">
+          <div className="text-sky-400/30 text-[10px] font-mono tracking-[0.3em] uppercase mb-4">
             ── SIDE A ──
           </div>
           <p className="text-white/70 text-base leading-relaxed whitespace-pre-line">{sideA}</p>
@@ -207,7 +207,7 @@ export default function CassetteBlogPost({ post }: CassetteBlogPostProps) {
           viewport={{ once: true }}
           className="prose prose-invert prose-sm max-w-none mb-12"
         >
-          <div className="text-amber-400/30 text-[10px] font-mono tracking-[0.3em] uppercase mb-4">
+          <div className="text-sky-400/30 text-[10px] font-mono tracking-[0.3em] uppercase mb-4">
             ── SIDE B ──
           </div>
           <p className="text-white/70 text-base leading-relaxed whitespace-pre-line">{sideB}</p>
@@ -254,7 +254,7 @@ export default function CassetteBlogPost({ post }: CassetteBlogPostProps) {
                 <Link
                   key={rp.slug}
                   href={`/blog/${rp.slug}`}
-                  className="group p-4 bg-[#1a1510] border border-amber-900/20 rounded-lg hover:border-accent/30 transition-colors"
+                  className="group p-4 bg-[#0a0e1a] border border-sky-900/20 rounded-lg hover:border-accent/30 transition-colors"
                 >
                   <div
                     className="text-[9px] font-mono tracking-wider uppercase mb-1"

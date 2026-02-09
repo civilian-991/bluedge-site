@@ -80,7 +80,7 @@ export default function TintinRocket() {
                 className="text-2xl font-bold"
                 style={{
                   fontFamily: "'Press Start 2P', monospace",
-                  color: countdown === 0 ? "#F5D547" : "#fff",
+                  color: countdown === 0 ? "#38BDF8" : "#fff",
                   textShadow: "0 0 15px rgba(255,255,255,0.5)",
                 }}
               >
@@ -112,7 +112,7 @@ export default function TintinRocket() {
               <div
                 className="absolute inset-x-1 top-0 bottom-2 rounded-t-full"
                 style={{
-                  background: "linear-gradient(180deg, #ff4444 0%, #ff4444 33%, white 33%, white 66%, #ff4444 66%, #ff4444 100%)",
+                  background: "linear-gradient(180deg, #0EA5E9 0%, #0EA5E9 33%, white 33%, white 66%, #0EA5E9 66%, #0EA5E9 100%)",
                   boxShadow: "inset -2px 0 4px rgba(0,0,0,0.2)",
                 }}
               />
@@ -120,7 +120,7 @@ export default function TintinRocket() {
               <div
                 className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-4"
                 style={{
-                  background: "#ff4444",
+                  background: "#0EA5E9",
                   clipPath: "polygon(50% 0%, 100% 100%, 0% 100%)",
                 }}
               />
@@ -128,14 +128,14 @@ export default function TintinRocket() {
               <div
                 className="absolute bottom-1 -left-1 w-3 h-4"
                 style={{
-                  background: "#ff4444",
+                  background: "#0EA5E9",
                   clipPath: "polygon(100% 0%, 100% 100%, 0% 100%)",
                 }}
               />
               <div
                 className="absolute bottom-1 -right-1 w-3 h-4"
                 style={{
-                  background: "#ff4444",
+                  background: "#0EA5E9",
                   clipPath: "polygon(0% 0%, 0% 100%, 100% 100%)",
                 }}
               />
@@ -157,7 +157,7 @@ export default function TintinRocket() {
                     transition={{ duration: 0.15, repeat: Infinity }}
                     className="w-4 h-8"
                     style={{
-                      background: "linear-gradient(to bottom, #F5D547, #ff6b35, rgba(255,100,50,0))",
+                      background: "linear-gradient(to bottom, #38BDF8, #0EA5E9, rgba(44,172,226,0))",
                       clipPath: "polygon(30% 0%, 70% 0%, 100% 100%, 0% 100%)",
                       filter: "blur(1px)",
                     }}
@@ -194,7 +194,7 @@ export default function TintinRocket() {
             exit={{ opacity: 0 }}
             className="absolute top-full left-1/2 -translate-x-1/2 w-12"
             style={{
-              backgroundImage: "radial-gradient(circle, rgba(245,213,71,0.3) 1px, transparent 1px)",
+              backgroundImage: "radial-gradient(circle, rgba(44,172,226,0.3) 1px, transparent 1px)",
               backgroundSize: "4px 4px",
             }}
           />

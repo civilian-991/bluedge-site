@@ -11,7 +11,7 @@ import AnimatedCharacter from "./AnimatedCharacter";
 function StatBar({ label, value, delay }: { label: string; value: number; delay: number }) {
   const color =
     value >= 90
-      ? "#F5D547"
+      ? "#38BDF8"
       : value >= 75
         ? "#2CACE2"
         : value >= 60
@@ -70,7 +70,7 @@ function CharacterSlot({
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.3, delay: index * 0.08 }}
-      className="relative aspect-square rounded-lg p-3 flex flex-col items-center justify-center gap-2 cursor-pointer transition-colors duration-200 outline-none focus-visible:ring-2 focus-visible:ring-[#F5D547]"
+      className="relative aspect-square rounded-lg p-3 flex flex-col items-center justify-center gap-2 cursor-pointer transition-colors duration-200 outline-none focus-visible:ring-2 focus-visible:ring-[#38BDF8]"
       style={{
         background: isSelected
           ? "linear-gradient(180deg, rgba(44,172,226,0.25) 0%, rgba(0,119,182,0.15) 100%)"
@@ -89,7 +89,7 @@ function CharacterSlot({
           animate={{ opacity: 1, y: 0 }}
           className="absolute -top-1 -right-1 px-1.5 py-0.5 rounded"
           style={{
-            background: "#F5D547",
+            background: "#38BDF8",
             fontFamily: "'Press Start 2P', monospace",
             fontSize: "0.35rem",
             color: "#000",
@@ -113,8 +113,8 @@ function CharacterSlot({
         style={{
           fontFamily: "'Press Start 2P', monospace",
           fontSize: "0.4rem",
-          color: isSelected ? "#F5D547" : "rgba(255,255,255,0.5)",
-          textShadow: isSelected ? "0 0 8px rgba(245,213,71,0.4)" : "none",
+          color: isSelected ? "#38BDF8" : "rgba(255,255,255,0.5)",
+          textShadow: isSelected ? "0 0 8px rgba(56,189,248,0.4)" : "none",
         }}
       >
         {role.shortName}
@@ -151,8 +151,8 @@ function DetailPanel({ role }: { role: TeamRole }) {
           style={{
             fontFamily: "'Press Start 2P', monospace",
             fontSize: "0.6rem",
-            color: "#F5D547",
-            textShadow: "0 0 10px rgba(245,213,71,0.4)",
+            color: "#38BDF8",
+            textShadow: "0 0 10px rgba(56,189,248,0.4)",
           }}
         >
           {role.shortName}
@@ -171,8 +171,8 @@ function DetailPanel({ role }: { role: TeamRole }) {
       <div
         className="text-center px-3 py-2 rounded"
         style={{
-          background: "rgba(245,213,71,0.1)",
-          border: "1px solid rgba(245,213,71,0.3)",
+          background: "rgba(56,189,248,0.1)",
+          border: "1px solid rgba(56,189,248,0.3)",
         }}
       >
         <span
@@ -189,8 +189,8 @@ function DetailPanel({ role }: { role: TeamRole }) {
           style={{
             fontFamily: "'Press Start 2P', monospace",
             fontSize: "0.5rem",
-            color: "#F5D547",
-            textShadow: "0 0 8px rgba(245,213,71,0.4)",
+            color: "#38BDF8",
+            textShadow: "0 0 8px rgba(56,189,248,0.4)",
           }}
         >
           {role.specialMove}
@@ -263,8 +263,8 @@ export default function ArcadeCharacterSelect() {
               style={{
                 fontFamily: "'Press Start 2P', monospace",
                 fontSize: "clamp(0.6rem, 2vw, 0.9rem)",
-                color: "#F5D547",
-                textShadow: "0 0 15px rgba(245,213,71,0.4)",
+                color: "#38BDF8",
+                textShadow: "0 0 15px rgba(56,189,248,0.4)",
                 letterSpacing: "0.15em",
               }}
             >
@@ -273,7 +273,7 @@ export default function ArcadeCharacterSelect() {
                 animate={{ opacity: [1, 0, 1] }}
                 transition={{ duration: 1, repeat: Infinity }}
                 className="inline-block ml-1"
-                style={{ color: "#F5D547" }}
+                style={{ color: "#38BDF8" }}
               >
                 _
               </motion.span>
