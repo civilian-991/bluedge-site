@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import { teamRoles } from "@/data";
 import type { TeamRole } from "@/types";
 import ScanLines from "./shared/ScanLines";
@@ -304,23 +305,41 @@ export default function ArcadeCharacterSelect() {
             </div>
           </div>
 
-          {/* Bottom insert coin */}
-          <motion.div
-            animate={{ opacity: [1, 0.3, 1] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-            className="text-center mt-8"
-          >
-            <span
-              style={{
-                fontFamily: "'Press Start 2P', monospace",
-                fontSize: "0.45rem",
-                color: "rgba(255,255,255,0.3)",
-                letterSpacing: "0.2em",
-              }}
+          {/* Bottom insert coin + View Full Party link */}
+          <div className="text-center mt-8 space-y-3">
+            <motion.div
+              animate={{ opacity: [1, 0.3, 1] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
             >
-              INSERT COIN TO CONTINUE
-            </span>
-          </motion.div>
+              <span
+                style={{
+                  fontFamily: "'Press Start 2P', monospace",
+                  fontSize: "0.45rem",
+                  color: "rgba(255,255,255,0.3)",
+                  letterSpacing: "0.2em",
+                }}
+              >
+                INSERT COIN TO CONTINUE
+              </span>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.5 }}
+            >
+              <Link
+                href="/team"
+                className="inline-flex items-center gap-2 text-accent/60 hover:text-accent transition-colors"
+                style={{
+                  fontFamily: "'Press Start 2P', monospace",
+                  fontSize: "0.45rem",
+                }}
+              >
+                VIEW FULL PARTY →
+              </Link>
+            </motion.div>
+          </div>
         </div>
       </motion.div>
     </div>

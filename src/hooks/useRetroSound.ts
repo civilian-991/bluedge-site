@@ -15,7 +15,16 @@ type SoundType =
   | "scrollMilestone"
   | "hoverBlip"
   | "konamiVictory"
-  | "collectFound";
+  | "collectFound"
+  | "terminalKey"
+  | "terminalBeep"
+  | "diskRead"
+  | "filmProjector"
+  | "filmSnap"
+  | "rpgMenuSelect"
+  | "rpgLevelUp"
+  | "cassetteInsert"
+  | "cassetteRewind";
 
 let globalCtx: AudioContext | null = null;
 let globalMuted =
@@ -265,6 +274,157 @@ function playCollectFound(ctx: AudioContext) {
   });
 }
 
+// --- New sound factories for multi-page themes ---
+
+function playTerminalKey(ctx: AudioContext) {
+  const osc = ctx.createOscillator();
+  osc.type = "square";
+  osc.frequency.value = 440 + Math.random() * 200;
+  const gain = ctx.createGain();
+  gain.gain.setValueAtTime(0.05, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.03);
+  osc.connect(gain).connect(ctx.destination);
+  osc.start();
+  osc.stop(ctx.currentTime + 0.04);
+}
+
+function playTerminalBeep(ctx: AudioContext) {
+  const osc = ctx.createOscillator();
+  osc.type = "square";
+  osc.frequency.value = 1000;
+  const gain = ctx.createGain();
+  gain.gain.setValueAtTime(0.08, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+  osc.connect(gain).connect(ctx.destination);
+  osc.start();
+  osc.stop(ctx.currentTime + 0.25);
+}
+
+function playDiskRead(ctx: AudioContext) {
+  const dur = 0.3;
+  const bufferSize = ctx.sampleRate * dur;
+  const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * (i % 800 < 400 ? 1 : 0.3);
+  const source = ctx.createBufferSource();
+  source.buffer = buffer;
+  const gain = ctx.createGain();
+  gain.gain.setValueAtTime(0.06, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+  const filter = ctx.createBiquadFilter();
+  filter.type = "bandpass";
+  filter.frequency.value = 2000;
+  filter.Q.value = 2;
+  source.connect(filter).connect(gain).connect(ctx.destination);
+  source.start();
+  source.stop(ctx.currentTime + dur);
+}
+
+function playFilmProjector(ctx: AudioContext) {
+  [0, 0.08, 0.16].forEach((offset) => {
+    const dur = 0.04;
+    const bufferSize = ctx.sampleRate * dur;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+    const source = ctx.createBufferSource();
+    source.buffer = buffer;
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.06, ctx.currentTime + offset);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + offset + dur);
+    source.connect(gain).connect(ctx.destination);
+    source.start(ctx.currentTime + offset);
+    source.stop(ctx.currentTime + offset + dur);
+  });
+}
+
+function playFilmSnap(ctx: AudioContext) {
+  const dur = 0.06;
+  const bufferSize = ctx.sampleRate * dur;
+  const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+  const source = ctx.createBufferSource();
+  source.buffer = buffer;
+  const gain = ctx.createGain();
+  gain.gain.setValueAtTime(0.15, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+  source.connect(gain).connect(ctx.destination);
+  source.start();
+  source.stop(ctx.currentTime + dur);
+}
+
+function playRPGMenuSelect(ctx: AudioContext) {
+  const osc = ctx.createOscillator();
+  osc.type = "triangle";
+  osc.frequency.value = 880;
+  const gain = ctx.createGain();
+  gain.gain.setValueAtTime(0.06, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+  osc.connect(gain).connect(ctx.destination);
+  osc.start();
+  osc.stop(ctx.currentTime + 0.12);
+}
+
+function playRPGLevelUp(ctx: AudioContext) {
+  const notes = [523, 659, 784, 1047, 1319];
+  notes.forEach((freq, i) => {
+    const osc = ctx.createOscillator();
+    osc.type = "triangle";
+    osc.frequency.value = freq;
+    const gain = ctx.createGain();
+    const t = ctx.currentTime + i * 0.08;
+    gain.gain.setValueAtTime(0.06, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start(t);
+    osc.stop(t + 0.25);
+  });
+}
+
+function playCassetteInsert(ctx: AudioContext) {
+  // Mechanical click + hum
+  const dur = 0.15;
+  const bufferSize = ctx.sampleRate * dur;
+  const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+  const source = ctx.createBufferSource();
+  source.buffer = buffer;
+  const gain = ctx.createGain();
+  gain.gain.setValueAtTime(0.1, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+  const filter = ctx.createBiquadFilter();
+  filter.type = "lowpass";
+  filter.frequency.value = 800;
+  source.connect(filter).connect(gain).connect(ctx.destination);
+  source.start();
+  source.stop(ctx.currentTime + dur);
+  // Thunk
+  const osc = ctx.createOscillator();
+  osc.type = "sine";
+  osc.frequency.value = 80;
+  const g2 = ctx.createGain();
+  g2.gain.setValueAtTime(0.12, ctx.currentTime + 0.1);
+  g2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+  osc.connect(g2).connect(ctx.destination);
+  osc.start(ctx.currentTime + 0.1);
+  osc.stop(ctx.currentTime + 0.3);
+}
+
+function playCassetteRewind(ctx: AudioContext) {
+  const osc = ctx.createOscillator();
+  osc.type = "sawtooth";
+  osc.frequency.setValueAtTime(200, ctx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(2000, ctx.currentTime + 0.5);
+  const gain = ctx.createGain();
+  gain.gain.setValueAtTime(0.04, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+  osc.connect(gain).connect(ctx.destination);
+  osc.start();
+  osc.stop(ctx.currentTime + 0.55);
+}
+
 const soundMap: Record<SoundType, (ctx: AudioContext) => void> = {
   channelSwitch: (ctx) => playNoiseBurst(ctx, 0.15),
   pillHover: playLowHum,
@@ -279,6 +439,15 @@ const soundMap: Record<SoundType, (ctx: AudioContext) => void> = {
   hoverBlip: playHoverBlip,
   konamiVictory: playKonamiVictory,
   collectFound: playCollectFound,
+  terminalKey: playTerminalKey,
+  terminalBeep: playTerminalBeep,
+  diskRead: playDiskRead,
+  filmProjector: playFilmProjector,
+  filmSnap: playFilmSnap,
+  rpgMenuSelect: playRPGMenuSelect,
+  rpgLevelUp: playRPGLevelUp,
+  cassetteInsert: playCassetteInsert,
+  cassetteRewind: playCassetteRewind,
 };
 
 export function getAudioContext(): AudioContext {

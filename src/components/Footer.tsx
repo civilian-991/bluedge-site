@@ -7,13 +7,16 @@ import { ArrowUpRight, Sparkles } from "lucide-react";
 import { socialLinks, contactInfo, services } from "@/data";
 import { CollectibleTrigger } from "./retro/CollectibleItem";
 
+const serviceSlugs = ["branding", "web-design", "mobile-apps", "project-development", "traditional-media"];
 const footerLinks = {
-  services: services.map(s => ({ name: s.title, href: "#services" })),
+  services: services.map((s, i) => ({ name: s.title, href: `/services/${serviceSlugs[i]}` })),
   company: [
-    { name: "About Us", href: "#about" },
-    { name: "Our Work", href: "#work" },
-    { name: "The Team", href: "#team" },
-    { name: "Contact", href: "#contact" },
+    { name: "About Us", href: "/#about" },
+    { name: "Our Work", href: "/work" },
+    { name: "The Team", href: "/team" },
+    { name: "Blog", href: "/blog" },
+    { name: "Manifesto", href: "/manifesto" },
+    { name: "Contact", href: "/#contact" },
   ],
   legal: [
     { name: "Privacy Policy", href: "#" },

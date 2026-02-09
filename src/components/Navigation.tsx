@@ -5,21 +5,57 @@ import { gsap } from "gsap";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { ChevronDown } from "lucide-react";
 
-const navLinks = [
-  { name: "Services", href: "#services" },
-  { name: "Portfolio", href: "#work" },
-  { name: "About", href: "#about" },
+const serviceSubLinks = [
+  { name: "Branding", href: "/services/branding" },
+  { name: "Web Design", href: "/services/web-design" },
+  { name: "Mobile Apps", href: "/services/mobile-apps" },
+  { name: "Project Dev", href: "/services/project-development" },
+  { name: "Traditional Media", href: "/services/traditional-media" },
+];
+
+interface NavLink {
+  name: string;
+  href: string;
+  homeHref?: string; // hash link for homepage
+  children?: { name: string; href: string }[];
+}
+
+const navLinks: NavLink[] = [
+  { name: "Services", href: "/services/branding", homeHref: "#services", children: serviceSubLinks },
+  { name: "Work", href: "/work", homeHref: "#work" },
+  { name: "Team", href: "/team", homeHref: "#about" },
+  { name: "Blog", href: "/blog" },
   { name: "Manifesto", href: "/manifesto" },
-  { name: "Contact", href: "#contact" },
+  { name: "Contact", href: "/#contact", homeHref: "#contact" },
 ];
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeLink, setActiveLink] = useState<string | null>(null);
+  const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
+  const [mobileAccordion, setMobileAccordion] = useState<string | null>(null);
   const navRef = useRef<HTMLElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
+  const dropdownTimeout = useRef<NodeJS.Timeout | null>(null);
+  const pathname = usePathname();
+  const isHomepage = pathname === "/";
+
+  function resolveHref(link: NavLink): string {
+    if (isHomepage && link.homeHref) return link.homeHref;
+    return link.href;
+  }
+
+  function isActive(link: NavLink): boolean {
+    if (link.children) {
+      return link.children.some((c) => pathname.startsWith(c.href));
+    }
+    if (link.href === "/") return pathname === "/";
+    return pathname.startsWith(link.href);
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -41,14 +77,12 @@ export default function Navigation() {
   // Animate nav on mount
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Nav slides in
       gsap.fromTo(
         navRef.current,
         { y: -100, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, delay: 2.5, ease: "power3.out" }
+        { y: 0, opacity: 1, duration: 1, delay: isHomepage ? 2.5 : 0.3, ease: "power3.out" }
       );
 
-      // Logo magnetic effect
       const logo = logoRef.current;
       if (logo) {
         const handleMouseMove = (e: MouseEvent) => {
@@ -84,7 +118,7 @@ export default function Navigation() {
     }, navRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [isHomepage]);
 
   const menuVariants = {
     closed: {
@@ -118,6 +152,15 @@ export default function Navigation() {
     }),
   };
 
+  function handleDropdownEnter(name: string) {
+    if (dropdownTimeout.current) clearTimeout(dropdownTimeout.current);
+    setDropdownOpen(name);
+  }
+
+  function handleDropdownLeave() {
+    dropdownTimeout.current = setTimeout(() => setDropdownOpen(null), 200);
+  }
+
   return (
     <>
       <nav
@@ -133,13 +176,11 @@ export default function Navigation() {
           {/* Logo with BluEdge branding */}
           <Link href="/" className="relative z-[110] group">
             <div ref={logoRef} className="flex items-center gap-4">
-              {/* Animated logo container */}
               <motion.div
                 className="relative w-12 h-12 rounded-xl overflow-hidden"
                 whileHover={{ scale: 1.1 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                {/* Glow effect */}
                 <motion.div
                   className="absolute inset-0 rounded-xl"
                   animate={{
@@ -151,34 +192,21 @@ export default function Navigation() {
                   }}
                   transition={{ duration: 2, repeat: Infinity }}
                 />
-
-                {/* Logo background */}
                 <div className="absolute inset-0 bg-gradient-to-br from-accent/20 to-accent/5 border border-accent/30 rounded-xl" />
-
-                {/* BluEdge Logo SVG */}
                 <Image
                   src="/bluedge/Logo.svg"
                   alt="BluEdge"
                   fill
                   className="object-contain p-2"
                 />
-
-                {/* Orbiting dot */}
                 <motion.div
                   className="absolute w-2 h-2 rounded-full bg-accent"
                   style={{ top: -4, left: "50%", marginLeft: -4 }}
-                  animate={{
-                    rotate: 360,
-                  }}
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "linear",
-                  }}
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
                 />
               </motion.div>
 
-              {/* Text logo */}
               <div className="hidden sm:flex flex-col">
                 <motion.span
                   className="text-xl font-bold tracking-tight leading-none"
@@ -191,7 +219,7 @@ export default function Navigation() {
                   className="text-[10px] tracking-[0.25em] text-white/40 uppercase"
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 3 }}
+                  transition={{ delay: isHomepage ? 3 : 0.5 }}
                 >
                   Marketing Agency
                 </motion.span>
@@ -199,47 +227,97 @@ export default function Navigation() {
             </div>
           </Link>
 
-          {/* Desktop Navigation with hover effects */}
+          {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-1">
-            {navLinks.map((link, i) => (
-              <motion.div
+            {navLinks.map((link) => (
+              <div
                 key={link.name}
                 className="relative"
-                onHoverStart={() => setActiveLink(link.name)}
-                onHoverEnd={() => setActiveLink(null)}
+                onMouseEnter={() => link.children && handleDropdownEnter(link.name)}
+                onMouseLeave={() => link.children && handleDropdownLeave()}
               >
-                <Link
-                  href={link.href}
-                  className="relative px-5 py-3 text-sm font-medium text-white/60 hover:text-white transition-colors uppercase tracking-wider"
+                <motion.div
+                  className="relative"
+                  onHoverStart={() => setActiveLink(link.name)}
+                  onHoverEnd={() => setActiveLink(null)}
                 >
-                  {link.name}
-
-                  {/* Animated underline */}
-                  <motion.span
-                    className="absolute bottom-1 left-5 right-5 h-px bg-gradient-to-r from-accent to-accent/50"
-                    initial={{ scaleX: 0 }}
-                    animate={{ scaleX: activeLink === link.name ? 1 : 0 }}
-                    transition={{ duration: 0.3 }}
-                  />
-
-                  {/* Hover glow */}
-                  <AnimatePresence>
-                    {activeLink === link.name && (
-                      <motion.span
-                        className="absolute inset-0 rounded-lg bg-accent/5"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2 }}
+                  <Link
+                    href={resolveHref(link)}
+                    className={`relative px-5 py-3 text-sm font-medium transition-colors uppercase tracking-wider inline-flex items-center gap-1 ${
+                      isActive(link) ? "text-accent" : "text-white/60 hover:text-white"
+                    }`}
+                  >
+                    {link.name}
+                    {link.children && (
+                      <ChevronDown
+                        className={`w-3 h-3 transition-transform ${
+                          dropdownOpen === link.name ? "rotate-180" : ""
+                        }`}
                       />
                     )}
-                  </AnimatePresence>
-                </Link>
-              </motion.div>
+
+                    <motion.span
+                      className="absolute bottom-1 left-5 right-5 h-px bg-gradient-to-r from-accent to-accent/50"
+                      initial={{ scaleX: 0 }}
+                      animate={{ scaleX: activeLink === link.name ? 1 : 0 }}
+                      transition={{ duration: 0.3 }}
+                    />
+
+                    <AnimatePresence>
+                      {activeLink === link.name && (
+                        <motion.span
+                          className="absolute inset-0 rounded-lg bg-accent/5"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.2 }}
+                        />
+                      )}
+                    </AnimatePresence>
+                  </Link>
+                </motion.div>
+
+                {/* Services dropdown */}
+                <AnimatePresence>
+                  {link.children && dropdownOpen === link.name && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                      transition={{ duration: 0.2, ease: "easeOut" }}
+                      className="absolute top-full left-0 mt-1 min-w-[220px] bg-[#0a0a12]/95 backdrop-blur-xl border border-accent/10 rounded-xl overflow-hidden shadow-xl shadow-black/30"
+                      onMouseEnter={() => handleDropdownEnter(link.name)}
+                      onMouseLeave={handleDropdownLeave}
+                    >
+                      {link.children.map((child, ci) => (
+                        <Link
+                          key={child.name}
+                          href={child.href}
+                          className={`block px-5 py-3 text-sm transition-all hover:bg-accent/10 hover:text-accent border-b border-white/5 last:border-b-0 ${
+                            pathname === child.href
+                              ? "text-accent bg-accent/5"
+                              : "text-white/60"
+                          }`}
+                        >
+                          <motion.span
+                            initial={{ x: -5, opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            transition={{ delay: ci * 0.04 }}
+                            className="flex items-center gap-3"
+                          >
+                            <span className="text-accent/40 text-xs font-mono">0{ci + 1}</span>
+                            {child.name}
+                          </motion.span>
+                        </Link>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             ))}
           </div>
 
-          {/* CTA Button with animation */}
+          {/* CTA Button */}
           <div className="hidden lg:flex items-center gap-6">
             <motion.a
               href="tel:+9611234567"
@@ -262,12 +340,10 @@ export default function Navigation() {
               whileTap={{ scale: 0.95 }}
             >
               <Link
-                href="#contact"
+                href={isHomepage ? "#contact" : "/#contact"}
                 className="btn-primary btn-shine text-xs py-3 px-6 relative overflow-hidden group"
               >
                 <span className="relative z-10">Get a Quote</span>
-
-                {/* Shine effect */}
                 <motion.span
                   className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
                   initial={{ x: "-100%" }}
@@ -278,7 +354,7 @@ export default function Navigation() {
             </motion.div>
           </div>
 
-          {/* Mobile Menu Button with animation */}
+          {/* Mobile Menu Button */}
           <motion.button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="relative z-[110] lg:hidden w-12 h-12 flex flex-col items-center justify-center gap-1.5 rounded-xl border border-white/10 hover:border-accent/30 transition-colors bg-white/5"
@@ -312,7 +388,7 @@ export default function Navigation() {
         </div>
       </nav>
 
-      {/* Mobile Menu with heavy animations */}
+      {/* Mobile Menu */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
@@ -322,7 +398,6 @@ export default function Navigation() {
             variants={menuVariants}
             className="fixed inset-0 z-[105] bg-[#050508] flex items-center justify-center"
           >
-            {/* Animated background decoration */}
             <div className="absolute inset-0 overflow-hidden">
               <motion.div
                 className="absolute top-1/4 right-1/4 w-[500px] h-[500px] rounded-full bg-accent/10 blur-[100px]"
@@ -346,9 +421,7 @@ export default function Navigation() {
               <div className="absolute inset-0 noise-overlay opacity-30" />
             </div>
 
-            {/* Menu content */}
-            <div className="relative z-10 flex flex-col items-center gap-4">
-              {/* BluEdge Logo at top */}
+            <div className="relative z-10 flex flex-col items-center gap-4 w-full px-8 max-h-[80vh] overflow-y-auto">
               <motion.div
                 initial={{ opacity: 0, y: -30 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -364,7 +437,6 @@ export default function Navigation() {
                 />
               </motion.div>
 
-              {/* Navigation links */}
               {navLinks.map((link, i) => (
                 <motion.div
                   key={link.name}
@@ -373,48 +445,105 @@ export default function Navigation() {
                   initial="closed"
                   animate="open"
                   exit="closed"
-                  className="overflow-hidden"
+                  className="overflow-hidden w-full text-center"
                 >
-                  <Link
-                    href={link.href}
-                    onClick={() => setIsMenuOpen(false)}
-                    className="group relative block text-5xl md:text-7xl font-bold tracking-tighter"
-                  >
-                    {/* Text with character animation */}
-                    <span className="relative inline-block">
-                      {link.name.split("").map((char, charIndex) => (
-                        <motion.span
-                          key={charIndex}
-                          className="inline-block"
-                          whileHover={{
-                            color: "#2CACE2",
-                            y: -5,
-                            textShadow: "0 0 20px rgba(44, 172, 226, 0.5)",
-                          }}
-                          transition={{ duration: 0.2, delay: charIndex * 0.02 }}
-                        >
-                          {char}
-                        </motion.span>
-                      ))}
-                    </span>
+                  {link.children ? (
+                    <div>
+                      <button
+                        onClick={() =>
+                          setMobileAccordion(
+                            mobileAccordion === link.name ? null : link.name
+                          )
+                        }
+                        className="group relative inline-flex items-center gap-3 text-4xl md:text-5xl font-bold tracking-tighter"
+                      >
+                        <span className="relative inline-block">
+                          {link.name.split("").map((char, ci) => (
+                            <motion.span
+                              key={ci}
+                              className="inline-block"
+                              whileHover={{
+                                color: "#2CACE2",
+                                y: -5,
+                                textShadow: "0 0 20px rgba(44, 172, 226, 0.5)",
+                              }}
+                              transition={{ duration: 0.2, delay: ci * 0.02 }}
+                            >
+                              {char}
+                            </motion.span>
+                          ))}
+                        </span>
+                        <ChevronDown
+                          className={`w-6 h-6 text-accent/50 transition-transform ${
+                            mobileAccordion === link.name ? "rotate-180" : ""
+                          }`}
+                        />
+                        <span className="absolute -left-8 top-1/2 -translate-y-1/2 text-sm text-accent/50 font-normal">
+                          0{i + 1}
+                        </span>
+                      </button>
 
-                    {/* Animated underline on hover */}
-                    <motion.span
-                      className="absolute -bottom-2 left-0 h-1 bg-gradient-to-r from-accent to-transparent"
-                      initial={{ width: 0 }}
-                      whileHover={{ width: "100%" }}
-                      transition={{ duration: 0.3 }}
-                    />
-
-                    {/* Number indicator */}
-                    <span className="absolute -left-8 top-1/2 -translate-y-1/2 text-sm text-accent/50 font-normal">
-                      0{i + 1}
-                    </span>
-                  </Link>
+                      <AnimatePresence>
+                        {mobileAccordion === link.name && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="overflow-hidden"
+                          >
+                            <div className="flex flex-col items-center gap-3 py-4">
+                              {link.children.map((child) => (
+                                <Link
+                                  key={child.name}
+                                  href={child.href}
+                                  onClick={() => setIsMenuOpen(false)}
+                                  className="text-lg text-white/50 hover:text-accent transition-colors"
+                                >
+                                  {child.name}
+                                </Link>
+                              ))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  ) : (
+                    <Link
+                      href={resolveHref(link)}
+                      onClick={() => setIsMenuOpen(false)}
+                      className="group relative block text-4xl md:text-5xl font-bold tracking-tighter"
+                    >
+                      <span className="relative inline-block">
+                        {link.name.split("").map((char, ci) => (
+                          <motion.span
+                            key={ci}
+                            className="inline-block"
+                            whileHover={{
+                              color: "#2CACE2",
+                              y: -5,
+                              textShadow: "0 0 20px rgba(44, 172, 226, 0.5)",
+                            }}
+                            transition={{ duration: 0.2, delay: ci * 0.02 }}
+                          >
+                            {char}
+                          </motion.span>
+                        ))}
+                      </span>
+                      <motion.span
+                        className="absolute -bottom-2 left-0 h-1 bg-gradient-to-r from-accent to-transparent"
+                        initial={{ width: 0 }}
+                        whileHover={{ width: "100%" }}
+                        transition={{ duration: 0.3 }}
+                      />
+                      <span className="absolute -left-8 top-1/2 -translate-y-1/2 text-sm text-accent/50 font-normal">
+                        0{i + 1}
+                      </span>
+                    </Link>
+                  )}
                 </motion.div>
               ))}
 
-              {/* CTA Button */}
               <motion.div
                 custom={navLinks.length}
                 variants={linkVariants}
@@ -428,7 +557,7 @@ export default function Navigation() {
                   whileTap={{ scale: 0.95 }}
                 >
                   <Link
-                    href="#contact"
+                    href={isHomepage ? "#contact" : "/#contact"}
                     onClick={() => setIsMenuOpen(false)}
                     className="btn-primary btn-shine text-base px-10 py-5"
                   >
@@ -438,7 +567,6 @@ export default function Navigation() {
               </motion.div>
             </div>
 
-            {/* Contact info at bottom */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -470,7 +598,6 @@ export default function Navigation() {
                 </span>
               </div>
 
-              {/* Social links with hover effects */}
               <div className="flex justify-center gap-8 mt-6">
                 {["Instagram", "LinkedIn", "Behance"].map((social, i) => (
                   <motion.a

@@ -5,7 +5,9 @@ import { motion, useInView } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
+import Link from "next/link";
 import { projects } from "@/data";
+import { caseStudies } from "@/data/caseStudies";
 import { Layers, ArrowUpRight } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -152,12 +154,28 @@ function PolaroidCard({
             ))}
           </div>
 
-          <p
-            className="text-[10px] text-gray-400"
-            style={{ fontFamily: "'Special Elite', monospace" }}
-          >
-            {project.year}
-          </p>
+          <div className="flex items-center justify-between">
+            <p
+              className="text-[10px] text-gray-400"
+              style={{ fontFamily: "'Special Elite', monospace" }}
+            >
+              {project.year}
+            </p>
+            {(() => {
+              const cs = caseStudies.find(
+                (c) => c.title.toLowerCase() === project.title.toLowerCase()
+              );
+              return cs ? (
+                <Link
+                  href={`/work/${cs.slug}`}
+                  className="text-[9px] text-accent hover:text-accent/80 transition-colors flex items-center gap-1"
+                  style={{ fontFamily: "'Special Elite', monospace" }}
+                >
+                  View Case Study <ArrowUpRight className="w-2.5 h-2.5" />
+                </Link>
+              ) : null;
+            })()}
+          </div>
         </div>
       </motion.div>
     </motion.div>

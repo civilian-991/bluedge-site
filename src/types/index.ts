@@ -109,3 +109,99 @@ export interface ManifestoContent {
   sections: ManifestoSection[];
   signature: string;
 }
+
+// --- Multi-page types ---
+
+export interface ServiceDetail {
+  slug: string;
+  title: string;
+  tagline: string;
+  description: string;
+  features: { name: string; description: string }[];
+  process: { step: number; title: string; description: string }[];
+  faq: { question: string; answer: string }[];
+  gradient: string;
+  iconSvg: string;
+  asciiArt: string;
+}
+
+export interface CaseStudyResult {
+  label: string;
+  value: string;
+  suffix?: string;
+}
+
+export interface CaseStudy {
+  slug: string;
+  title: string;
+  client: string;
+  category: string;
+  year: string;
+  image: string;
+  color: string;
+  tags: string[];
+  genre: string;
+  challenge: string;
+  approach: string;
+  results: CaseStudyResult[];
+  testimonial?: string;
+  testimonialAuthor?: string;
+}
+
+export interface RPGSkill {
+  name: string;
+  level: number;
+  maxLevel: number;
+  icon: string;
+}
+
+export interface RPGEquipment {
+  name: string;
+  type: string;
+  rarity: "common" | "uncommon" | "rare" | "epic" | "legendary";
+  icon: string;
+  description: string;
+}
+
+export interface RPGQuest {
+  title: string;
+  client: string;
+  status: "completed" | "active" | "legendary";
+  xpReward: number;
+  description: string;
+}
+
+export interface TeamProfile {
+  slug: string;
+  title: string;
+  icon: string;
+  description: string;
+  shortName: string;
+  stats: CharacterStats & { cre: number; wit: number };
+  specialMove: string;
+  skills: RPGSkill[];
+  equipment: RPGEquipment[];
+  questLog: RPGQuest[];
+  backstory: string;
+}
+
+export interface BlogCategory {
+  slug: string;
+  name: string;
+  tapeColor: string;
+  icon: string;
+}
+
+export interface BlogPost {
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  category: string;
+  author: string;
+  date: string;
+  readTime: number;
+  image: string;
+  featured?: boolean;
+  tags: string[];
+}

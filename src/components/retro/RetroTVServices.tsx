@@ -4,7 +4,9 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Link from "next/link";
 import { services } from "@/data";
+import { serviceSlugs } from "@/data/serviceDetails";
 import TVStatic from "./shared/TVStatic";
 import ScanLines from "./shared/ScanLines";
 import { useCollectibles } from "@/hooks/useCollectibles";
@@ -334,6 +336,22 @@ export default function RetroTVServices() {
                       >
                         NOW PLAYING
                       </span>
+                    </motion.div>
+
+                    {/* Learn More link */}
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.5 }}
+                      className="mt-4"
+                    >
+                      <Link
+                        href={`/services/${serviceSlugs[activeChannel] || "branding"}`}
+                        className="inline-flex items-center gap-2 text-accent/60 hover:text-accent transition-colors"
+                        style={{ fontFamily: "'Press Start 2P', monospace", fontSize: "0.45rem" }}
+                      >
+                        LEARN MORE →
+                      </Link>
                     </motion.div>
                   </motion.div>
                 )}
