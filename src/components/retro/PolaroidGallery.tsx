@@ -198,6 +198,7 @@ export default function PolaroidGallery() {
     <section
       ref={sectionRef}
       id="work"
+      data-ambient="section-polaroid"
       className="relative py-24 md:py-32 overflow-hidden"
       style={{ paddingLeft: "5%", paddingRight: "5%" }}
     >

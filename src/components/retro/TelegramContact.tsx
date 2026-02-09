@@ -162,6 +162,7 @@ export default function TelegramContact() {
     <section
       ref={sectionRef}
       id="contact"
+      data-ambient="section-telegram"
       className="relative py-24 md:py-32 overflow-hidden"
       style={{ paddingLeft: "5%", paddingRight: "5%" }}
     >

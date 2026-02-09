@@ -12,6 +12,13 @@
   --gradient-start: #2CACE2;
   --gradient-mid: #0077B6;
   --gradient-end: #023E8A;
+
+  /* Dynamic Time Theme (Feature 24) — overridden by JS */
+  --theme-accent: #2CACE2;
+  --theme-accent-glow: rgba(44, 172, 226, 0.6);
+  --theme-bg-tint: rgba(0, 0, 0, 0);
+  --theme-glow-color: #2CACE2;
+  --theme-name: "day";
 }
 
 @theme inline {
@@ -2896,4 +2903,74 @@ body {
 @keyframes confettiDrop {
   0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
   100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+/* ================================
+   CIRCUIT PATHS GLOW (Feature 22)
+   ================================ */
+@keyframes circuitNodePulse {
+  0%, 100% {
+    opacity: 0.4;
+    filter: drop-shadow(0 0 2px #2CACE2);
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 8px #2CACE2) drop-shadow(0 0 16px rgba(44,172,226,0.5));
+  }
+}
+
+@keyframes dataPacketTravel {
+  0% { opacity: 0.8; }
+  50% { opacity: 1; }
+  100% { opacity: 0.8; }
+}
+
+.circuit-node {
+  transition: opacity 0.3s ease, stroke-width 0.3s ease;
+}
+
+.data-packet {
+  animation: dataPacketTravel 2s ease-in-out infinite;
+}
+
+/* ================================
+   CINEMA MODE (Feature 25)
+   ================================ */
+@keyframes cinemaGrain {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-1%, -1%); }
+  20% { transform: translate(1%, 0%); }
+  30% { transform: translate(-2%, 1%); }
+  40% { transform: translate(1%, -1%); }
+  50% { transform: translate(-1%, 2%); }
+  60% { transform: translate(2%, 1%); }
+  70% { transform: translate(0%, -2%); }
+  80% { transform: translate(-1%, 0%); }
+  90% { transform: translate(1%, 1%); }
+}
+
+/* ================================
+   PARALLAX DEPTH (Feature 20)
+   ================================ */
+[data-parallax-container] {
+  will-change: transform;
+}
+
+[data-depth] {
+  will-change: transform;
+  transition: transform 0.1s ease-out;
+}
+
+/* ================================
+   REDUCED MOTION — Phase 3 features
+   ================================ */
+@media (prefers-reduced-motion: reduce) {
+  [data-parallax-container],
+  [data-depth] {
+    transform: none !important;
+  }
+  .circuit-node,
+  .data-packet {
+    animation: none !important;
+  }
 }

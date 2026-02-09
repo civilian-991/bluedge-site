@@ -19,6 +19,11 @@ import SoundToggle from "@/components/retro/SoundToggle";
 import VHSRewind from "@/components/retro/VHSRewind";
 import CollectibleCounter from "@/components/retro/CollectibleCounter";
 import CollectibleCelebration from "@/components/retro/CollectibleCelebration";
+import TimeThemeProvider from "@/components/retro/TimeThemeProvider";
+import CircuitPaths from "@/components/retro/CircuitPaths";
+import AmbientAudioManager from "@/components/retro/AmbientAudioManager";
+import CinemaMode from "@/components/retro/CinemaMode";
+import ParallaxInit from "@/components/retro/ParallaxInit";
 import {
   HeroToMatrixTransition,
   MatrixToTVTransition,
@@ -54,6 +59,21 @@ export default function Home() {
       {/* Sound toggle (Feature 13) */}
       <SoundToggle />
 
+      {/* Dynamic Time Theme (Feature 24) */}
+      <TimeThemeProvider />
+
+      {/* Cinema Mode (Feature 25) */}
+      <CinemaMode />
+
+      {/* Ambient Audio Manager (Feature 21) */}
+      <AmbientAudioManager />
+
+      {/* 3D Parallax Depth Engine init (Feature 20) */}
+      <ParallaxInit />
+
+      {/* Scroll-Drawn Circuit Paths (Feature 22) */}
+      <CircuitPaths />
+
       {/* Collectibles counter (Feature 16) */}
       <CollectibleCounter />
       <CollectibleCelebration />
@@ -66,7 +86,7 @@ export default function Home() {
 
       {/* Main content */}
       <main>
-        {/* Hero Section (with TintinRocket CTA) */}
+        {/* Hero Section (with TintinRocket CTA + ParticleConstellation) */}
         <Hero />
 
         {/* Transition: Hero → MatrixPill */}

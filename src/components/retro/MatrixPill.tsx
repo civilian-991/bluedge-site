@@ -69,6 +69,7 @@ export default function MatrixPill() {
   return (
     <section
       ref={sectionRef}
+      data-ambient="section-matrix"
       className="relative py-24 md:py-32 overflow-hidden"
       style={{
         paddingLeft: "5%",

@@ -7,6 +7,7 @@ import { motion, useInView } from "framer-motion";
 import { processSteps } from "@/data";
 import { CollectibleTrigger } from "./CollectibleItem";
 import GlitchText from "./GlitchText";
+import MagneticText from "./MagneticText";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -198,6 +199,7 @@ export default function GrendizerProcess() {
   return (
     <section
       ref={sectionRef}
+      data-ambient="section-grendizer"
       className="relative py-24 md:py-32 overflow-hidden"
       style={{ paddingLeft: "5%", paddingRight: "5%" }}
     >
@@ -224,10 +226,9 @@ export default function GrendizerProcess() {
           >
             Battle Plan
           </span>
-          <GlitchText
+          <MagneticText
             as="h2"
-            intensity="medium"
-            className="text-4xl md:text-6xl font-black mb-4"
+            className="text-4xl md:text-6xl font-black mb-4 glitch-text-medium"
             style={{
               fontFamily: "'Bangers', cursive",
               color: "white",
@@ -236,7 +237,7 @@ export default function GrendizerProcess() {
             }}
           >
             OUR PROCESS
-          </GlitchText>
+          </MagneticText>
           <p className="text-white/40 text-sm max-w-md mx-auto">
             Assembling your brand&apos;s ultimate form — one phase at a time
           </p>

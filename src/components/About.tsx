@@ -393,6 +393,7 @@ export default function About() {
     <section
       ref={sectionRef}
       id="about"
+      data-ambient="section-about"
       className="relative py-32 md:py-40 overflow-hidden"
       style={{ paddingLeft: "5%", paddingRight: "5%" }}
     >

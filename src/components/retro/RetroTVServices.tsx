@@ -11,6 +11,7 @@ import { useCollectibles } from "@/hooks/useCollectibles";
 import { CollectibleTrigger } from "./CollectibleItem";
 import { useRetroSound } from "@/hooks/useRetroSound";
 import GlitchText from "./GlitchText";
+import MagneticText from "./MagneticText";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -79,6 +80,7 @@ export default function RetroTVServices() {
     <section
       ref={sectionRef}
       id="services"
+      data-ambient="section-retrotv"
       className="relative py-24 md:py-32 overflow-hidden"
       style={{ paddingLeft: "5%", paddingRight: "5%" }}
     >
@@ -103,10 +105,9 @@ export default function RetroTVServices() {
               Cable TV Guide
             </span>
           </div>
-          <GlitchText
+          <MagneticText
             as="h2"
-            intensity="intense"
-            className="text-4xl md:text-6xl font-bold mb-4"
+            className="text-4xl md:text-6xl font-bold mb-4 glitch-text-intense"
             style={{
               fontFamily: "'Press Start 2P', monospace",
               fontSize: "clamp(1rem, 4vw, 2.5rem)",
@@ -114,8 +115,8 @@ export default function RetroTVServices() {
               textShadow: "0 0 20px rgba(245,213,71,0.4), 3px 3px 0 #0077B6",
             }}
           >
-            WHAT&apos;S ON TONIGHT
-          </GlitchText>
+            {"WHAT'S ON TONIGHT"}
+          </MagneticText>
           <p className="text-white/40 text-sm max-w-md mx-auto" style={{ fontFamily: "'Press Start 2P', monospace", fontSize: "0.55rem" }}>
             Tune in to our channel lineup
           </p>

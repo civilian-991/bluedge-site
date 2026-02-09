@@ -281,6 +281,19 @@ const soundMap: Record<SoundType, (ctx: AudioContext) => void> = {
   collectFound: playCollectFound,
 };
 
+export function getAudioContext(): AudioContext {
+  return getCtx();
+}
+
+export function isGlobalMuted(): boolean {
+  return globalMuted;
+}
+
+export function onMuteChange(handler: (m: boolean) => void): () => void {
+  listeners.add(handler);
+  return () => { listeners.delete(handler); };
+}
+
 export function useRetroSound() {
   const [muted, setMutedState] = useState(globalMuted);
   const initialized = useRef(false);

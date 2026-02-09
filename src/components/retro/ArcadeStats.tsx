@@ -5,6 +5,7 @@ import { motion, useInView } from "framer-motion";
 import { stats } from "@/data";
 import { useRetroSound } from "@/hooks/useRetroSound";
 import GlitchText from "./GlitchText";
+import MagneticText from "./MagneticText";
 
 function ArcadeCounter({ target, suffix, onStart }: { target: number; suffix: string; onStart?: () => void }) {
   const [count, setCount] = useState(0);
@@ -91,18 +92,19 @@ export default function ArcadeStats() {
         transition={{ duration: 0.6 }}
         className="text-center mb-8"
       >
-        <GlitchText
+        <MagneticText
           as="span"
-          intensity="intense"
-          className="text-xs tracking-[0.3em] uppercase"
+          className="text-xs tracking-[0.3em] uppercase glitch-text-intense"
           style={{
             fontFamily: "'Press Start 2P', monospace",
             color: "#F5D547",
             textShadow: "0 0 10px rgba(245,213,71,0.4)",
           }}
+          radius={60}
+          maxDisplacement={10}
         >
           HIGH SCORES
-        </GlitchText>
+        </MagneticText>
       </motion.div>
 
       {/* Arcade scoreboard */}

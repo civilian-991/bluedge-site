@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Play, Zap } from "lucide-react";
 import TintinRocket from "./retro/TintinRocket";
+import ParticleConstellation from "./retro/ParticleConstellation";
 import Image from "next/image";
 import { useCollectibles } from "@/hooks/useCollectibles";
 import { CollectibleTrigger } from "./retro/CollectibleItem";
@@ -750,6 +751,7 @@ export default function Hero() {
 
       <section
         ref={sectionRef}
+        data-ambient="section-hero"
         className="relative min-h-screen flex flex-col justify-center overflow-hidden"
         style={{
           paddingLeft: "5%",
@@ -901,16 +903,17 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Enhanced Particle field */}
-        <ParticleField />
+        {/* Interactive Particle Constellation (Feature 19 — replaces ParticleField) */}
+        <ParticleConstellation />
 
-        {/* Content */}
-        <div className="relative z-10 w-full max-w-[1800px] mx-auto">
+        {/* Content — parallax depth container */}
+        <div className="relative z-10 w-full max-w-[1800px] mx-auto" data-parallax-container>
           {/* BluEdge Logo with enhanced effects */}
           <motion.div
             ref={logoRef}
             initial={{ opacity: 0, scale: 0 }}
             className="mb-12 relative"
+            data-depth="3"
           >
             <div className="logo-glow absolute -inset-12 bg-[#2CACE2]/30 rounded-full blur-3xl opacity-50" />
             <div className="absolute -inset-8 rounded-full animate-pulse"
@@ -965,6 +968,7 @@ export default function Hero() {
           <h1
             ref={titleRef}
             className="hero-title mb-10"
+            data-depth="2"
             style={{ perspective: "1500px" }}
           >
             {/* Line 1 */}
