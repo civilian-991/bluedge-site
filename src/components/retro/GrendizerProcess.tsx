@@ -55,70 +55,6 @@ function EnergyPulse({ active }: { active: boolean }) {
 }
 
 /* =============================================
-   Systems Check Bar — progress indicator
-   ============================================= */
-function SystemsCheckBar({ progress, activePhase }: { progress: number; activePhase: number }) {
-  return (
-    <div className="mb-6">
-      <div className="flex items-center justify-between mb-2">
-        <span
-          style={{
-            fontFamily: "'Press Start 2P', monospace",
-            fontSize: "0.4rem",
-            color: "rgba(255,255,255,0.5)",
-          }}
-        >
-          SYSTEMS CHECK
-        </span>
-        <span
-          style={{
-            fontFamily: "'Press Start 2P', monospace",
-            fontSize: "0.4rem",
-            color: progress >= 100 ? "#F5D547" : "#2CACE2",
-            textShadow: `0 0 8px ${progress >= 100 ? "rgba(245,213,71,0.5)" : "rgba(44,172,226,0.5)"}`,
-          }}
-        >
-          {Math.round(progress)}%
-        </span>
-      </div>
-      <div className="h-2 rounded-full bg-white/5 overflow-hidden">
-        <div
-          className="h-full rounded-full transition-all duration-300"
-          style={{
-            width: `${Math.min(progress, 100)}%`,
-            background: `linear-gradient(90deg, #2CACE2, ${progress >= 100 ? "#F5D547" : "#0077B6"})`,
-            boxShadow: `0 0 10px ${progress >= 100 ? "rgba(245,213,71,0.4)" : "rgba(44,172,226,0.3)"}`,
-          }}
-        />
-      </div>
-      {/* Phase dots */}
-      <div className="flex justify-between mt-2 px-1">
-        {[1, 2, 3, 4].map((p) => (
-          <div key={p} className="flex items-center gap-1">
-            <div
-              className="w-2 h-2 rounded-full transition-all duration-300"
-              style={{
-                background: activePhase >= p ? "#2CACE2" : "rgba(255,255,255,0.1)",
-                boxShadow: activePhase >= p ? "0 0 6px rgba(44,172,226,0.5)" : "none",
-              }}
-            />
-            <span
-              style={{
-                fontFamily: "'Press Start 2P', monospace",
-                fontSize: "0.3rem",
-                color: activePhase >= p ? "#2CACE2" : "rgba(255,255,255,0.2)",
-              }}
-            >
-              P{p}
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/* =============================================
    HUD Step Card — with animated corner brackets
    ============================================= */
 function HUDStepCard({
@@ -590,7 +526,6 @@ export default function GrendizerProcess() {
   const pinContainerRef = useRef<HTMLDivElement>(null);
   const stepsRef = useRef<HTMLDivElement>(null);
   const [activePhase, setActivePhase] = useState(0);
-  const [assemblyProgress, setAssemblyProgress] = useState(0);
   const [completedPhases, setCompletedPhases] = useState<Set<number>>(new Set());
   const [allComplete, setAllComplete] = useState(false);
   const [boltFound, setBoltFound] = useState(false);
@@ -626,7 +561,6 @@ export default function GrendizerProcess() {
         scrub: 1,
         onUpdate: (self) => {
           const p = self.progress * 100;
-          setAssemblyProgress(p);
 
           // Determine active phase (0-4)
           const phase = Math.min(4, Math.floor(p / 25) + 1);
@@ -713,7 +647,6 @@ export default function GrendizerProcess() {
 
           {/* Right: fixed mecha assembly */}
           <div className="sticky top-[10vh] self-start">
-            <SystemsCheckBar progress={assemblyProgress} activePhase={activePhase} />
             <MechaAssembly
               activePhase={activePhase}
               completedPhases={completedPhases}
