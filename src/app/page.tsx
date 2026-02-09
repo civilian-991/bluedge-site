@@ -86,7 +86,7 @@ export default function Home() {
       <Navigation />
 
       {/* Main content */}
-      <main>
+      <main id="main-content">
         {/* Hero Section (with TintinRocket CTA + ParticleConstellation) */}
         <Hero />
 

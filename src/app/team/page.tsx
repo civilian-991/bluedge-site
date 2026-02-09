@@ -6,6 +6,20 @@ export const metadata: Metadata = {
   title: "The Team | BluEdge Agency",
   description:
     "Meet the BluEdge guild — strategists, designers, developers, and creative warriors who bring your brand to life.",
+  openGraph: {
+    title: "The Team | BluEdge Agency",
+    description:
+      "Meet the BluEdge guild — strategists, designers, developers, and creative warriors who bring your brand to life.",
+    type: "website",
+    siteName: "BluEdge Agency",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "The Team | BluEdge Agency",
+    description:
+      "Meet the BluEdge guild — strategists, designers, developers, and creative warriors who bring your brand to life.",
+  },
 };
 
 export default function TeamPage() {

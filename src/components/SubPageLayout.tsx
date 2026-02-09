@@ -71,7 +71,7 @@ export default function SubPageLayout({ children, breadcrumbs }: SubPageLayoutPr
         </motion.div>
       )}
 
-      <main className="min-h-screen">{children}</main>
+      <main id="main-content" className="min-h-screen">{children}</main>
       <Footer />
     </>
   );

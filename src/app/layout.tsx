@@ -14,6 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://bluedge.me"),
   title: "Blu Edge Agency | Creative Digital Agency in Dubai",
   description:
     "Blu Edge is a full-service creative agency specializing in branding, web design, video production, and social media management. We craft digital experiences that captivate and convert.",

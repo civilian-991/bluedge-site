@@ -21,6 +21,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${study.title} | BluEdge Agency`,
     description: `${study.category} — ${study.challenge.slice(0, 150)}`,
+    openGraph: {
+      title: `${study.title} | BluEdge Agency`,
+      description: `${study.category} — ${study.challenge.slice(0, 150)}`,
+      type: 'article',
+      siteName: 'BluEdge Agency',
+      locale: 'en_US',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${study.title} | BluEdge Agency`,
+      description: `${study.category} — ${study.challenge.slice(0, 150)}`,
+    },
   };
 }
 

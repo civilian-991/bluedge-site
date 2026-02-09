@@ -20,6 +20,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${service.title} | BluEdge Agency`,
     description: service.tagline + " — " + service.description.slice(0, 150),
+    openGraph: {
+      title: `${service.title} | BluEdge Agency`,
+      description: service.tagline,
+      type: 'website',
+      siteName: 'BluEdge Agency',
+      locale: 'en_US',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${service.title} | BluEdge Agency`,
+      description: service.tagline,
+    },
   };
 }
 

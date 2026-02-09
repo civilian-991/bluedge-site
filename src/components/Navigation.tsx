@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -35,11 +35,11 @@ const navLinks: NavLink[] = [
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [activeLink, setActiveLink] = useState<string | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
   const [mobileAccordion, setMobileAccordion] = useState<string | null>(null);
   const navRef = useRef<HTMLElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
   const dropdownTimeout = useRef<NodeJS.Timeout | null>(null);
   const pathname = usePathname();
   const isHomepage = pathname === "/";
@@ -53,9 +53,16 @@ export default function Navigation() {
     if (link.children) {
       return link.children.some((c) => pathname.startsWith(c.href));
     }
+    // Hash-only links (like /#contact) have no dedicated page — never "active"
+    if (link.href.includes("#")) return false;
     if (link.href === "/") return pathname === "/";
     return pathname.startsWith(link.href);
   }
+
+  const closeMenu = useCallback(() => {
+    setIsMenuOpen(false);
+    setMobileAccordion(null);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -70,8 +77,60 @@ export default function Navigation() {
     if (isMenuOpen) {
       document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = "";
     }
+    return () => { document.body.style.overflow = ""; };
+  }, [isMenuOpen]);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    closeMenu();
+  }, [pathname, closeMenu]);
+
+  // Keyboard: Escape closes dropdown & mobile menu
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        if (dropdownOpen) setDropdownOpen(null);
+        if (isMenuOpen) closeMenu();
+      }
+    }
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [dropdownOpen, isMenuOpen, closeMenu]);
+
+  // Focus trap for mobile menu
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    const menu = mobileMenuRef.current;
+    if (!menu) return;
+
+    const focusable = menu.querySelectorAll<HTMLElement>(
+      'a[href], button, [tabindex]:not([tabindex="-1"])'
+    );
+    if (focusable.length === 0) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    function trapFocus(e: KeyboardEvent) {
+      if (e.key !== "Tab") return;
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    }
+
+    document.addEventListener("keydown", trapFocus);
+    requestAnimationFrame(() => first.focus());
+    return () => document.removeEventListener("keydown", trapFocus);
   }, [isMenuOpen]);
 
   // Animate nav on mount
@@ -85,17 +144,15 @@ export default function Navigation() {
 
       const logo = logoRef.current;
       if (logo) {
+        const quickX = gsap.quickTo(logo, "x", { duration: 0.3, ease: "power2.out" });
+        const quickY = gsap.quickTo(logo, "y", { duration: 0.3, ease: "power2.out" });
+
         const handleMouseMove = (e: MouseEvent) => {
           const rect = logo.getBoundingClientRect();
           const x = e.clientX - rect.left - rect.width / 2;
           const y = e.clientY - rect.top - rect.height / 2;
-
-          gsap.to(logo, {
-            x: x * 0.2,
-            y: y * 0.2,
-            duration: 0.3,
-            ease: "power2.out",
-          });
+          quickX(x * 0.2);
+          quickY(y * 0.2);
         };
 
         const handleMouseLeave = () => {
@@ -163,8 +220,17 @@ export default function Navigation() {
 
   return (
     <>
+      {/* Skip to content */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[200] focus:px-4 focus:py-2 focus:bg-accent focus:text-black focus:rounded-lg focus:text-sm focus:font-medium"
+      >
+        Skip to content
+      </a>
+
       <nav
         ref={navRef}
+        aria-label="Main navigation"
         className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${
           isScrolled
             ? "py-3 bg-[#050508]/95 backdrop-blur-xl border-b border-accent/10 shadow-lg shadow-accent/5"
@@ -229,23 +295,25 @@ export default function Navigation() {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-1">
-            {navLinks.map((link) => (
-              <div
-                key={link.name}
-                className="relative"
-                onMouseEnter={() => link.children && handleDropdownEnter(link.name)}
-                onMouseLeave={() => link.children && handleDropdownLeave()}
-              >
-                <motion.div
+            {navLinks.map((link) => {
+              const active = isActive(link);
+              return (
+                <div
+                  key={link.name}
                   className="relative"
-                  onHoverStart={() => setActiveLink(link.name)}
-                  onHoverEnd={() => setActiveLink(null)}
+                  onMouseEnter={() => link.children && handleDropdownEnter(link.name)}
+                  onMouseLeave={() => link.children && handleDropdownLeave()}
                 >
                   <Link
                     href={resolveHref(link)}
-                    className={`relative px-5 py-3 text-sm font-medium transition-colors uppercase tracking-wider inline-flex items-center gap-1 ${
-                      isActive(link) ? "text-accent" : "text-white/60 hover:text-white"
+                    className={`relative px-5 py-3 text-sm font-medium transition-colors uppercase tracking-wider inline-flex items-center gap-1 group/link ${
+                      active ? "text-accent" : "text-white/60 hover:text-white"
                     }`}
+                    {...(active ? { "aria-current": "page" as const } : {})}
+                    {...(link.children ? {
+                      "aria-haspopup": "true" as const,
+                      "aria-expanded": dropdownOpen === link.name,
+                    } : {})}
                   >
                     {link.name}
                     {link.children && (
@@ -256,65 +324,57 @@ export default function Navigation() {
                       />
                     )}
 
-                    <motion.span
-                      className="absolute bottom-1 left-5 right-5 h-px bg-gradient-to-r from-accent to-accent/50"
-                      initial={{ scaleX: 0 }}
-                      animate={{ scaleX: activeLink === link.name ? 1 : 0 }}
-                      transition={{ duration: 0.3 }}
+                    <span
+                      className="absolute bottom-1 left-5 right-5 h-px bg-gradient-to-r from-accent to-accent/50 origin-left scale-x-0 group-hover/link:scale-x-100 transition-transform duration-300"
                     />
 
-                    <AnimatePresence>
-                      {activeLink === link.name && (
-                        <motion.span
-                          className="absolute inset-0 rounded-lg bg-accent/5"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          transition={{ duration: 0.2 }}
-                        />
-                      )}
-                    </AnimatePresence>
+                    <span
+                      className="absolute inset-0 rounded-lg bg-accent/5 opacity-0 group-hover/link:opacity-100 transition-opacity duration-200"
+                    />
                   </Link>
-                </motion.div>
 
-                {/* Services dropdown */}
-                <AnimatePresence>
-                  {link.children && dropdownOpen === link.name && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 8, scale: 0.96 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 8, scale: 0.96 }}
-                      transition={{ duration: 0.2, ease: "easeOut" }}
-                      className="absolute top-full left-0 mt-1 min-w-[220px] bg-[#0a0a12]/95 backdrop-blur-xl border border-accent/10 rounded-xl overflow-hidden shadow-xl shadow-black/30"
-                      onMouseEnter={() => handleDropdownEnter(link.name)}
-                      onMouseLeave={handleDropdownLeave}
-                    >
-                      {link.children.map((child, ci) => (
-                        <Link
-                          key={child.name}
-                          href={child.href}
-                          className={`block px-5 py-3 text-sm transition-all hover:bg-accent/10 hover:text-accent border-b border-white/5 last:border-b-0 ${
-                            pathname === child.href
-                              ? "text-accent bg-accent/5"
-                              : "text-white/60"
-                          }`}
-                        >
-                          <motion.span
-                            initial={{ x: -5, opacity: 0 }}
-                            animate={{ x: 0, opacity: 1 }}
-                            transition={{ delay: ci * 0.04 }}
-                            className="flex items-center gap-3"
+                  {/* Services dropdown */}
+                  <AnimatePresence>
+                    {link.children && dropdownOpen === link.name && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                        transition={{ duration: 0.2, ease: "easeOut" }}
+                        role="menu"
+                        className="absolute top-full left-0 mt-1 min-w-[220px] bg-[#0a0a12]/95 backdrop-blur-xl border border-accent/10 rounded-xl overflow-hidden shadow-xl shadow-black/30"
+                        onMouseEnter={() => handleDropdownEnter(link.name)}
+                        onMouseLeave={handleDropdownLeave}
+                      >
+                        {link.children.map((child, ci) => (
+                          <Link
+                            key={child.name}
+                            href={child.href}
+                            role="menuitem"
+                            className={`block px-5 py-3 text-sm transition-all hover:bg-accent/10 hover:text-accent border-b border-white/5 last:border-b-0 ${
+                              pathname === child.href
+                                ? "text-accent bg-accent/5"
+                                : "text-white/60"
+                            }`}
+                            {...(pathname === child.href ? { "aria-current": "page" as const } : {})}
                           >
-                            <span className="text-accent/40 text-xs font-mono">0{ci + 1}</span>
-                            {child.name}
-                          </motion.span>
-                        </Link>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            ))}
+                            <motion.span
+                              initial={{ x: -5, opacity: 0 }}
+                              animate={{ x: 0, opacity: 1 }}
+                              transition={{ delay: ci * 0.04 }}
+                              className="flex items-center gap-3"
+                            >
+                              <span className="text-accent/40 text-xs font-mono">0{ci + 1}</span>
+                              {child.name}
+                            </motion.span>
+                          </Link>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
           </div>
 
           {/* CTA Button */}
@@ -357,6 +417,9 @@ export default function Navigation() {
           {/* Mobile Menu Button */}
           <motion.button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-menu"
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             className="relative z-[110] lg:hidden w-12 h-12 flex flex-col items-center justify-center gap-1.5 rounded-xl border border-white/10 hover:border-accent/30 transition-colors bg-white/5"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -392,6 +455,10 @@ export default function Navigation() {
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
+            ref={mobileMenuRef}
+            id="mobile-menu"
+            role="dialog"
+            aria-label="Mobile navigation"
             initial="closed"
             animate="open"
             exit="closed"
@@ -455,6 +522,7 @@ export default function Navigation() {
                             mobileAccordion === link.name ? null : link.name
                           )
                         }
+                        aria-expanded={mobileAccordion === link.name}
                         className="group relative inline-flex items-center gap-3 text-4xl md:text-5xl font-bold tracking-tighter"
                       >
                         <span className="relative inline-block">
@@ -497,7 +565,7 @@ export default function Navigation() {
                                 <Link
                                   key={child.name}
                                   href={child.href}
-                                  onClick={() => setIsMenuOpen(false)}
+                                  onClick={closeMenu}
                                   className="text-lg text-white/50 hover:text-accent transition-colors"
                                 >
                                   {child.name}
@@ -511,7 +579,7 @@ export default function Navigation() {
                   ) : (
                     <Link
                       href={resolveHref(link)}
-                      onClick={() => setIsMenuOpen(false)}
+                      onClick={closeMenu}
                       className="group relative block text-4xl md:text-5xl font-bold tracking-tighter"
                     >
                       <span className="relative inline-block">
@@ -558,7 +626,7 @@ export default function Navigation() {
                 >
                   <Link
                     href={isHomepage ? "#contact" : "/#contact"}
-                    onClick={() => setIsMenuOpen(false)}
+                    onClick={closeMenu}
                     className="btn-primary btn-shine text-base px-10 py-5"
                   >
                     Start a Project
