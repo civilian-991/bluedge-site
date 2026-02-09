@@ -57,7 +57,10 @@ export default function SubPageLayout({ children, breadcrumbs }: SubPageLayoutPr
                       {crumb.label}
                     </Link>
                   ) : (
-                    <span className="text-white/60 uppercase tracking-wider">
+                    <span
+                      className="text-white/60 uppercase tracking-wider"
+                      aria-current={i === breadcrumbs.length - 1 ? "page" : undefined}
+                    >
                       {crumb.label}
                     </span>
                   )}

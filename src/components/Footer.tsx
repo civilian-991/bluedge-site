@@ -3,11 +3,21 @@
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowUpRight, Sparkles } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { socialLinks, contactInfo, services } from "@/data";
 import { CollectibleTrigger } from "./retro/CollectibleItem";
 
 const serviceSlugs = ["branding", "web-design", "mobile-apps", "project-development", "traditional-media"];
+
+// Pre-generate particle positions to avoid Math.random() in render
+const PARTICLE_DATA = Array.from({ length: 25 }, () => ({
+  left: `${Math.random() * 100}%`,
+  top: `${Math.random() * 100}%`,
+  width: `${2 + Math.random() * 4}px`,
+  height: `${2 + Math.random() * 4}px`,
+  duration: 5 + Math.random() * 3,
+  delay: Math.random() * 5,
+}));
 const footerLinks = {
   services: services.map((s, i) => ({ name: s.title, href: `/services/${serviceSlugs[i]}` })),
   company: [
@@ -41,15 +51,15 @@ export default function Footer() {
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00AEEF]/30 to-transparent" />
         <div className="blob morph-blob absolute -top-40 left-1/3 w-[500px] h-[500px] bg-[#00AEEF] opacity-8" />
         {/* Floating energy particles */}
-        {[...Array(25)].map((_, i) => (
+        {PARTICLE_DATA.map((p, i) => (
           <motion.div
             key={i}
             className="absolute rounded-full"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              width: `${2 + Math.random() * 4}px`,
-              height: `${2 + Math.random() * 4}px`,
+              left: p.left,
+              top: p.top,
+              width: p.width,
+              height: p.height,
               background: "#2CACE2",
               boxShadow: "0 0 10px #2CACE2, 0 0 20px #00AEEF",
             }}
@@ -59,9 +69,9 @@ export default function Footer() {
               scale: [0, 1.5, 0],
             }}
             transition={{
-              duration: 5 + Math.random() * 3,
+              duration: p.duration,
               repeat: Infinity,
-              delay: Math.random() * 5,
+              delay: p.delay,
             }}
           />
         ))}

@@ -144,6 +144,7 @@ export default function MovieLobbyPortfolio() {
                 <Link href={`/work/${cs.slug}`} className="group block">
                   <motion.div
                     whileHover={{ y: -8, scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     transition={{ type: "spring", stiffness: 300 }}
                     className="relative bg-[#1a1208] border border-amber-900/20 rounded-sm overflow-hidden shadow-xl shadow-black/30"
                   >

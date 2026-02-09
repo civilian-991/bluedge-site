@@ -20,6 +20,7 @@ export default function CassetteTape({ post, tapeColor = "#2CACE2", index }: Cas
       <Link href={`/blog/${post.slug}`} className="group block">
         <motion.div
           whileHover={{ y: -6, scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           transition={{ type: "spring", stiffness: 300 }}
           className="relative bg-[#2a2520] border border-amber-900/20 rounded-lg overflow-hidden shadow-lg"
         >

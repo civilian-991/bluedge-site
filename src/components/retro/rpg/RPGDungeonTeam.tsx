@@ -12,6 +12,14 @@ import QuestBoard from "./QuestBoard";
 
 type Phase = "intro" | "guild";
 
+// Pre-generate starfield positions at module level to avoid Math.random() in render
+const STARFIELD_DATA = Array.from({ length: 40 }, () => ({
+  left: `${Math.random() * 100}%`,
+  top: `${Math.random() * 100}%`,
+  duration: 2 + Math.random() * 3,
+  delay: Math.random() * 2,
+}));
+
 export default function RPGDungeonTeam() {
   const [phase, setPhase] = useState<Phase>("intro");
   const [introStep, setIntroStep] = useState(0);
@@ -21,6 +29,7 @@ export default function RPGDungeonTeam() {
     typeof window !== "undefined"
       ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
       : false;
+
 
   const introLines = [
     "In the year 2004, in the ancient city of Beirut...",
@@ -64,20 +73,20 @@ export default function RPGDungeonTeam() {
             >
               <div className="w-full">
                 {/* Starfield background */}
-                <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                  {Array.from({ length: 40 }).map((_, i) => (
+                <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+                  {STARFIELD_DATA.map((star, i) => (
                     <motion.div
                       key={i}
                       className="absolute w-1 h-1 rounded-full bg-white/30"
                       style={{
-                        left: `${Math.random() * 100}%`,
-                        top: `${Math.random() * 100}%`,
+                        left: star.left,
+                        top: star.top,
                       }}
                       animate={{ opacity: [0.1, 0.6, 0.1] }}
                       transition={{
-                        duration: 2 + Math.random() * 3,
+                        duration: star.duration,
                         repeat: Infinity,
-                        delay: Math.random() * 2,
+                        delay: star.delay,
                       }}
                     />
                   ))}

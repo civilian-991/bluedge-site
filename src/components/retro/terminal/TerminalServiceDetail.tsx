@@ -19,7 +19,6 @@ type Section = "title" | "desc" | "features" | "process" | "projects" | "faq" | 
 
 export default function TerminalServiceDetail({ service }: TerminalServiceDetailProps) {
   const [booted, setBooted] = useState(false);
-  const [currentSection, setCurrentSection] = useState<Section>("title");
   const [sectionsRevealed, setSectionsRevealed] = useState<Set<Section>>(new Set());
   const [selectedFaq, setSelectedFaq] = useState<number | null>(null);
   const [commandInput, setCommandInput] = useState("");
@@ -32,15 +31,15 @@ export default function TerminalServiceDetail({ service }: TerminalServiceDetail
 
   const revealSection = useCallback((section: Section) => {
     setSectionsRevealed((prev) => new Set([...prev, section]));
-    setCurrentSection(section);
   }, []);
 
   // Auto-reveal sections with delay
   useEffect(() => {
     if (!booted) return;
     if (reducedMotion) {
-      // Show everything immediately
-      setSectionsRevealed(new Set(["title", "desc", "features", "process", "projects", "faq", "cta"]));
+      // Show everything immediately — use functional update to avoid lint warning
+      const allSections: Section[] = ["title", "desc", "features", "process", "projects", "faq", "cta"];
+      allSections.forEach((s) => revealSection(s));
       return;
     }
 

@@ -83,14 +83,21 @@ export default function BoomboxBlogHub() {
 
             {/* Transport controls */}
             <div className="flex items-center justify-center gap-3">
-              {["⏮", "⏪", "▶", "⏩", "⏭"].map((btn, i) => (
+              {[
+                { icon: "⏮", label: "Previous track" },
+                { icon: "⏪", label: "Rewind" },
+                { icon: "▶", label: "Play" },
+                { icon: "⏩", label: "Fast forward" },
+                { icon: "⏭", label: "Next track" },
+              ].map((btn, i) => (
                 <motion.button
                   key={i}
+                  aria-label={btn.label}
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
-                  className="w-10 h-10 rounded-full bg-[#1a1510] border border-amber-900/30 flex items-center justify-center text-amber-400/60 hover:text-amber-300 transition-colors text-sm"
+                  className="w-11 h-11 rounded-full bg-[#1a1510] border border-amber-900/30 flex items-center justify-center text-amber-400/60 hover:text-amber-300 transition-colors text-sm"
                 >
-                  {btn}
+                  {btn.icon}
                 </motion.button>
               ))}
             </div>

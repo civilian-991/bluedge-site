@@ -31,6 +31,7 @@ export default function TerminalBootSequence({
   const [done, setDone] = useState(false);
   const { playSound } = useRetroSound();
   const hasBooted = useRef(false);
+  const progressTimerRef = useRef<ReturnType<typeof setInterval>>(undefined);
 
   useEffect(() => {
     if (hasBooted.current) return;
@@ -56,12 +57,12 @@ export default function TerminalBootSequence({
         clearInterval(lineTimer);
         // Progress bar phase
         let p = 80;
-        const progressTimer = setInterval(() => {
+        progressTimerRef.current = setInterval(() => {
           p += 4;
           setProgress(Math.min(p, 100));
           playSound("diskRead");
           if (p >= 100) {
-            clearInterval(progressTimer);
+            clearInterval(progressTimerRef.current);
             playSound("terminalBeep");
             setTimeout(() => {
               setDone(true);
@@ -72,7 +73,10 @@ export default function TerminalBootSequence({
       }
     }, 120);
 
-    return () => clearInterval(lineTimer);
+    return () => {
+      clearInterval(lineTimer);
+      clearInterval(progressTimerRef.current);
+    };
   }, [serviceName, onComplete, playSound]);
 
   // ASCII progress bar

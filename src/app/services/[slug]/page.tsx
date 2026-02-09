@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { serviceDetails, getServiceBySlug, serviceSlugs } from "@/data/serviceDetails";
+import { getServiceBySlug, serviceSlugs } from "@/data/serviceDetails";
 import SubPageLayout from "@/components/SubPageLayout";
 import TerminalServiceDetail from "@/components/retro/terminal/TerminalServiceDetail";
 
