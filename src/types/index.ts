@@ -28,10 +28,20 @@ export interface Testimonial {
   rating: number;
 }
 
+export interface CharacterStats {
+  atk: number;
+  def: number;
+  spd: number;
+  int: number;
+}
+
 export interface TeamRole {
   title: string;
   icon: string;
   description: string;
+  stats: CharacterStats;
+  specialMove: string;
+  shortName: string;
 }
 
 export interface Stat {

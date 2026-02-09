@@ -3,13 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { motion, useInView, AnimatePresence } from "framer-motion";
-import { Users, Award, Rocket, Heart } from "lucide-react";
-import Image from "next/image";
-import { stats, teamRoles } from "@/data";
-import type { Stat, TeamRole } from "@/types";
+import { motion, useInView } from "framer-motion";
+import { stats } from "@/data";
+import type { Stat } from "@/types";
 import ArcadeStats from "./retro/ArcadeStats";
 import ComicStripAbout from "./retro/ComicStripAbout";
+import ArcadeCharacterSelect from "./retro/ArcadeCharacterSelect";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -140,102 +139,6 @@ function StatCard({
               ? "inset 0 0 60px rgba(44, 172, 226, 0.1)"
               : "inset 0 0 0px transparent",
           }}
-        />
-      </motion.div>
-    </motion.div>
-  );
-}
-
-function TeamCard({
-  role,
-  index,
-}: {
-  role: TeamRole;
-  index: number;
-}) {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(cardRef, { once: true, margin: "-50px" });
-  const [isHovered, setIsHovered] = useState(false);
-
-  return (
-    <motion.div
-      ref={cardRef}
-      initial={{ opacity: 0, y: 100, scale: 0.9 }}
-      animate={
-        isInView
-          ? { opacity: 1, y: 0, scale: 1 }
-          : { opacity: 0, y: 100, scale: 0.9 }
-      }
-      transition={{
-        duration: 0.8,
-        delay: index * 0.12,
-        ease: [0.25, 0.46, 0.45, 0.94],
-      }}
-      className="group relative overflow-hidden"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <motion.div
-        className="p-8 md:p-10 rounded-3xl border border-white/5 bg-gradient-to-br from-white/[0.03] to-transparent transition-all duration-500 h-full"
-        whileHover={{
-          borderColor: "rgba(44, 172, 226, 0.4)",
-          y: -8,
-        }}
-      >
-        {/* Animated emoji icon */}
-        <motion.span
-          className="text-6xl mb-6 block"
-          animate={{
-            scale: isHovered ? 1.2 : 1,
-            rotate: isHovered ? [0, -10, 10, -5, 0] : 0,
-          }}
-          transition={{ duration: 0.5 }}
-        >
-          {role.icon}
-        </motion.span>
-
-        {/* Title with gradient on hover */}
-        <h3 className="text-xl md:text-2xl font-semibold mb-3">
-          {role.title.split("").map((char, i) => (
-            <motion.span
-              key={i}
-              className="inline-block"
-              animate={{
-                color: isHovered ? "#2CACE2" : "#ffffff",
-              }}
-              transition={{ duration: 0.2, delay: i * 0.02 }}
-            >
-              {char === " " ? "\u00A0" : char}
-            </motion.span>
-          ))}
-        </h3>
-
-        {/* Description */}
-        <motion.p
-          className="text-white/50 text-sm leading-relaxed"
-          animate={{
-            color: isHovered ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.5)",
-          }}
-        >
-          {role.description}
-        </motion.p>
-
-        {/* Gradient line */}
-        <motion.div
-          className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-accent via-[#0077B6] to-accent/50"
-          initial={{ width: 0 }}
-          animate={{ width: isHovered ? "100%" : "0%" }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-        />
-
-        {/* Background decoration */}
-        <motion.div
-          className="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-accent/10 blur-3xl"
-          animate={{
-            scale: isHovered ? 1.5 : 1,
-            opacity: isHovered ? 0.3 : 0,
-          }}
-          transition={{ duration: 0.5 }}
         />
       </motion.div>
     </motion.div>
@@ -413,40 +316,8 @@ export default function About() {
           <ArcadeStats />
         </div>
 
-        {/* Team section */}
-        <div id="team">
-          <motion.div
-            initial={{ opacity: 0, y: 60 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-20"
-          >
-            <motion.div className="flex items-center justify-center gap-4 mb-8">
-              <motion.div
-                className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/30 flex items-center justify-center"
-                animate={{
-                  rotate: [0, 5, -5, 0],
-                }}
-                transition={{ duration: 4, repeat: Infinity }}
-              >
-                <Users className="w-6 h-6 text-accent" />
-              </motion.div>
-              <span className="text-sm text-accent uppercase tracking-[0.3em] font-medium">
-                Our Team
-              </span>
-            </motion.div>
-            <h2 className="section-title">
-              Meet the <span className="text-gradient">Squad</span>
-            </h2>
-          </motion.div>
-
-          {/* Team roles grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {teamRoles.map((role, index) => (
-              <TeamCard key={role.title} role={role} index={index} />
-            ))}
-          </div>
-        </div>
+        {/* Team section — Arcade Character Select */}
+        <ArcadeCharacterSelect />
       </div>
     </section>
   );
